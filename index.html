@@ -215,6 +215,23 @@ body.mobile #topbtns{max-width:calc(100vw - 230px)}
 #ach .ac small{display:block;font-size:11px;margin-top:3px;color:var(--c,#e8c170)}
 #ach .ac.lk{opacity:.45;cursor:default}#ach .ac.sel{border-color:var(--c);box-shadow:0 0 12px color-mix(in srgb,var(--c) 45%,transparent)}
 #ach .bf{text-align:right}#ach button.x{font-family:var(--mincho),serif;font-size:13px;padding:5px 12px;border-radius:14px;border:1px solid rgba(232,193,112,.5);background:#ffffff10;color:#f3e6c8;cursor:pointer;margin:8px 0 0}
+#story{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:min(620px,94vw);max-height:86vh;overflow:auto;padding:16px 16px 12px;border-radius:14px;background:rgba(14,10,28,.94);border:1px solid rgba(232,193,112,.5);box-shadow:0 0 40px rgba(120,80,220,.35);pointer-events:auto;opacity:0;visibility:hidden;transition:.2s;z-index:21;font-family:var(--mincho),serif}
+#story.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+#story .wt{color:var(--gold);letter-spacing:.2em;text-align:center;font-size:18px}
+#story .sh{font-size:12px;color:#d8ccb0;opacity:.8;text-align:center;margin:4px 0 8px;font-family:var(--gothic)}
+#story .sq{padding:10px 12px;border-radius:10px;margin:8px 0;background:#ffffff08;border-left:3px solid var(--gold)}
+#story .sq.d{border-left-color:#9fe0a8}#story .sq.u{border-left-color:#b070ff;background:rgba(120,60,200,.12)}#story .sq.a{border-left-color:#9fc4ff}
+#story .ch{font-size:11.5px;color:var(--gold);letter-spacing:.2em}#story .sq.u .ch{color:#d0a8ff}
+#story .qt2{font-size:16px;color:#fff3cf;margin:2px 0}#story .fr{font-size:11.5px;color:#bfb29a;font-family:var(--gothic)}
+#story .tx{font-size:13.5px;line-height:1.8;color:#f3e6c8;margin:4px 0}
+#story .gl{font-size:12.5px;color:#9fe0ff;font-family:var(--gothic)}
+#story .pb{height:6px;border-radius:3px;background:#0008;margin-top:5px;overflow:hidden}#story .pb i{display:block;height:100%;background:linear-gradient(90deg,#e8c170,#fff0c4)}
+#story .sec{margin-top:12px;font-size:13px;color:var(--gold);letter-spacing:.15em}
+#story .bf{text-align:right}#story button{font-family:var(--mincho),serif;font-size:13px;padding:5px 12px;border-radius:14px;border:1px solid rgba(232,193,112,.5);background:#ffffff10;color:#f3e6c8;cursor:pointer;margin:8px 0 0}
+#qtrack{position:absolute;right:14px;top:calc(var(--st) + 246px);width:min(230px,40vw);text-align:right;font-size:12px;line-height:1.5;color:#f3e6c8;text-shadow:0 1px 3px #000,0 0 6px #000;pointer-events:none}
+#qtrack b{color:var(--gold);font-family:var(--mincho);font-weight:600}#qtrack .u{color:#d0a8ff}
+body.mobile #qtrack{top:calc(var(--st) + 204px);font-size:11px}
+body.spec #qtrack{display:none}
 #realm{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:min(760px,96vw);max-height:86vh;overflow:auto;padding:16px 16px 12px;border-radius:14px;background:rgba(14,10,28,.93);border:1px solid rgba(232,193,112,.5);box-shadow:0 0 40px rgba(120,80,220,.35);pointer-events:auto;opacity:0;visibility:hidden;transition:.2s;z-index:21;font-family:var(--mincho),serif}
 #realm.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
 #realm .wt{color:var(--gold);letter-spacing:.2em;text-align:center;font-size:18px}
@@ -291,7 +308,7 @@ body.mobile #topbtns{max-width:calc(100vw - 230px)}
     <div class="bar hp"><i></i><b>2400</b></div>
     <div class="bar mp"><i></i><b>∞</b></div>
   </div>
-  <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button><button class="tb" id="realmBtn" type="button">国勢</button><button class="tb" id="specBtn" type="button">観戦</button><button class="tb" id="achBtn" type="button">実績</button></div>
+  <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button><button class="tb" id="realmBtn" type="button">国勢</button><button class="tb" id="specBtn" type="button">観戦</button><button class="tb" id="achBtn" type="button">実績</button><button class="tb" id="storyBtn" type="button">物語</button></div>
   <div id="stats">
     <div class="lbl">王都ルーンヘイム 壊滅率</div>
     <div class="pct" id="ruinPct">0%</div>
@@ -312,6 +329,8 @@ body.mobile #topbtns{max-width:calc(100vw - 230px)}
   <div id="quest"><div class="wt">依頼書 ─ 世界の勢力</div><div class="qb"></div><div class="bf"><button type="button" class="qx">閉じる</button></div></div>
   <div id="spec"><div class="sn"></div><div class="ss"></div><div class="sb"><i></i></div><div class="sc"><button type="button" data-s="prev">◀ 前</button><button type="button" data-s="next">次 ▶</button><button type="button" data-s="in">寄る</button><button type="button" data-s="out">引く</button><button type="button" data-s="spd">×1</button><button type="button" data-s="x">戻る</button></div><div class="sh"></div></div>
   <div id="ending"><div><div class="ek">結末</div><div class="en"></div><div class="et"></div><div class="es"></div><button type="button">この世界に留まる</button></div></div>
+  <div id="qtrack"></div>
+  <div id="story"><div class="wt">物語</div><div class="sh"></div><div class="sb2"></div><div class="bf"><button type="button" class="x">閉じる</button></div></div>
   <div id="ach"><div class="wt">実績と称号</div><div class="ah"></div><div class="ag"></div><div class="bf"><button type="button" class="x">閉じる</button></div></div>
   <div id="realm"><div class="wt">国勢 ─ 各国の暮らし</div><div class="rh">人口・幸福度・戦力と、食料・木材・鉱石の蓄え（矢印は増減の向き）。8割以上壊した国は属国に、恩を積んで幸福にした国は盟友になる</div><div class="tw"><table><thead><tr><th>国・村</th><th>人口</th><th>幸福</th><th>戦力</th><th>食料</th><th>木材</th><th>鉱石</th><th>関係</th></tr></thead><tbody></tbody></table></div><div class="bf"><button type="button" class="rx">閉じる</button></div></div>
   <div id="wmap"><div class="wt">世界地図</div><canvas width="520" height="520"></canvas><div class="bf"><button type="button" class="mx">閉じる</button></div></div>
@@ -1530,7 +1549,7 @@ class Enemy{
     if(!npc)this.aggro=true;
     if(dmg>0&&type!=='fall'&&!npc)dmgText(this.pos.clone().setY(this.pos.y+this.h),Math.round(dmg));
     if(this.hp<=0){this.alive=false;this.dying=0;this.deathType=type;this.air=true;if(!this.fly&&this.vel.y<8)this.vel.y+=10;
-      if(!npc){kills++;countKill(this);}if((this.kind==='mage'||this.kind==='brute')&&this.rank!=='soldier'){const nm=this.nm,rk=this.rank;later(1,()=>showBanner(nm+'、敗れる',rk==='king'?'魔王 討滅':rk==='elite'?'強敵 撃破':'宮廷魔導士 撃破'));}if(this.onDeath)this.onDeath(this);if(this.kind==='boss')later(1.2,()=>showBanner('黒鋼の古竜、討滅','この世界に、もはや敵はいない'));}
+      if(!npc){kills++;countKill(this);}if((this.kind==='mage'||this.kind==='brute')&&this.rank!=='soldier'){const nm=this.nm,rk=this.rank;later(1,()=>showBanner(nm+'、敗れる',rk==='king'?'魔王 討滅':rk==='majin'?'魔人 討滅':rk==='elite'?'強敵 撃破':'宮廷魔導士 撃破'));}if(this.onDeath)this.onDeath(this);if(this.kind==='boss')later(1.2,()=>showBanner('黒鋼の古竜、討滅','この世界に、もはや敵はいない'));}
   }
   finish(){
     const c=this.pos.clone();c.y+=this.h*.5;
@@ -1847,7 +1866,7 @@ Enemy.prototype.mageAI=function(dt){
   if(this.war&&!this.active){this.animate(dt);this.warMageAI(dt);return;}
   this.animate(dt);const sh=this.parts.shield;sh.visible=this.shield>0;sh.material.opacity=.12+.06*Math.sin(gameTime*4)+(this.shFlash>0?.4:0);this.shFlash-=dt;
   this.shT+=dt;if(this.active&&this.shT>8&&this.shield<this.shMax)this.shield=Math.min(this.shMax,this.shield+this.shMax*.3*dt);
-  if(!this.active&&COUNTRIES[this.ci].angered)this.activate();
+  {const C0=COUNTRIES[this.ci];if(!this.active&&C0&&C0.angered)this.activate();}
   const dh=Math.hypot(player.pos.x-this.home.x,player.pos.z-this.home.z);
   if(!this.active||pDead||dh>(this.engR||380)+60){const t=V3(this.home.x,this.home.y+Math.sin(gameTime*.8)*1.5,this.home.z);this.pos.lerp(t,Math.min(1,dt*1.5));this.g.rotation.y+=dt*.3;return;}
   this.g.rotation.y=Math.atan2(player.pos.x-this.pos.x,player.pos.z-this.pos.z);
@@ -2194,6 +2213,7 @@ function cast(i){
   announce(s);snd('cast',.8);
   const K=TK[TIER];SP[s.id](P,s,K);comboCheck(s.id,P,K);
   if(K.t===3){screenFlash(lin(1.2,1,1.4),.35);shake(.8);}
+  qCast(s.id,P,K.t);
 }
 const SP={
   fire(P,s,K){
@@ -2751,7 +2771,7 @@ function townSpotOk(ci,x,z){const C=COUNTRIES[ci];
   for(const b of buildings){if(b.wall)continue;if(Math.hypot(b.x-x,b.z-z)<b.rad+8)return false;}return true;}
 function growBuilding(b){b.mesh.scale.y=.02;let t=0;addFx({update(dt){t+=dt;const e=Math.min(t/1.2,1);b.mesh.scale.y=.02+.98*(1-Math.pow(1-e,3));
   if(Math.random()<.5)glow.emit(b.x+rr(-b.rad,b.rad),b.y+b.height*e,b.z+rr(-b.rad,b.rad),0,rr(2,6),0,.8,1.2,.2,PC.gold,PC.white,.8,0,-1);return e<1;}});}
-function restoreBuilding(b){
+function restoreBuilding(b){if(b.destroyed||b.gold)QS.restored++;
   if(b.rub){scene.remove(b.rub);b.rub=null;}
   if(b.gold){b.mesh.material=b.origMat;if(b.ornMats)for(const [o,m] of b.ornMats)o.material=m;b.gold=false;}
   if(!b.mesh.parent)scene.add(b.mesh);if(b.orn&&!b.orn.parent)scene.add(b.orn);
@@ -2889,7 +2909,7 @@ addEventListener('keydown',e=>{
   if(SPEC){if(e.code==='KeyV'||e.code==='Escape')toggleSpec();else if(e.code==='ArrowLeft'||e.code==='KeyA')specStep(-1);else if(e.code==='ArrowRight'||e.code==='KeyD')specStep(1);else if(e.code==='KeyT')specSpeed();
     if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();return;}
   if(e.code==='KeyV'&&!questOpen&&!mapOpen&&!bookOpen&&!warpOpen&&!realmOpen){toggleSpec();return;}
-  const n=e.code.startsWith('Digit')?+e.code.slice(5):parseInt(e.key,10);if(questOpen){if(e.code==='KeyJ'||e.code==='Escape')toggleQuest();return;}if(mapOpen){if(e.code==='KeyN'||e.code==='Escape')toggleMap();return;}if(achOpen){if(e.code==='KeyL'||e.code==='Escape')toggleAch();return;}if(e.code==='KeyL'){toggleAch();return;}if(realmOpen){if(e.code==='KeyK'||e.code==='Escape')toggleRealm();return;}if(e.code==='KeyK'){toggleRealm();return;}if(e.code==='KeyJ'){toggleQuest();return;}if(e.code==='KeyN'){toggleMap();return;}if(bookOpen){if(e.code==='KeyB'||e.code==='Escape')toggleBook();return;}if(warpOpen){if(n>=1&&n<=WARPS.length)travelTo(n-1);if(e.code==='Escape'||e.code==='KeyH')toggleWarp();return;}if(e.code==='KeyB'){toggleBook();return;}if(n>=1&&n<=9){if(SLOTS[n-1]!=null)cast(SLOTS[n-1]);}else if(n===0&&e.code==='Digit0'){if(SLOTS[9]!=null)cast(SLOTS[9]);}
+  const n=e.code.startsWith('Digit')?+e.code.slice(5):parseInt(e.key,10);if(questOpen){if(e.code==='KeyJ'||e.code==='Escape')toggleQuest();return;}if(mapOpen){if(e.code==='KeyN'||e.code==='Escape')toggleMap();return;}if(storyOpen){if(e.code==='KeyG'||e.code==='Escape')toggleStory();return;}if(e.code==='KeyG'){toggleStory();return;}if(achOpen){if(e.code==='KeyL'||e.code==='Escape')toggleAch();return;}if(e.code==='KeyL'){toggleAch();return;}if(realmOpen){if(e.code==='KeyK'||e.code==='Escape')toggleRealm();return;}if(e.code==='KeyK'){toggleRealm();return;}if(e.code==='KeyJ'){toggleQuest();return;}if(e.code==='KeyN'){toggleMap();return;}if(bookOpen){if(e.code==='KeyB'||e.code==='Escape')toggleBook();return;}if(warpOpen){if(n>=1&&n<=WARPS.length)travelTo(n-1);if(e.code==='Escape'||e.code==='KeyH')toggleWarp();return;}if(e.code==='KeyB'){toggleBook();return;}if(n>=1&&n<=9){if(SLOTS[n-1]!=null)cast(SLOTS[n-1]);}else if(n===0&&e.code==='Digit0'){if(SLOTS[9]!=null)cast(SLOTS[9]);}
   if(e.code==='KeyF')toggleFly();
   if(e.code==='KeyQ')setTier(TIER-1);
   if(e.code==='KeyH')travel();
@@ -2971,7 +2991,7 @@ function renderBook(){const g=$('#book .bg');if(!g)return;g.innerHTML='';
 rebuildBar();
 $('#controls').innerHTML=IS_MOBILE?
   '<dt>移動</dt><dd>画面の左側をなぞる</dd><dt>視点</dt><dd>画面の右側をなぞる</dd><dt>魔法</dt><dd>下の紋章をタップ（照準は画面中央）。「魔法書」で並びを編成</dd><dt>飛翔</dt><dd>「飛」で切替、「昇」「降」で高度</dd><dt>威力</dt><dd>「弱・中・強・極」をタップ</dd><dt>転移</dt><dd>「転」で転移先を選択</dd>':
-  '<dt>移動</dt><dd>WASD　疾走 Shift</dd><dt>視点</dt><dd>マウス（クリックで固定、Escで解除。固定できない時はドラッグ）</dd><dt>魔法</dt><dd>1〜9・0キー（B の魔法書で編成）、またはクリックで選択中の魔法</dd><dt>飛翔</dt><dd>F で切替　上昇 Space　下降 C</dd><dt>威力</dt><dd>Q／E で 弱・中・強・極 を切替</dd><dt>転移</dt><dd>H で転移先を選択（天穹楼・各国）</dd><dt>世界</dt><dd>J 依頼書　N 世界地図　K 国勢　V 観戦　L 実績</dd><dt>音</dt><dd>M で切替</dd>';
+  '<dt>移動</dt><dd>WASD　疾走 Shift</dd><dt>視点</dt><dd>マウス（クリックで固定、Escで解除。固定できない時はドラッグ）</dd><dt>魔法</dt><dd>1〜9・0キー（B の魔法書で編成）、またはクリックで選択中の魔法</dd><dt>飛翔</dt><dd>F で切替　上昇 Space　下降 C</dd><dt>威力</dt><dd>Q／E で 弱・中・強・極 を切替</dd><dt>転移</dt><dd>H で転移先を選択（天穹楼・各国）</dd><dt>世界</dt><dd>G 物語　J 依頼書　N 世界地図　K 国勢　V 観戦　L 実績</dd><dt>音</dt><dd>M で切替</dd>';
 
 // ================= aim =================
 const aimPoint=V3();const camDir=V3();
@@ -3150,7 +3170,7 @@ function step(dt){
   // ambient motes
   if(Math.random()<dt*20){const c=camera.position;glow.emit(c.x+rr(-60,60),c.y+rr(-15,20),c.z+rr(-60,60),rr(-.5,.5),rr(-.2,.5),rr(-.5,.5),rr(3,6),.5,.5,PC.gold,PC.gold,.35,0,0);}
   glow.update(dt);smoke.update(dt);
-  if(started){updHud(dt);updDmgText(dt);updAch(dt);
+  if(started){updHud(dt);updDmgText(dt);updAch(dt);updQuests(dt);
     if(AURA&&!SPEC&&!pDead&&Math.random()<dt*14){const a=Math.random()*6.28,r=rr(.6,1.6),p=player.pos;glow.emit(p.x+Math.cos(a)*r,p.y+rr(0,.6),p.z+Math.sin(a)*r,0,rr(1.5,3.5),0,rr(.8,1.4),rr(.35,.6),.1,AURA,AURA,.8,.5,-.5);}}
 }
 
@@ -3159,7 +3179,7 @@ requestAnimationFrame(frame);
 $('#start').disabled=false;$('#loadmsg').textContent='';
 $('#start').addEventListener('click',()=>{
   started=true;initAudio();$('#title').classList.add('gone');$('#hud').classList.add('on');
-  appStart();homeSpawn();
+  appStart();homeSpawn();questPostStart();
   setTimeout(()=>APP?showBanner(APP_BASE.n,'見習い魔法使い（'+FAC_N[MODE.fac]+'）の修行が始まる'):showBanner('天穹楼','大魔導士の居城'),600);
   if(!IS_MOBILE)tryLock();
   magicCircle(player.pos,6,lin(6,4,1.5),2,{y:.2,spin:2});burst(player.pos.clone().setY(player.pos.y+1),120,18,1.5,2,.3,PC.gold,PC.violetB,1,2,0);
@@ -3375,7 +3395,7 @@ function btAlive(bt,side){return bt.u[side].filter(u=>u.alive).length+(bt.n?bt.n
 function updBattles(dt){for(const bt of BATTLES){if(bt.over){if(gameTime>bt.clear){for(const s2 of['emp','dem'])for(const u of bt.u[s2])if(u.alive&&!u.aggro&&!u.active){scene.remove(u.g);u.alive=false;u.dead=true;}bt.clear=1e12;}continue;}
     const ea=btAlive(bt,'emp'),da=btAlive(bt,'dem');let w=null;
     if(!ea&&!da)w='draw';else if(!da)w='emp';else if(!ea)w='dem';else if(gameTime-bt.t0>330)w=ea>=da?'emp':'dem';
-    if(w){bt.over=true;bt.win=w;bt.clear=gameTime+60;for(const s2 of['emp','dem'])for(const u of bt.u[s2])u.war=null;
+    if(w){bt.over=true;bt.win=w;if(w==='emp'||w==='dem')QS.win[w]++;bt.clear=gameTime+60;for(const s2 of['emp','dem'])for(const u of bt.u[s2])u.war=null;
       if(w==='emp'){PWR_BIAS+=1.5;showBanner('帝国軍、'+bt.f.n+'にて勝利','人類の勢力が増した');}else if(w==='dem'){PWR_BIAS-=1.5;showBanner('魔王軍、'+bt.f.n+'にて勝利','魔王軍の勢力が増した');}}}}
 function countKill(e){gainExp(expFor(e));if(e.raid!=null&&COUNTRIES[e.raid])addFavor(e.raid,1.5);if(e.kind==='citizen'){const ci=countryAt(e.pos.x,e.pos.z);if(ci>=0&&COUNTRIES[ci].eco)COUNTRIES[ci].eco.pop=Math.max(0,COUNTRIES[ci].eco.pop-6);}if(e.war){const o=e.war==='emp'?'dem':'emp';FAC[e.war].rep-=1.2;FAC[o].rep+=.4;}const k=(e.fac||'x')+'_'+(e.rank||e.kind);KB[k]=(KB[k]||0)+1;KB[e.kind]=(KB[e.kind]||0)+1;}
 function worldPower(){let H=0,D=0;COUNTRIES.forEach((C,i)=>{if(!C.total)return;const k=1-C.dest/C.total;const w=i===4||i===5?10:C.settle?.5:1;if(C.faction==='dem')D+=w*k;else H+=w*k;});
@@ -3419,7 +3439,7 @@ function genMission(fac){const L=[];
 function offerMission(m){m.id=++MID;m.exp=gameTime+240;OFFERS.push(m);if(OFFERS.length>4)OFFERS.shift();toast(`📜 ${FAC[m.fac].name}より依頼「${m.title}」（J で依頼書）`);snd('bell',.7);renderQuest();}
 function acceptMission(id){const i=OFFERS.findIndex(m=>m.id===id);if(i<0)return;if(ACTIVE.length>=3){toast('受けられる依頼は3件まで');return;}const m=OFFERS.splice(i,1)[0];m.t0=gameTime;m.init&&m.init();ACTIVE.push(m);renderQuest();}
 function finishMission(m,ok){ACTIVE.splice(ACTIVE.indexOf(m),1);
-  if(ok){MANA+=m.mana;gainExp(Math.round(m.mana*.6));if(m.defCi!=null)addFavor(m.defCi,15);FAC[m.fac].rep+=m.rep;const o=m.fac==='emp'?'dem':'emp';if(m.repO)FAC[o].rep+=m.repO;PWR_BIAS+=m.pwr;showBanner('依頼達成　'+m.title,`魔晶 +${m.mana}　${FAC[m.fac].name}の信頼 +${m.rep}`);snd('coin',1);}
+  if(ok){QS.miss++;MANA+=m.mana;gainExp(Math.round(m.mana*.6));if(m.defCi!=null)addFavor(m.defCi,15);FAC[m.fac].rep+=m.rep;const o=m.fac==='emp'?'dem':'emp';if(m.repO)FAC[o].rep+=m.repO;PWR_BIAS+=m.pwr;showBanner('依頼達成　'+m.title,`魔晶 +${m.mana}　${FAC[m.fac].name}の信頼 +${m.rep}`);snd('coin',1);}
   else{FAC[m.fac].rep-=5;showBanner('依頼失敗　'+m.title,'');}
   for(const k of['emp','dem'])if(FAC[k].rep<=-40&&!FAC[k].hostile){FAC[k].hostile=true;COUNTRIES[k==='emp'?4:5].angered=true;toast(`⚔ ${FAC[k].name}はあなたを敵と定めた`);}
   renderQuest();saveGame();}
@@ -3431,6 +3451,7 @@ function updWorld(dt){if(!started)return;
   for(const k of['emp','dem']){const C=COUNTRIES[k==='emp'?4:5];if(C.angered&&!FAC[k].hostile){FAC[k].hostile=true;FAC[k].rep=Math.min(FAC[k].rep,-40);toast(`⚔ ${FAC[k].name}と交戦状態に入った`);}}
   offerT-=dt;if(offerT<=0){offerT=rr(70,120);const f=['emp','dem'].filter(k=>!FAC[k].hostile&&(!APP||MODE.fac==='none'||k===MODE.fac));if(f.length&&OFFERS.length<3)offerMission(genMission(f[Math.random()*f.length|0]));}
   for(let i=OFFERS.length-1;i>=0;i--)if(gameTime>OFFERS[i].exp)OFFERS.splice(i,1);
+  for(const r of RAIDS)if(!r.cleared&&!r.units.some(u=>u.alive)&&!(r.n&&r.n[1]>0)){r.cleared=true;QS.raid++;}
   saveT-=dt;if(saveT<=0){saveT=20;saveGame();}
   updEconomy(dt);updRule(dt);
   wT-=dt;if(wT>0)return;wT=.5;
@@ -3667,6 +3688,8 @@ const ENDINGS=[
     t:'神聖ヴァルガルド帝国の白亜の都は灰となり、人類の旗は地に落ちた。大地を覆うのは魔王軍の黒き軍旗。だが魔族たちは知っている。この世界を真に形作ったのが、天穹楼に住まう大魔導士その人であることを。'},
   {id:'hegemony',n:'覇天統一',cond:()=>COUNTRIES[4].rule==='vassal'&&COUNTRIES[5].rule==='vassal'&&COUNTRIES.filter((C,i)=>i!==4&&i!==5&&C.rule).length>=6,
     t:'帝国も魔王軍も、ついに大魔導士の前に膝を屈した。諸国は貢ぎ、あるいは盟を結び、天下にはただひとつの王が立つ。人も魔も等しく従え、天を覇する者──覇天の大魔導士。この世界に、あなたを止められるものはいない。'},
+  {id:'true',n:'大魔導士の気持ち',cond:()=>QDONE.has('u10'),
+    t:'千年の封印を破った魔人は、崩れ落ちながら笑っていた。最強であることの退屈を、誰よりも知っていたのは、きっとあの魔人だった。天穹楼に朝日が差す。今日もまた、平凡で、少し退屈な一日が始まる。──それが、たまらなく愛おしい。'},
 ];
 const END_SEEN=new Set();let endChkT=0;
 function checkEndings(){endChkT-=1;if(endChkT>0)return;endChkT=2;if(document.querySelector('#ending.on'))return;
@@ -3703,6 +3726,10 @@ const ACHS=[
   {id:'dawn',n:'夜明けを告げる者',d:'結末「人類の夜明け」に至る',t:'暁の大魔導士',col:'#ffe8b0',c:()=>END_SEEN.has('dawn')},
   {id:'dusk',n:'闇の宰領',d:'結末「魔王軍の世界」に至る',t:'黄昏の大魔導士',col:'#b03050',c:()=>END_SEEN.has('dusk')},
   {id:'hegemony',n:'覇天',d:'結末「覇天統一」に至る',t:'覇天の大魔導士',col:'#ffd070',c:()=>END_SEEN.has('hegemony')},
+  {id:'story',n:'それでも退屈',d:'本編「大魔導士の気持ち」を終える',t:'退屈を愛する者',col:'#fff0c4',c:()=>QDONE.has('m32')},
+  {id:'grad',n:'見習い卒業',d:'見習い編を終える',t:'新たなる大魔導士',col:'#9fc4ff',c:()=>QDONE.has('a20')},
+  {id:'q50',n:'依頼の達人',d:'物語と依頼を合わせて50個達成する',t:'よろず屋の魔法使い',col:'#b8f0c8',c:()=>QDONE.size>=50},
+  {id:'ura',n:'真なる最強',d:'裏章を終え、虚ろの魔人を討つ',t:'最強を超えし者',col:'#b070ff',c:()=>QDONE.has('u10')},
 ];
 const ACH=new Set();let TITLE=null;
 function loadAch(){try{const v=JSON.parse(localStorage.getItem(ACH_KEY)||'null');if(v&&Array.isArray(v.a))for(const id of v.a)if(ACHS.some(a=>a.id===id))ACH.add(id);if(v&&ACH.has(v.t))TITLE=v.t;}catch(e){}applyTitle();}
@@ -3790,12 +3817,206 @@ if(APP){$('#me .name').firstChild.textContent='見習い魔法使い';$('#me .tt
   WARPS[0]={n:APP_BASE.n,d:APP_BASE.d};const wb=$('#warp').querySelectorAll('button')[0];if(wb)wb.innerHTML=`1　${APP_BASE.n}<small>${APP_BASE.d}</small>`;
   $('#titleLeft .lead').innerHTML=`世界には、最強の名を冠する大魔導士がいるという。<br>あなたはまだ、見習いの魔法使い。所属は${FAC_N[MODE.fac]}。小さな火球ひとつから、今日の修行を始めよう。`;
   $('#start').textContent='修行を始める';}
+// ================= 物語とクエスト =================
+// 本編（大魔導士）・日常・見習い編・裏シナリオ。条件は受けた時点の数値からの増分か、世界の状態で判定する。
+const QS={cast:{},weak:0,fly:0,home:0,spec:0,play:0,vis:new Set(),restored:0,raid:0,win:{emp:0,dem:0},miss:0,ruinsR:0,wedge:new Set(),majin:0,tmp:{}};
+const QV={kills:()=>kills,harvest:()=>HARVEST,trade:()=>TRADE,built:()=>BUILT,combo:()=>COMBO_N,miss:()=>QS.miss,raid:()=>QS.raid,fly:()=>QS.fly,home:()=>QS.home,
+  spec:()=>QS.spec,play:()=>QS.play,ruinsR:()=>QS.ruinsR,restored:()=>QS.restored,watched:()=>WATCHED,weak:()=>QS.weak,upg:()=>UPG.hp+UPG.pw+UPG.df};
+function qv(k){return k.startsWith('kb:')?(KB[k.slice(3)]||0):k.startsWith('cast:')?(QS.cast[k.slice(5)]||0):QV[k]?QV[k]():0;}
+function qsnap(){const o={};for(const k in QV)o[k]=QV[k]();for(const k in KB)o['kb:'+k]=KB[k];for(const k in QS.cast)o['cast:'+k]=QS.cast[k];return o;}
+const dv=(b,k)=>qv(k)-(b[k]||0),qVis=k=>QS.vis.has(k)?1:0,cIdx=l=>COUNTRIES.findIndex(C=>C.label===l);
+function qCast(id,P,t){QS.cast[id]=(QS.cast[id]||0)+1;if(t===0)QS.weak++;if(id==='bloom'&&t>=2)QS.cast.bloom2=(QS.cast.bloom2||0)+1;
+  if(id==='restore'){if(Math.hypot(P.x-RUINS.x,P.z-RUINS.z)<260)QS.ruinsR++;for(const i of[0,1,6]){const C=COUNTRIES[i];if(Math.hypot(P.x-C.x,P.z-C.z)<C.r+80&&QDONE.has('u4')&&!QS.wedge.has(i)){QS.wedge.add(i);showBanner('光の楔、ひとつ灯る',`${C.label}の祈りが楔に宿った（${QS.wedge.size}/3）`);snd('chime',1);}}}}
+// 裏シナリオで呼び出す敵
+function spawnAt(kind,x,z,n,tag){const L=QS.tmp[tag]=QS.tmp[tag]||[];for(let i=0;i<n;i++){const a=Math.random()*6.28,r=rr(20,60);const e=new Enemy(kind,x+Math.cos(a)*r,z+Math.sin(a)*r,{tc:{x,z,r:90},inTown:false,raidGo:true,aggroR:70});L.push(e);}return L;}
+const tagLeft=tag=>(QS.tmp[tag]||[]).filter(e=>e.alive).length;
+let MAJIN=null;
+function spawnMajin(shadow){const w=QS.wedge.size;const m=makeMage({ci:-1,x:SEAL.x,z:SEAL.z,hy:SEAL.y+46,nm:shadow?'魔人の影':'虚ろの魔人 ヴェルゼ',rank:shadow?'elite':'majin',
+    hpMul:shadow?5:28-w*4,shMul:shadow?3:14-w*3,dm:shadow?1.8:3.4-w*.5,rate:shadow?1.1:1.8,range:70,scale:shadow?2:3.2,
+    pats:shadow?['mFire','mBolt','mBeam','mOrbs']:['mFire','mBolt','mBeam','mOrbs','mMeteor','mTri','mChain','mNova','mSummon','mMeteor','mNova','mTri'],
+    robe:0x0a0410,trim:0x7a20ff,orb:lin(4,1,9),c3:lin(3,1,8),shot:lin(4,1.2,9),fac:'none'});
+  m.engR=700;m.activate();MAGES.push(m);if(!shadow){MAJIN=m;m.onDeath=()=>{QS.majin=1;sealVisual();saveGame();};}else QS.tmp.shadow=[m];
+  magicCircle(V3(SEAL.x,SEAL.y,SEAL.z),80,lin(4,1,8),4,{y:1,spin:.8});screenFlash(lin(1,.3,1.4),.8);shake(1.6,V3(SEAL.x,SEAL.y,SEAL.z));snd('bigboom',1.2);return m;}
+function sealVisual(){if(!SEAL.g)return;const red=[QDONE.has('u2'),QDONE.has('u4'),QDONE.has('u8'),QDONE.has('u8')];
+  SEAL.pillars.forEach((p,i)=>{p.rune.material.color.copy(red[i]?lin(7,.6,.8):lin(4,1.4,7));p.g.visible=!(QDONE.has('u8')&&i>=2);});
+  SEAL.cry.visible=!QDONE.has('u8');SEAL.rings.forEach(r=>r.visible=!QS.majin);}
+// ---- データ ----
+const nR=r=>COUNTRIES.filter(C=>C.rule===r).length;
+const QUESTS=[];
+function Q(line,list){for(const q of list){q.line=line;QUESTS.push(q);}}
+const CH={m:['序章 退屈な朝','第一章 英雄は困っている','第二章 二つの陣営','第三章 遺跡の囁き','第四章 世界の天秤','終章 天下の行方'],a:['見習い編'],u:['裏章 虚ろの魔人']};
+Q('main',[
+ {id:'m1',ch:0,t:'目覚め',f:'大魔導士の独り言',s:'今日も目が覚めてしまった。世界最強というのは、存外退屈なものだ。',g:'天穹楼でしばらくぼんやりする（20秒）',c:b=>[dv(b,'home'),20],r:[100,0]},
+ {id:'m2',ch:0,t:'朝の散歩',f:'大魔導士の独り言',s:'たまには人の暮らしでも眺めに行くか。転移すれば一瞬だが、それも味気ない。',g:'王都ルーンヘイムを訪れる',c:()=>[qVis('c0'),1],r:[100,0]},
+ {id:'m3',ch:0,t:'手加減の稽古',f:'王都の子どもたち',s:'「魔法見せてー！」とせがまれた。本気を出せば王都が消える。手加減は、最強にとって一番難しい魔法だ。',g:'「弱」の威力で魔法を10回唱える',c:b=>[dv(b,'weak'),10],r:[150,0]},
+ {id:'m4',ch:0,t:'畑の手伝い',f:'ミルデン村の村長 ボルト',s:'「大魔導士さま、今年は人手が足りませんで……」 国を滅ぼせる手で、麦を植える。悪くない。',g:'「黄金の麦穂」で麦畑を作る',c:b=>[dv(b,'cast:wheat'),1],r:[150,0]},
+ {id:'m5',ch:0,t:'迷い狼',f:'ミルデン村の村長 ボルト',s:'「畑を荒らす狼がおりまして」 狼に少し同情しながら、追い払うことにした。',g:'狼を5体倒す',c:b=>[dv(b,'kb:wolf'),5],r:[200,0]},
+ {id:'m6',ch:0,t:'一通の手紙',f:'大魔導士の独り言',s:'天穹楼に依頼書が届くようになった。暇つぶしには、ちょうどいい。',g:'帝国か魔王軍の依頼を1件達成する（J で依頼書）',c:b=>[dv(b,'miss'),1],r:[250,0]},
+ {id:'m7',ch:1,t:'騎士団長の頼み',f:'王都騎士団長 ガレス',s:'「魔王軍の侵攻隊が村々を襲っている。貴殿の力を……いや、ほんの少しだけ貸してほしい」',g:'魔王軍の侵攻隊を1度退ける',c:b=>[dv(b,'raid'),1],r:[400,0]},
+ {id:'m8',ch:1,t:'収穫祭',f:'ミルデン村の村長 ボルト',s:'「おかげさまで豊作です！ぜひ収穫祭に」 祭りの主役にされるのは、どうにも苦手だ。',g:'収穫で食料を1,000得る',c:b=>[dv(b,'harvest'),1000],r:[300,0]},
+ {id:'m9',ch:1,t:'港町の夢',f:'アズラーンの老船乗り',s:'「港さえあれば、遠い国の品が届くんですがねえ」',g:'「潮騒の港」で港を築く',c:()=>[PORT_N>0?1:0,1],r:[300,0]},
+ {id:'m10',ch:1,t:'交易の風',f:'アズラーンの老船乗り',s:'「船が帰ってくるのを待つ時間ってのは、いいもんですよ」 待つのは、得意なほうだ。',g:'交易船を3回帰港させる',c:b=>[dv(b,'trade'),3],r:[350,0]},
+ {id:'m11',ch:1,t:'空飛ぶ厄介者',f:'神楽京の巫女 シズネ',s:'「飛竜が参道の灯籠を壊して回るのです。どうか、境内は壊さずに……」',g:'飛竜を3体倒す',c:b=>[dv(b,'kb:wyvern'),3],r:[400,0]},
+ {id:'m12',ch:1,t:'魔法の研究',f:'大魔導士の独り言',s:'退屈しのぎに、魔法の組み合わせを試してみよう。知らないことがあるのは、嬉しいことだ。',g:'連鎖魔法を2種見いだす',c:()=>[COMBO_SEEN.size,2],r:[400,0]},
+ {id:'m13',ch:2,t:'帝国の使者',f:'帝国宰相 エルンスト',s:'「神聖ヴァルガルド帝国は、貴殿を賓客としてお迎えしたい」 賓客とは、面倒な肩書きだ。',g:'帝都を訪れる',c:()=>[qVis('c4'),1],r:[400,0]},
+ {id:'m14',ch:2,t:'冥皇からの手紙',f:'魔王 冥皇ゼファルド',s:'「退屈しておるのだろう？ 我もだ。一度、魔都へ来い」 黒い封蝋の手紙は、妙に達筆だった。',g:'魔都ネクロディアを訪れる',c:()=>[qVis('c5'),1],r:[400,0]},
+ {id:'m15',ch:2,t:'戦場見物',f:'大魔導士の独り言',s:'両軍がまたぶつかるらしい。どちらにも肩入れせず、ただ眺めてみる。',g:'観戦で合わせて60秒眺める（V で観戦）',c:b=>[Math.floor(dv(b,'spec')),60],r:[300,0]},
+ {id:'m16',ch:2,t:'決着の行方',f:'大魔導士の独り言',s:'勝った側も、負けた側も、同じ顔で空を見上げていた。',g:'会戦を決着まで見届ける',c:b=>[dv(b,'watched'),1],r:[500,0]},
+ {id:'m17',ch:2,t:'笑顔の村',f:'ミルデン村の村長 ボルト',s:'「村の者の暮らし向きが、もう少しよくなれば……」 壊すより、ずっと手間がかかる。',g:'いずれかの国か村の幸福度を80以上にする',c:()=>[COUNTRIES.some(C=>C.eco&&C.eco.hap>=80)?1:0,1],r:[500,0]},
+ {id:'m18',ch:2,t:'盟友',f:'王都騎士団長 ガレス',s:'「王国は、いや、この国の民は、貴殿と盟を結びたいと願っている」',g:'盟友を1か国つくる',c:()=>[nR('ally'),1],r:[600,0]},
+ {id:'m19',ch:3,t:'西の果ての遺跡',f:'差出人のない書状',s:'差出人のない書状が届いた。「西の果て、古の遺跡にて待つ」',g:'古の遺跡を訪れる',c:()=>[qVis('ruins'),1],r:[400,0]},
+ {id:'m20',ch:3,t:'碑文の修復',f:'古の遺跡',s:'崩れた碑文に、見覚えのない魔法陣が刻まれている。直せば読めるかもしれない。',g:'古の遺跡で「万象回帰」を唱える',c:()=>[Math.min(1,QS.ruinsR),1],r:[500,0]},
+ {id:'m21',ch:3,t:'古代の術式',f:'古の碑文',s:'碑文は、属性を重ねる古い術式の手引きだった。誰かが、ずっと昔に同じ遊びをしていたらしい。',g:'連鎖魔法を4種見いだす',c:()=>[COMBO_SEEN.size,4],r:[600,0]},
+ {id:'m22',ch:3,t:'北東の祭壇',f:'古の碑文',s:'碑文の最後の一行。「虚ろの祭壇に、最強を超えるものを封ず」',g:'封印の地を訪れる',c:()=>[qVis('seal'),1],r:[500,0]},
+ {id:'m23',ch:3,t:'祭壇の番人',f:'封印の地',s:'祭壇を守る石の番人が目を覚ました。……封印は、まだ固い。',g:'封印の地の番人（ゴーレム3体）を倒す',sp:1,on:()=>{if(!tagLeft('guard'))spawnAt('golem',SEAL.x-40,SEAL.z+40,3,'guard');},c:()=>[3-Math.min(3,tagLeft('guard')),3],r:[700,0]},
+ {id:'m24',ch:3,t:'昼寝',f:'大魔導士の独り言',s:'最強を超えるもの、か。……少しだけ、胸が高鳴った気がする。今日はもう寝よう。',g:'天穹楼でひと休みする（30秒）',c:b=>[dv(b,'home'),30],r:[300,0]},
+ {id:'m25',ch:4,t:'天秤の傾き',f:'帝国宰相 エルンスト',s:'帝国も魔王軍も、大魔導士を味方に引き入れようと躍起になっている。放っておいてほしいのだが。',g:'属国と盟友を合わせて3か国にする',c:()=>[nR('ally')+nR('vassal'),3],r:[800,0]},
+ {id:'m26',ch:4,t:'特務隊の腕試し',f:'帝国特務隊',s:'「我ら十二名、最強と名高い貴殿に一手ご指南願う」 断る理由を探すほうが、面倒だった。',g:'帝国特務隊を3名倒す',c:b=>[dv(b,'kb:emp_elite'),3],r:[1000,0]},
+ {id:'m27',ch:4,t:'六魔将の挑戦',f:'魔王軍 六魔将',s:'「冥皇さまのお気に入りとやら、我らが試させてもらう」',g:'魔王軍の魔将を2名倒す',c:b=>[dv(b,'kb:dem_elite'),2],r:[1000,0]},
+ {id:'m28',ch:4,t:'冥皇の本気',f:'魔王 冥皇ゼファルド',s:'「さあ、退屈な者同士、本気で遊ぼうではないか」',g:'冥皇ゼファルドを倒す',c:b=>[dv(b,'kb:dem_king'),1],r:[1500,0]},
+ {id:'m29',ch:4,t:'宴のあと',f:'大魔導士の独り言',s:'倒れた冥皇は笑っていた。「……楽しかったぞ」 少しだけ、分かる気がした。',g:'魔晶の工房で2回強化する',c:b=>[dv(b,'upg'),2],r:[500,0]},
+ {id:'m30',ch:5,t:'覇者の器',f:'諸国の使者たち',s:'諸国が大魔導士の名のもとに集い始めた。望んだわけでは、ないのだが。',g:'属国と盟友を合わせて6か国にする',c:()=>[nR('ally')+nR('vassal'),6],r:[1500,0]},
+ {id:'m31',ch:5,t:'天下の行方',f:'大魔導士の独り言',s:'世界はひとつの結末へと向かっている。その中心に、自分がいる。',g:'いずれかの結末に至る（人類の夜明け／魔王軍の世界／覇天統一）',c:()=>[['dawn','dusk','hegemony'].some(id=>END_SEEN.has(id))?1:0,1],r:[2000,0]},
+ {id:'m32',ch:5,t:'それでも退屈',f:'大魔導士の独り言',s:'世界は変わった。けれど、朝はまたやって来る。帰ろう、天穹楼へ。',g:'天穹楼へ帰り、ひと息つく（10秒）',c:b=>[dv(b,'home'),10],r:[1000,0]},
+]);
+Q('daily',[
+ {id:'d1',t:'庭の花',s:'天穹楼の周りが少し殺風景だ。',g:'「百花繚乱」で花畑を作る',c:b=>[dv(b,'cast:flowers'),1],r:[80,40],gm:'m1',ga:1},
+ {id:'d2',t:'朝の水やり',s:'ちょっと多めの水やり。大海嘯は、少し多すぎたかもしれない。',g:'「大海嘯」を唱える',c:b=>[dv(b,'cast:water'),1],r:[80,40],gm:'m2',ga:4},
+ {id:'d3',t:'かき氷',s:'暑い日だ。王都の子どもたちに、かき氷を作ってやろう。',g:'「絶対零度」を唱える',c:b=>[dv(b,'cast:ice'),1],r:[80,40],gm:'m1',ga:1},
+ {id:'d4',t:'暖炉の火',s:'薪をくべるより、魔法のほうが早い。',g:'「紅蓮葬送」を20回唱える',c:b=>[dv(b,'cast:fire'),20],r:[120,60],gm:'m2',ga:1},
+ {id:'d5',t:'落雷注意',s:'雷の音は、なぜか落ち着く。',g:'「天雷招来」を5回唱える',c:b=>[dv(b,'cast:thunder'),5],r:[120,60],gm:'m3',ga:3},
+ {id:'d6',t:'風通し',s:'天穹楼の空気を入れ替えよう。竜巻で。',g:'「天嵐」を3回唱える',c:b=>[dv(b,'cast:wind'),3],r:[120,60],gm:'m3',ga:6},
+ {id:'d7',t:'地ならし',s:'村の道がでこぼこだと聞いた。',g:'「地殻崩壊」を3回唱える',c:b=>[dv(b,'cast:earth'),3],r:[120,60],gm:'m4',ga:8},
+ {id:'d8',t:'隣人を増やす',s:'村が寂しいと、村長がこぼしていた。',g:'「生命の招来」を2回唱える',c:b=>[dv(b,'cast:people'),2],r:[150,80],gm:'m4',ga:9},
+ {id:'d9',t:'家を一軒',s:'住む家がないと困る。一軒くらい、建ててやろう。',g:'「創都の礎」で建物を5棟建てる',c:b=>[dv(b,'built'),5],r:[200,100],gm:'m5',ga:11},
+ {id:'d10',t:'田植え',s:'泥だらけになるのは、嫌いではない。',g:'「瑞穂の水田」で水田を作る',c:b=>[dv(b,'cast:paddy'),1],r:[120,60],gm:'m4',ga:3},
+ {id:'d11',t:'野菜の差し入れ',s:'南瓜の煮物が食べたくなった。',g:'「実りの畑」で野菜畑を作る',c:b=>[dv(b,'cast:veg'),1],r:[120,60],gm:'m5',ga:2},
+ {id:'d12',t:'空の散歩',s:'雲の上は静かでいい。',g:'飛翔で合わせて60秒飛ぶ（F で飛翔）',c:b=>[Math.floor(dv(b,'fly')),60],r:[120,80],gm:'m2',ga:7},
+ {id:'d13',t:'流れ星',s:'願い事をするには、流れ星が要る。なければ、落とせばいい。',g:'「星墜とし」を3回唱える',c:b=>[dv(b,'cast:meteor'),3],r:[200,150],gm:'m6',ga:18},
+ {id:'d14',t:'金ぴかの誘惑',s:'一度くらい、黄金の景色を眺めてみたい。',g:'「万象黄金郷」を唱える',c:b=>[dv(b,'cast:gold'),1],r:[200,150],gm:'m8',ga:24},
+ {id:'d15',t:'後片付け',s:'やりすぎた。直そう。',g:'「万象回帰」で建物を10棟直す',c:b=>[dv(b,'restored'),10],r:[300,150],gm:'m7',ga:14},
+ {id:'d16',t:'連鎖遊び',s:'水をまいて、雷を落とす。子どもの遊びのようで楽しい。',g:'連鎖魔法を5回起こす',c:b=>[dv(b,'combo'),5],r:[300,150],gm:'m12',ga:6},
+ {id:'d17',t:'狼の群れ',s:'狼が増えすぎると、羊飼いが困る。',g:'狼を10体倒す',c:b=>[dv(b,'kb:wolf'),10],r:[200,120],gm:'m5',ga:2},
+ {id:'d18',t:'石拾い',s:'庭石にちょうどいい岩が欲しい。ゴーレムでもいい。',g:'ゴーレムを3体倒す',c:b=>[dv(b,'kb:golem'),3],r:[250,150],gm:'m7',ga:6},
+ {id:'d19',t:'竜退治の真似事',s:'吟遊詩人に「竜退治の歌」をねだられた。題材が要る。',g:'飛竜を5体倒す',c:b=>[dv(b,'kb:wyvern'),5],r:[300,180],gm:'m11',ga:8},
+ {id:'d20',t:'市場で買い物',s:'たまには自分のために魔晶を使おう。',g:'魔晶の工房で1回強化する（J の依頼書）',c:b=>[dv(b,'upg'),1],r:[100,80],gm:'m6',ga:4},
+ {id:'d21',t:'へそくり',s:'最強でも、蓄えはあって困らない。',g:'魔晶を2,000貯める',c:()=>[Math.min(MANA,2000),2000],r:[200,150],gm:'m8',ga:10},
+ {id:'d22',t:'豊作祈願',s:'今年の冬を、誰も飢えずに越せるように。',g:'収穫で食料を5,000得る',c:b=>[dv(b,'harvest'),5000],r:[400,200],gm:'m9',ga:10},
+ {id:'d23',t:'船を見送る',s:'帆が水平線に消えるまで、見送るのが好きだ。',g:'交易船を10回帰港させる',c:b=>[dv(b,'trade'),10],r:[400,200],gm:'m10',ga:12},
+ {id:'d24',t:'ご近所付き合い',s:'友人は、多いほうがいいらしい。',g:'盟友を2か国つくる',c:()=>[nR('ally'),2],r:[500,300],gm:'m18',ga:15},
+ {id:'d25',t:'魔族の斥候',s:'村はずれに魔族の斥候がうろついている。',g:'魔族兵を20体倒す',c:b=>[dv(b,'kb:demon'),20],r:[250,150],gm:'m7',ga:5},
+ {id:'d26',t:'帝国兵の訓練相手',s:'帝国の新兵に稽古をつけてくれと頼まれた。……稽古、のつもりだ。',g:'帝国の兵を20体倒す',c:b=>[dv(b,'kb:emp_crowd'),20],r:[250,150],gm:'m13',ga:8},
+ {id:'d27',t:'国巡り',s:'この世界の国を、ひととおり見て回ろう。',g:'7つの国をすべて訪れる',c:()=>[[0,1,2,3,4,5,6].filter(i=>QS.vis.has('c'+i)).length,7],r:[500,300],gm:'m14',ga:10},
+ {id:'d28',t:'村巡り',s:'大きな国より、小さな村のほうが落ち着く。',g:'村を10か所訪れる',c:()=>[COUNTRIES.filter((C,i)=>C.village&&QS.vis.has('c'+i)).length,10],r:[500,300],gm:'m17',ga:12},
+ {id:'d29',t:'雪見',s:'北の村では、もう雪が降っているらしい。',g:'白嶺村を訪れる',c:()=>[qVis('c'+cIdx('白嶺村')),1],r:[200,120],gm:'m15',ga:6},
+ {id:'d30',t:'砂漠の星空',s:'東の砂の村では、星がよく見えるという。',g:'サフラン村を訪れる',c:()=>[qVis('c'+cIdx('サフラン村')),1],r:[200,120],gm:'m16',ga:9},
+ {id:'d31',t:'世界樹',s:'大きな木の下で昼寝がしたい。大きな木がなければ、生やせばいい。',g:'「豊穣の祝福」を「強」以上で唱える',c:b=>[dv(b,'cast:bloom2'),1],r:[300,200],gm:'m20',ga:12},
+ {id:'d32',t:'夜更かし',s:'気がつけば、もうこんな時間だ。',g:'合わせて20分遊ぶ',c:b=>[Math.floor(dv(b,'play')/60),20],r:[300,200],gm:'m3',ga:1},
+ {id:'d33',t:'本日の依頼',s:'依頼書の山を片付けよう。',g:'依頼を5件達成する',c:b=>[dv(b,'miss'),5],r:[500,300],gm:'m10',ga:6},
+ {id:'d34',t:'会戦の見届け',s:'戦の結末を、誰かが見届けなければならない。',g:'会戦を3回見届ける',c:b=>[dv(b,'watched'),3],r:[500,300],gm:'m16',ga:10},
+ {id:'d35',t:'幸せの国',s:'誰もが笑って暮らせる国を、ひとつくらい。',g:'いずれかの国か村の幸福度を90以上にする',c:()=>[COUNTRIES.some(C=>C.eco&&C.eco.hap>=90)?1:0,1],r:[600,400],gm:'m18',ga:14},
+ {id:'d36',t:'古竜の尾',s:'黒鋼の古竜が、また山で暴れている。',g:'黒鋼の古竜を倒す',c:b=>[dv(b,'kb:boss'),1],r:[800,600],gm:'m11',ga:20},
+ {id:'d37',t:'魔法の総ざらい',s:'使える魔法を、ひとつずつ確かめておこう。',g:'すべての魔法を1回ずつ唱える',c:()=>[SPELLS.filter(s=>QS.cast[s.id]>0).length,SPELLS.length],r:[800,500],gm:'m12',ga:28},
+ {id:'d38',t:'手加減の達人',s:'最強の魔法とは、誰も傷つけない魔法のことかもしれない。',g:'「弱」の威力で魔法を100回唱える',c:b=>[dv(b,'weak'),100],r:[600,400],gm:'m24',ga:1},
+]);
+const MASTER={emp:'魔導兵長 リーゼ',dem:'術士長 ノクス',none:'老魔女 ハンナ'}[MODE.fac];
+Q('app',[
+ {id:'a1',t:'初めての火球',f:MASTER,s:'「まずは火球だ。的に当てることだけ考えろ」',g:'「紅蓮葬送」を5回唱える',c:b=>[dv(b,'cast:fire'),5],r:[50,60]},
+ {id:'a2',t:'狼の相手',f:MASTER,s:'「狼くらい追い払えねば、見習いとも呼べん」',g:'狼を3体倒す',c:b=>[dv(b,'kb:wolf'),3],r:[80,80]},
+ {id:'a3',t:'見習いの一歩',f:MASTER,s:'「魔力は使えば使うほど育つ。毎日の積み重ねだ」',g:'Lv3 になる',c:()=>[LV,3],r:[80,0]},
+ {id:'a4',t:'最初の依頼',f:MASTER,s:'「依頼書が届いている。見習いにもできる仕事があるはずだ」',g:'依頼を1件達成する（J で依頼書）',c:b=>[dv(b,'miss'),1],r:[150,100]},
+ {id:'a5',t:'中位の魔法',f:MASTER,s:'「そろそろ、もう一段強い魔法を扱えるはずだ」',g:'Lv5 になり「中」の威力を覚える',c:()=>[LV,5],r:[100,0]},
+ MODE.fac==='emp'?{id:'a6',t:'魔族掃討',f:MASTER,s:'「帝国の魔導兵として、魔族の斥候を退けよ」',g:'魔族兵を10体倒す',c:b=>[dv(b,'kb:demon'),10],r:[200,200]}
+  :MODE.fac==='dem'?{id:'a6',t:'帝国兵狩り',f:MASTER,s:'「魔王軍の術士ならば、帝国の雑兵くらい蹴散らしてみせよ」',g:'帝国の兵を10体倒す',c:b=>[dv(b,'kb:emp_crowd'),10],r:[200,200]}
+  :{id:'a6',t:'村の守り手',f:MASTER,s:'「どこの軍にも属さぬなら、自分の村くらいは自分で守りな」',g:'魔王軍の侵攻隊を1度退ける',c:b=>[dv(b,'raid'),1],r:[250,250]},
+ {id:'a7',t:'畑仕事',f:MASTER,s:'「魔法は戦のためだけのものではないよ」',g:'「黄金の麦穂」で麦畑を作る',c:b=>[dv(b,'cast:wheat'),1],r:[100,100]},
+ {id:'a8',t:'浮遊術',f:MASTER,s:'「足が地を離れる感覚を、体に覚えさせろ」',g:'Lv7 になり飛翔を覚える',c:()=>[LV,7],r:[150,0]},
+ {id:'a9',t:'初飛行',f:MASTER,s:'「落ちても泣くな。見習いは皆、一度は落ちる」',g:'飛翔で合わせて60秒飛ぶ（F で飛翔）',c:b=>[Math.floor(dv(b,'fly')),60],r:[150,150]},
+ {id:'a10',t:'噂の大魔導士',f:MASTER,s:'「山頂の天穹楼には、世界最強の大魔導士が住むという。一度、見上げておくといい」',g:'天穹楼を訪れる',c:()=>[qVis('tower'),1],r:[200,200]},
+ {id:'a11',t:'一人前への道',f:MASTER,s:'「半人前から、一人前へ。ここからが長いぞ」',g:'Lv10 になる',c:()=>[LV,10],r:[300,0]},
+ MODE.fac==='none'?{id:'a12',t:'戦を見る',f:MASTER,s:'「戦がどういうものか、その目で見ておきな。加わるかどうかは、それから決めればいい」',g:'会戦を決着まで見届ける（V で観戦）',c:b=>[dv(b,'watched'),1],r:[300,300]}
+  :{id:'a12',t:'会戦の勝利',f:MASTER,s:'「会戦だ。見習いとて、陣営の一員。勝利に貢献せよ」',g:(MODE.fac==='emp'?'帝国軍':'魔王軍')+'を会戦で勝たせる',c:()=>[QS.win[MODE.fac]>0?1:0,1],r:[400,400]},
+ {id:'a13',t:'連鎖の発見',f:MASTER,s:'「属性を重ねてごらん。思いもよらぬことが起きる」',g:'連鎖魔法を1種見いだす',c:()=>[COMBO_SEEN.size,1],r:[250,250]},
+ {id:'a14',t:'強の威力',f:MASTER,s:'「その魔力、もはや見習いの域ではないな」',g:'Lv12 になり「強」の威力を覚える',c:()=>[LV,12],r:[400,0]},
+ {id:'a15',t:'石の巨人',f:MASTER,s:'「ゴーレムは硬い。力任せでは勝てんぞ」',g:'ゴーレムを5体倒す',c:b=>[dv(b,'kb:golem'),5],r:[400,400]},
+ {id:'a16',t:'港を築く',f:MASTER,s:'「港があれば、魔晶の巡りもよくなる」',g:'「潮騒の港」で港を築く',c:()=>[PORT_N>0?1:0,1],r:[400,300]},
+ {id:'a17',t:'星を墜とす者',f:MASTER,s:'「星墜とし……伝説の大魔導士が好んだ魔法だ」',g:'Lv18 になる',c:()=>[LV,18],r:[600,0]},
+ {id:'a18',t:'陣営の英雄',f:MASTER,s:'「お前の名は、もう兵たちの間で囁かれているぞ」',g:'依頼を10件達成する',c:b=>[dv(b,'miss'),10],r:[800,600]},
+ {id:'a19',t:'極みへ',f:MASTER,s:'「極の魔法。これを扱える者は、世界に数えるほどしかいない」',g:'Lv22 になり「極」の威力を覚える',c:()=>[LV,22],r:[800,0]},
+ {id:'a20',t:'見習い卒業',f:MASTER,s:'「もう教えることはない。……あの大魔導士にも、いつか会えるだろう」',g:'Lv30 になる',c:()=>[LV,30],r:[2000,0]},
+]);
+Q('ura',[
+ {id:'u1',t:'封印の綻び',f:'謎の声',s:'北東の空が、紫に染まった。「……目覚めの刻は近い。最強を名乗る者よ、来るがいい」',g:'封印の地を訪れる',c:()=>[qVis('seal'),1],r:[500,500],on:()=>{QS.vis.delete('seal');}},
+ {id:'u2',t:'四柱の守り',f:'封印の地',s:'魔人の眷属が封印柱を砕こうとしている。',g:'封印の地に現れた眷属（ゴーレム・飛竜）を倒す',sp:1,on:()=>{if(!tagLeft('kin')){spawnAt('golem',SEAL.x,SEAL.z,3,'kin');spawnAt('wyvern',SEAL.x,SEAL.z,3,'kin');}},c:()=>[6-Math.min(6,tagLeft('kin')),6],r:[800,800],end:'柱のひとつが赤く染まった。封印は、確かに弱まっている。'},
+ {id:'u3',t:'古文書',f:'古の碑文',s:'遺跡の碑文には続きがあった。修復すれば、封印の由来が分かるかもしれない。',g:'古の遺跡で「万象回帰」を唱える',c:b=>[Math.min(1,dv(b,'ruinsR')),1],r:[600,600]},
+ {id:'u4',t:'魔人の影',f:'謎の声',s:'「千年前、我を封じたのも、お前のような退屈した魔法使いだった」 祭壇に、魔人の影が立つ。',g:'封印の地で魔人の影を倒す',sp:1,on:()=>{if(!QS.tmp.shadow||!QS.tmp.shadow.some(e=>e.alive))spawnMajin(true);},c:()=>[QS.tmp.shadow&&!QS.tmp.shadow.some(e=>e.alive)?1:0,1],r:[1000,1000],end:'影は笑って消えた。「本物は、この程度ではないぞ」'},
+ {id:'u5',t:'光の楔',f:'古の碑文',s:'碑文いわく、魔人を弱める「光の楔」は、人の祈りが集まる都でのみ灯る。',g:'王都・神楽京・桜花京で「万象回帰」を唱え、光の楔を3つ灯す',c:()=>[QS.wedge.size,3],r:[1200,1000]},
+ {id:'u6',t:'共に立つ者',f:'王都騎士団長 ガレス',s:'「一人で背負うな。我々も、少しは役に立つ」',g:'属国と盟友を合わせて3か国にする',c:()=>[nR('ally')+nR('vassal'),3],r:[800,800]},
+ {id:'u7',t:'最後の支度',f:'大魔導士の独り言',s:'初めてだ。勝てるかどうか、分からない相手というのは。',g:'魔晶の工房で合わせて4回強化する',c:()=>[UPG.hp+UPG.pw+UPG.df,4],r:[500,500]},
+ {id:'u8',t:'封印の崩壊',f:'謎の声',s:'「さあ、来い。千年分の退屈を、ここで晴らそうではないか」',g:'封印の地へ向かう',c:()=>{if(!MAJIN&&!QS.majin&&Math.hypot(player.pos.x-SEAL.x,player.pos.z-SEAL.z)<280){spawnMajin(false);showBanner('虚ろの魔人 ヴェルゼ','封印は、砕けた');}return[MAJIN||QS.majin?1:0,1];},r:[500,500]},
+ {id:'u9',t:'虚ろの魔人',f:'虚ろの魔人 ヴェルゼ',s:'大魔導士をも超える魔人。光の楔が、その力をわずかに削いでいる。',g:'虚ろの魔人 ヴェルゼを倒す',sp:1,on:()=>{if(!QS.majin&&!(MAJIN&&MAJIN.alive))spawnMajin(false);},c:()=>[QS.majin?1:0,1],r:[5000,5000],end:'魔人は崩れ落ちながら言った。「……ああ、楽しかった」'},
+ {id:'u10',t:'大魔導士の気持ち',f:'大魔導士の独り言',s:'最強を超えるものに、勝ってしまった。また、退屈な毎日が戻ってくる。……それでいい。',g:'帰る場所へ戻り、ひと息つく（10秒）',c:b=>[dv(b,'home'),10],r:[3000,3000]},
+]);
+// ---- 進行 ----
+const QDONE=new Set(),QACT=new Map();let storyOpen=false,qT=0,qTrackT=0;
+const QBYID=Object.fromEntries(QUESTS.map(q=>[q.id,q]));
+const lineOk=q=>q.line==='main'?!APP:q.line==='app'?APP:true;
+const QTOTAL=()=>QUESTS.filter(lineOk).length;
+function uraOpen(){return QDONE.has('m31')||QDONE.has('a20');}
+function nextInLine(line){for(const q of QUESTS){if(q.line!==line)continue;if(!QDONE.has(q.id))return q;}return null;}
+function dailyGate(q){return APP?LV>=(q.ga||1):QDONE.has(q.gm||'m1')||q.gm==null;}
+function qActivate(q){if(QACT.has(q.id)||QDONE.has(q.id))return;QACT.set(q.id,qsnap());if(q.on)q.on();
+  if(started)toast(`📖 ${q.line==='ura'?'裏章':q.line==='daily'?'日常':'物語'}「${q.t}」 ─ ${q.g}（G で物語）`);}
+function qProg(q){const b=QACT.get(q.id)||{};let r=[0,1];try{r=q.c(b);}catch(e){}return [Math.max(0,Math.floor(r[0])),r[1]];}
+function qComplete(q){QACT.delete(q.id);QDONE.add(q.id);const [m,x]=q.r||[0,0];MANA+=m;if(x)gainExp(x);
+  showBanner((q.line==='ura'?'裏章 ':'')+'「'+q.t+'」 達成',q.end||`魔晶 +${m}${APP&&x?`　経験 +${x}`:''}`);snd('chime',.9);later(.3,()=>snd('coin',.7));
+  if(q.id==='m31'||q.id==='a20')later(4,()=>{toast('……北東の空が、紫に染まっている。');});
+  sealVisual();saveGame();if(storyOpen)renderStory();}
+function updQuests(dt){
+  if(!SPEC){if(player.flying)QS.fly+=dt;
+    const hx=APP?APP_BASE.x:HX,hz=APP?APP_BASE.z:HZ;if(Math.hypot(player.pos.x-hx,player.pos.z-hz)<(APP?60:40))QS.home+=dt;}else QS.spec+=dt;
+  QS.play+=dt;
+  qT-=dt;if(qT>0)return;qT=1;
+  {COUNTRIES.forEach((C,i)=>{if(Math.hypot(player.pos.x-C.x,player.pos.z-C.z)<C.r+(C.big?140:110))QS.vis.add('c'+i);});
+    const near=(x,z,r)=>Math.hypot(player.pos.x-x,player.pos.z-z)<r;if(near(HX,HZ,90))QS.vis.add('tower');if(near(RUINS.x,RUINS.z,170))QS.vis.add('ruins');if(near(SEAL.x,SEAL.z,230))QS.vis.add('seal');}
+  // 受ける：本編・見習い編・裏章は一本道、日常は最大4件
+  for(const line of['main','app','ura']){if(line==='main'&&APP||line==='app'&&!APP||line==='ura'&&!uraOpen())continue;const q=nextInLine(line);if(q)qActivate(q);}
+  let nd=0;for(const q of QUESTS)if(q.line==='daily'&&QACT.has(q.id))nd++;
+  for(const q of QUESTS){if(nd>=4)break;if(q.line!=='daily'||QDONE.has(q.id)||QACT.has(q.id)||!dailyGate(q))continue;qActivate(q);nd++;}
+  for(const [id] of [...QACT]){const q=QBYID[id];if(!q){QACT.delete(id);continue;}const [c,t]=qProg(q);if(c>=t)qComplete(q);}
+  qTrackT-=1;if(qTrackT<=0){qTrackT=2;renderTrack();}if(storyOpen)renderStory();}
+function renderTrack(){const el=$('#qtrack');if(!el)return;const L=[];
+  for(const [id] of QACT){const q=QBYID[id];if(!q||q.line==='daily')continue;const [c,t]=qProg(q);L.push(`<div${q.line==='ura'?' class="u"':''}><b>${q.line==='ura'?'裏章':'物語'}</b> ${q.t}<br>${q.g}${t>1?`（${Math.min(c,t).toLocaleString()}/${t.toLocaleString()}）`:''}</div>`);}
+  el.innerHTML=L.join('');}
+function qCard(q,cls){const [c,t]=qProg(q);const ch=q.line==='main'?CH.m[q.ch]:q.line==='app'?'見習い編 ─ '+FAC_N[MODE.fac]:q.line==='ura'?CH.u[0]:'日常';
+  return `<div class="sq ${cls}"><div class="ch">${ch}</div><div class="qt2">${q.t}</div>${q.f?`<div class="fr">${q.f}より</div>`:''}<div class="tx">${q.s}</div><div class="gl">目的：${q.g}${t>1?`　${Math.min(c,t).toLocaleString()} / ${t.toLocaleString()}`:''}</div><div class="pb"><i style="width:${Math.min(100,c/t*100).toFixed(0)}%"></i></div></div>`;}
+function renderStory(){const box=$('#story .sb2');if(!box)return;const done=QUESTS.filter(q=>lineOk(q)&&QDONE.has(q.id)).length;
+  $('#story .wt').textContent=APP?'物語 ─ 見習いの日々':'物語 ─ 大魔導士の気持ち';
+  $('#story .sh').textContent=`達成 ${done} / ${QTOTAL()}　物語は自動で進む。日常の依頼は同時に4つまで`;
+  let h='';for(const [id] of QACT){const q=QBYID[id];if(q&&q.line!=='daily')h+=qCard(q,q.line==='ura'?'u':q.line==='app'?'a':'');}
+  if(!uraOpen())h+=`<div class="sq u"><div class="ch">裏章</div><div class="tx">……まだ、何も起きていない。${APP?'見習いを卒業した':'天下の行方が定まった'}とき、何かが目を覚ます。</div></div>`;
+  const ds=[...QACT.keys()].map(id=>QBYID[id]).filter(q=>q&&q.line==='daily');if(ds.length){h+='<div class="sec">日常の依頼</div>'+ds.map(q=>qCard(q,'d')).join('');}
+  const past=QUESTS.filter(q=>lineOk(q)&&QDONE.has(q.id)&&q.line!=='daily').slice(-5).reverse();
+  if(past.length)h+='<div class="sec">これまでの物語</div>'+past.map(q=>`<div class="sq" style="opacity:.6"><div class="qt2" style="font-size:14px">${q.t}</div><div class="tx">${q.end||q.s}</div></div>`).join('');
+  box.innerHTML=h;}
+function toggleStory(){storyOpen=!storyOpen;$('#story').classList.toggle('on',storyOpen);if(storyOpen){renderStory();if(document.pointerLockElement)document.exitPointerLock();}}
+$('#storyBtn').addEventListener('click',e=>{e.stopPropagation();toggleStory();});
+$('#story .x').addEventListener('click',e=>{e.stopPropagation();toggleStory();});
+$('#story').addEventListener('pointerdown',e=>e.stopPropagation());
+function questSave(){return {done:[...QDONE],act:[...QACT].map(([id,b])=>[id,b]),qs:{cast:QS.cast,weak:QS.weak,fly:Math.round(QS.fly),home:Math.round(QS.home),spec:Math.round(QS.spec),play:Math.round(QS.play),vis:[...QS.vis],restored:QS.restored,raid:QS.raid,win:QS.win,miss:QS.miss,ruinsR:QS.ruinsR,wedge:[...QS.wedge],majin:QS.majin}};}
+function questLoad(o){if(!o||typeof o!=='object')return;const n=(v,d=0)=>typeof v==='number'&&isFinite(v)?v:d;
+  if(Array.isArray(o.done))for(const id of o.done)if(QBYID[id])QDONE.add(id);
+  const q=o.qs||{};if(q.cast&&typeof q.cast==='object')for(const k in q.cast)QS.cast[k]=n(q.cast[k]);
+  for(const k of['weak','fly','home','spec','play','restored','raid','miss','ruinsR','majin'])QS[k]=n(q[k]);
+  if(q.win){QS.win.emp=n(q.win.emp);QS.win.dem=n(q.win.dem);}if(Array.isArray(q.vis))for(const v of q.vis)QS.vis.add(String(v));if(Array.isArray(q.wedge))for(const v of q.wedge)QS.wedge.add(v|0);
+  if(Array.isArray(o.act))for(const a of o.act){if(!Array.isArray(a)||!QBYID[a[0]]||QDONE.has(a[0]))continue;QACT.set(a[0],a[1]&&typeof a[1]==='object'?a[1]:{});}}
+function questPostStart(){for(const [id] of QACT){const q=QBYID[id];if(q&&q.sp&&q.on)q.on();}sealVisual();renderTrack();}
 // ================= save =================
 // 進行状況（魔晶・工房の強化・勢力・難易度・撃破数）と、世界の記録（建てた物・壊した物）を保存する。
 const SAVE_KEY=APP?'hatenMadouou.save.app.'+MODE.fac:'hatenMadouou.save';const ECO_FIXED=7+VILL.length;let saveReady=false;
 function saveGame(){if(!saveReady||!started)return;
   try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,at:Date.now(),diff:DIFF,mana:MANA,upg:UPG,pwr:PWR_BIAS,kills,kb:KB,built:BUILT,farms:FARMS,
-    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,world:worldSave(),lv:LV,exp:EXP,endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
+    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,world:worldSave(),lv:LV,exp:EXP,quest:questSave(),endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
     rule:COUNTRIES.map(C=>[C.rule==='vassal'?1:C.rule==='ally'?2:0,Math.round(C.favor||0)]),
     eco:COUNTRIES.map(C=>C.eco?[Math.round(C.eco.pop),Math.round(C.eco.hap),Math.round(C.eco.food),Math.round(C.eco.wood),Math.round(C.eco.ore)]:null)}));}catch(e){}}
 function readSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&typeof s==='object'?s:null;}catch(e){return null;}}
@@ -3805,6 +4026,7 @@ function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v=
   for(const it of SHOP){const l=Math.max(0,Math.min(it.max,Math.floor(num(s.upg&&s.upg[it.k],0))));if(!APP||it.k==='df')for(let i=0;i<l;i++)it.fx();UPG[it.k]=l;}
   pHP=PLAYER_MAX;
   for(const k of['emp','dem']){const f=s.fac&&s.fac[k];if(!f)continue;FAC[k].rep=num(f.rep,0);FAC[k].hostile=!!f.hostile;}
+  try{questLoad(s.quest);}catch(e){}
   LV=clamp(Math.floor(num(s.lv,1)),1,LV_MAX);EXP=Math.max(0,num(s.exp,0));
   PWR_BIAS=num(s.pwr,0);kills=Math.max(0,Math.floor(num(s.kills,0)));BUILT=Math.max(0,num(s.built,0));FARMS=Math.max(0,num(s.farms,0));
   if(s.kb&&typeof s.kb==='object')for(const k in s.kb){const v=num(s.kb[k],0);if(v>0)KB[k]=v;}
@@ -3897,7 +4119,7 @@ initCrowd();
 initEconomy();
 BN0=buildings.length;
 setDiff(loadSave());postLoad();saveReady=true;loadAch();renderSaveInfo();
-window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,UPG,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
