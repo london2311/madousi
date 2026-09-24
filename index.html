@@ -321,7 +321,7 @@ body.spec #qtrack{display:none}
 <div id="hud">
   <div id="me">
     <div class="name">大魔導士<span class="ttl"></span></div>
-    <div class="bar hp"><i></i><b>2400</b></div>
+    <div class="bar hp"><i></i><b></b></div>
     <div class="bar mp"><i></i><b>∞</b></div>
   </div>
   <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="gfxBtn" type="button">画質</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button><button class="tb" id="realmBtn" type="button">国勢</button><button class="tb" id="specBtn" type="button">観戦</button><button class="tb" id="achBtn" type="button">実績</button><button class="tb" id="storyBtn" type="button">物語</button></div>
@@ -603,7 +603,9 @@ const BFIELDS=[{n:'ガルド平原',x:-1350,z:620},{n:'黒鉄の荒野',x:-1200,
 // 拡大した世界の新しい土地：古の遺跡と、魔人の眠る封印の地
 const RUINS={x:-4000,z:1200,n:'古の遺跡'},SEAL={x:3800,z:-3800,n:'封印の地 虚ろの祭壇'};
 C6H=clamp(baseHeight0(C6X,C6Z),30,105);for(const v of VILL)FLATS.push({x:v.x,z:v.z,r:115,t:160,h:clamp(baseHeight0(v.x,v.z),8,90)});for(const f of BFIELDS)FLATS.push({x:f.x,z:f.z,r:230,t:220,h:clamp(baseHeight0(f.x,f.z),8,80)});for(const f of[RUINS,SEAL])FLATS.push({x:f.x,z:f.z,r:120,t:200,h:clamp(baseHeight0(f.x,f.z),12,70)});
-let DIFF=1;const DN=['イージー','ノーマル','ハード'],EHP=[1,1.8,3.5],DMG=[.3,.55,1.1],BHP=[1,2.2,4.5],MAGE_HP=[12000,30000,70000],MAGE_SH=[3000,8000,18000],MAGE_RATE=[1.4,1,.72];
+// 力の均衡：大魔導士は最強のまま、敵は「本気を出せば手応えがある」強さに。見習いは成長前提の従来値
+let DIFF=1;const DN=['イージー','ノーマル','ハード'],EHP=APP?[1,1.8,3.5]:[2,4,8],DMG=APP?[.3,.55,1.1]:[.25,.4,.8],BHP=[1,2.2,4.5],
+  MAGE_HP=APP?[12000,30000,70000]:[30000,120000,280000],MAGE_SH=APP?[3000,8000,18000]:[9000,24000,54000],MAGE_RATE=[1.4,1,.72];
 const HOUSE_MK=[];let SETTLE_N=0;
 const COUNTRIES=[
   {label:'王都ルーンヘイム',x:0,z:0,r:TOWN_R,total:0,dest:0,start:-1,done:false,doneAt:0},
@@ -987,7 +989,7 @@ const rubbleMat=new THREE.MeshStandardMaterial({color:0x3a3430,roughness:1,flatS
 let CUR_C=0;
 function addBuilding(geo,mats,x,z,y,rad,height,hp,kind){
   const m=new THREE.Mesh(geo,mats);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;scene.add(m);
-  const b={country:CUR_C,mesh:m,x,z,y,rad,height,hp,maxHp:hp,baseHp:hp*(CUR_C===4||CUR_C===5?5:1),burn:0,destroyed:false,collapse:-1,kind,children:[],smokeT:0,archers:[]};buildings.push(b);return b;
+  const b={country:CUR_C,mesh:m,x,z,y,rad,height,hp,maxHp:hp,baseHp:hp*(CUR_C===4||CUR_C===5?(APP?5:15):1),burn:0,destroyed:false,collapse:-1,kind,children:[],smokeT:0,archers:[]};buildings.push(b);return b;
 }
 function houseGeo(w,h,d,rh){
   const body=new THREE.BoxGeometry(w,h,d).translate(0,h/2,0);
@@ -1441,7 +1443,7 @@ function destroyBuilding(b){
   shake(.35,c);
 }
 // ================= 大結界 =================
-const BAR_MAX=[1.5e6,3e6,6e6];
+const BAR_MAX=[1.5e7,3e7,6e7];let FRAME_N=0;
 const barVS='varying vec3 vN,vV,vP;void main(){vec4 w=modelMatrix*vec4(position,1.);vP=w.xyz;vec4 mv=viewMatrix*w;vN=normalize(normalMatrix*normal);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}';
 const barFS='uniform vec3 col;uniform float hit,t,op;varying vec3 vN,vV,vP;void main(){float f=pow(1.-abs(dot(vN,vV)),2.2);vec2 q=vP.xz*.045+vec2(0.,vP.y*.06);float hx=abs(sin(q.x*3.1+t*.3)*sin(q.y*3.1))+abs(sin((q.x+q.y)*2.2-t*.2));float g=smoothstep(1.55,1.75,hx);gl_FragColor=vec4(col*(f*.9+.04+g*.14+hit*(.25+f*.5))*op,1.);}';
 const BARRIERS=[];
@@ -1450,7 +1452,9 @@ function mkBarrier(ci,x,z,y,r,col){const u={col:{value:col},hit:{value:0},t:{val
   m.scale.y=.72;m.position.set(x,y-2,z);m.renderOrder=4;scene.add(m);const B={ci,x,z,y,r,max:BAR_MAX[DIFF],hp:BAR_MAX[DIFF],down:0,hitT:-99,m,u,fxT:0};BARRIERS.push(B);return B;}
 function barrierFor(b){for(const B of BARRIERS)if(B.ci===b.country&&B.hp>0)return B;return null;}
 function barrierAt(x,z){for(const B of BARRIERS)if(B.hp>0&&Math.hypot(x-B.x,z-B.z)<B.r)return B;return null;}
-function hitBarrier(B,b,dmg){B.hp-=dmg*.05;B.hitT=gameTime;B.u.hit.value=Math.min(1,B.u.hit.value+.35);
+function hitBarrier(B,b,dmg){
+  // 1フレームで最も強い一撃だけを結界の損耗とする（巻き込んだ建物の数では増えない）
+  if(B.fn!==FRAME_N){B.fn=FRAME_N;B.fm=0;}const d=dmg*1.5;if(d>B.fm){B.hp-=d-B.fm;B.fm=d;}B.hitT=gameTime;B.u.hit.value=Math.min(1,B.u.hit.value+.35);
   if(gameTime>B.fxT){B.fxT=gameTime+.06;const d=V3(b.x-B.x,(b.y+b.height)-B.y+20,b.z-B.z).normalize();d.y*=.72;const p=V3(B.x,B.y,B.z).addScaledVector(d,B.r);p.y=B.y+Math.max(4,(p.y-B.y));
     glowSphere(p,2,16,B.u.col.value.clone().multiplyScalar(.8),.35);burst(p,14,14,.5,2,.3,PC.white,PC.elecB,1,1.5,0);if(Math.random()<.3)snd('null',.8,p);}
   if(B.hp<=0){B.hp=0;B.down=gameTime+120;B.m.visible=false;const C=COUNTRIES[B.ci];
@@ -1790,7 +1794,8 @@ const builders={
 let MAGE_SPEC=null;const MAGES=[];
 function makeMage(m){MAGE_SPEC=m;const e=new Enemy(m.brute?'brute':'mage',m.x,m.z,{ci:m.ci,nm:m.nm,col3:m.c3,shotCol:m.shot,rank:m.rank||'court',dm:m.dm||1,rateM:m.rate||1,shMul:m.shMul||1,pats:m.pats||['mFire','mBolt','mBeam'],fac:m.fac});
   e.baseHp=m.hpMul||1;e.maxHp=e.baseHp*MAGE_HP[DIFF];e.hp=e.maxHp;if(m.scale)e.g.scale.setScalar(m.scale);e.sc=(m.scale||1.35)/1.35;
-  e.home.set(m.x,m.hy,m.z);e.pos.y=m.hy;e.g.position.copy(e.pos);e.orb=Math.random()*6;e.odir=1;e.range=m.range||46;e.blinkT=6;e.atkT=2.5;e.casting=0;e.shT=99;e.shFlash=0;e.shMax=MAGE_SH[DIFF]*(m.shMul||1)*(m.brute?0:1)+(m.brute?1:0);e.shield=m.brute?0:e.shMax;e.active=false;e.inTown=false;e.engR=m.rank==='soldier'?200:m.rank==='king'?300:m.rank==='elite'?260:380;return e;}
+  e.home.set(m.x,m.hy,m.z);e.pos.y=m.hy;e.g.position.copy(e.pos);e.orb=Math.random()*6;e.odir=1;e.range=m.range||46;e.blinkT=6;e.atkT=2.5;e.casting=0;e.shT=99;e.shFlash=0;e.shMax=MAGE_SH[DIFF]*(m.shMul||1)*(m.brute?0:1)+(m.brute?1:0);e.shield=m.brute?0:e.shMax;e.active=false;e.inTown=false;e.engR=m.rank==='soldier'?200:m.rank==='king'?300:m.rank==='elite'?260:380;
+  if(!APP&&m.rank!=='majin'){const k=m.rank==='king'?4:m.rank==='elite'?2.5:m.rank==='soldier'?1.5:2;e.baseHp*=k;e.maxHp*=k;e.hp=e.maxHp;if(m.rank==='king')e.dm*=.75;}return e;}
 function distSeg(p,a,b){const ab=b.clone().sub(a),t=clamp(p.clone().sub(a).dot(ab)/Math.max(1e-6,ab.lengthSq()),0,1);return p.distanceTo(a.clone().addScaledVector(ab,t));}
 const beamGeo=new THREE.CylinderGeometry(1,1,1,14,1,true).translate(0,.5,0);
 function beamFx(a,b,w,col,dur=.35){
@@ -2176,11 +2181,15 @@ function updDmgText(dt){
     const x=(projV.x*.5+.5)*innerWidth+o.dx*(1-o.t),y=(-projV.y*.5+.5)*innerHeight;
     o.el.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%)`;o.el.style.opacity=Math.min(1,o.t*2.5);}
 }
-let P_MUL=1,PLAYER_MAX=2400;let pHP=PLAYER_MAX,pHurtT=9,pDead=false,pIfr=0;
+let P_MUL=1,PLAYER_MAX=APP?2400:4000,HURT_WIN=[];let pHP=PLAYER_MAX,pHurtT=9,pDead=false,pIfr=0;
 const ATK={knight:70,archer:40,wolf:45,golem:220,wyvern:110,boss:380,demon:120};
 function hurtPlayer(dmg){
   if(pDead||pIfr>0||!started||SPEC)return;
-  dmg=Math.round(dmg*DMG[DIFF]*DEF_MUL*rr(.9,1.1));pHP-=dmg;pHurtT=0;pIfr=.12;
+  dmg=Math.round(dmg*DMG[DIFF]*DEF_MUL*rr(.9,1.1));
+  // 反射障壁（大魔導士のみ）：2秒間に受けるのは最大体力の12%まで。超えた分は15%しか通さない（集中砲火でも簡単には倒れない）
+  if(!APP){const now=gameTime;while(HURT_WIN.length&&now-HURT_WIN[0][0]>2)HURT_WIN.shift();const sum=HURT_WIN.reduce((a,h)=>a+h[1],0);
+    const room=Math.max(0,PLAYER_MAX*.12-sum);if(dmg>room){dmg=Math.round(room+(dmg-room)*.15);barrierUni.uHit.value=Math.min(1.4,barrierUni.uHit.value+.4);}HURT_WIN.push([now,dmg]);}
+  pHP-=dmg;pHurtT=0;pIfr=.12;
   dmgText(player.pos.clone().setY(player.pos.y+3.4),dmg,false,true);screenFlash(lin(1,.12,.06),.18+Math.min(.3,dmg/800));shake(.15+Math.min(.5,dmg/600));
   if(pHP<=0){pHP=0;pDead=true;showBanner('大魔導士、膝をつく','天穹楼にて再起する');snd('bigboom',.6);
     later(2.6,()=>{travelTo(0);pHP=PLAYER_MAX;pDead=false;});}
@@ -2189,7 +2198,7 @@ function updBossBar(){let best=null,bd=520;for(const m of MAGES){if(!m.alive||!m
   const el=$('#bossbar');el.classList.toggle('on',!!best);if(!best)return;
   el.querySelector('.bn').textContent=best.nm+(best.hp<best.maxHp*.5?' ─ 本気':'');el.querySelector('.bh i').style.width=(best.hp/best.maxHp*100).toFixed(1)+'%';
   el.querySelector('.bs i').style.width=(best.shield/best.shMax*100).toFixed(1)+'%';}
-function updPlayerHP(dt){updBossBar();pHurtT+=dt;pIfr-=dt;if(pHurtT>4&&!pDead)pHP=Math.min(PLAYER_MAX,pHP+PLAYER_MAX*.06*dt);
+function updPlayerHP(dt){updBossBar();pHurtT+=dt;pIfr-=dt;if(!APP&&!pDead)pHP=Math.min(PLAYER_MAX,pHP+PLAYER_MAX*.04*dt);if(pHurtT>(APP?4:2.5)&&!pDead)pHP=Math.min(PLAYER_MAX,pHP+PLAYER_MAX*.06*dt);
   const k=pHP/PLAYER_MAX;$('#me .bar.hp i').style.width=(k*100).toFixed(1)+'%';$('#me .bar.hp b').textContent=Math.ceil(pHP);
   $('#me .bar.hp').classList.toggle('low',k<.3);}
 function barrierHit(p,power,dmg=0){
@@ -2877,7 +2886,7 @@ function explode(pos,scale,type){
   damageArea(pos,(big?34:18)*S,(big?1300:300)*S,(big?46:22),type,{ignite:big?.9:.7,bmul:big?1.4:1.1});
   crater(pos.x,pos.z,(big?20:6)*S,(big?6:1.2)*S,1);
 }
-function novaBlast(P,S=1){
+function novaBlast(P,S=1){let lastT=0;
   const R0=120*S;
   screenFlash(lin(1.3,1.15,1.5),1.2);post.aberr=.02;
   shake(2.2*Math.sqrt(S),P);snd('bigboom',1.4,P);later(.15,()=>snd('bigboom',1,P));later(.3,()=>snd('chime',.8));
@@ -2900,7 +2909,7 @@ function novaBlast(P,S=1){
     inner.scale.setScalar((4+R0*.75*e)*(t<1.5?1:Math.max(0.01,1-(t-1.5)/.6)));inner.material.opacity=t<1.2?.9:Math.max(0,.9-(t-1.2)/.9);
     pillar.scale.set(20+R0*.3*e,900,20+R0*.3*e);pillar.position.y=P.y+450;pillar.material.opacity=Math.max(0,.8-t/2.2);
     if(!hitDone&&t>.15){hitDone=true;damageArea(P,R0,9999,70,'ultima',{up:40,ignite:1,bmul:3});crater(P.x,P.z,58*S,9*S,1);}
-    if(t>.35&&t<1.4)damageArea(P,R0*e,9999,20,'ultima',{up:10,ignite:1,trees:false,bmul:3});
+    if(t>.35&&t<1.4){const w=(t-Math.max(.35,lastT))*3;if(w>0)damageArea(P,R0*e,9999*w,20,'ultima',{up:10,ignite:1,trees:false,bmul:3});}lastT=t;
     if(t>2.4){[outer,inner,pillar].forEach(m=>{scene.remove(m);m.material.dispose();});pillar.geometry.dispose();return false;}return true;}});
 }
 function bolt(a,b,w=1){
@@ -3169,7 +3178,7 @@ function frame(){
   else renderer.render(scene,camera);
 }
 function step(dt){
-  gameTime+=dt;
+  gameTime+=dt;FRAME_N++;
   for(let i=timers.length-1;i>=0;i--){timers[i].t-=dt;if(timers[i].t<=0){const f=timers[i].fn;timers.splice(i,1);f();}}
   for(let i=0;i<cds.length;i++)if(cds[i]>0)cds[i]=Math.max(0,cds[i]-dt);
   if(SPEC){VIEW.x=SPEC.fx;VIEW.z=SPEC.fz;}else if(started){VIEW.x=player.pos.x;VIEW.z=player.pos.z;}
@@ -3863,7 +3872,7 @@ function spawnAt(kind,x,z,n,tag){const L=QS.tmp[tag]=QS.tmp[tag]||[];for(let i=0
 const tagLeft=tag=>(QS.tmp[tag]||[]).filter(e=>e.alive).length;
 let MAJIN=null;
 function spawnMajin(shadow){const w=QS.wedge.size;const m=makeMage({ci:-1,x:SEAL.x,z:SEAL.z,hy:SEAL.y+46,nm:shadow?'魔人の影':'虚ろの魔人 ヴェルゼ',rank:shadow?'elite':'majin',
-    hpMul:shadow?5:28-w*4,shMul:shadow?3:14-w*3,dm:shadow?1.8:3.4-w*.5,rate:shadow?1.1:1.8,range:70,scale:shadow?2:3.2,
+    hpMul:shadow?5:22-w*4,shMul:shadow?3:16-w*3,dm:shadow?2.2:(APP?3.4:4.4)-w*.6,rate:shadow?1.1:1.8,range:70,scale:shadow?2:3.2,
     pats:shadow?['mFire','mBolt','mBeam','mOrbs']:['mFire','mBolt','mBeam','mOrbs','mMeteor','mTri','mChain','mNova','mSummon','mMeteor','mNova','mTri'],
     robe:0x0a0410,trim:0x7a20ff,orb:lin(4,1,9),c3:lin(3,1,8),shot:lin(4,1.2,9),fac:'none'});
   m.engR=700;m.activate();MAGES.push(m);if(!shadow){MAJIN=m;m.onDeath=()=>{QS.majin=1;sealVisual();saveGame();};}else QS.tmp.shadow=[m];
@@ -4150,7 +4159,7 @@ initCrowd();
 initEconomy();
 BN0=buildings.length;
 setDiff(loadSave());postLoad();saveReady=true;loadAch();renderSaveInfo();
-window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,UPG,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,UPG,BARRIERS,MAGES,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
