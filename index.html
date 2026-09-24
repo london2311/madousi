@@ -21,7 +21,7 @@
 :root[data-theme="dark"]{ --panel:rgba(18,13,34,.55); }
 html{scroll-padding-top:var(--st);}
 *,*::before,*::after{box-sizing:border-box;}
-html,body{height:100%;margin:0;overflow:hidden;background:#0b0816;color:var(--parch);font-family:var(--gothic);
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none;background:#0b0816;color:var(--parch);font-family:var(--gothic);
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none;-webkit-tap-highlight-color:transparent;}
 #view{position:fixed;inset:0;width:100%;height:100%;display:block;}
 button{font:inherit;color:inherit;}
@@ -51,6 +51,8 @@ button:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px;}
   border-radius:2px;box-shadow:0 0 24px rgba(232,193,112,.25), inset 0 0 18px rgba(232,193,112,.15);text-indent:.4em;}
 #start:disabled{opacity:.5;cursor:wait;}
 #start:not(:disabled):hover{box-shadow:0 0 34px rgba(232,193,112,.5), inset 0 0 22px rgba(232,193,112,.3);}
+#inapp{display:none;margin:0 0 14px;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,190,120,.6);background:rgba(60,30,10,.7);font-size:13px;line-height:1.7;color:#ffe8c8;max-width:30em}
+#inapp.on{display:block}#inapp button{margin-top:8px;font-family:var(--mincho),serif;font-size:15px;padding:7px 16px;border-radius:16px;border:1px solid #ffd49a;background:linear-gradient(180deg,#ffd98a,#c07a20);color:#1a0d00;cursor:pointer}
 #loadmsg{margin-top:12px;font-size:12px;color:rgba(243,230,200,.6);min-height:1.2em;}
 #saveInfo{margin-top:6px;font-size:12px;line-height:1.7;color:rgba(243,230,200,.8);text-shadow:0 1px 4px #000;}
 #saveInfo:empty{display:none;}
@@ -391,6 +393,7 @@ body.mobile #guide .gpc{display:none}body:not(.mobile) #guide .gsp{display:none}
   <div id="titleLeft">
     <p class="lead">最強の名を冠する大魔導士。魔王すら片手で退けてしまう力を持ちながら、山頂の天穹楼で迎えるのは、今日も平凡で少し退屈な一日。<br>炎も雷も、星さえも。その気になれば国ひとつ消せる魔法を、さて、今日は何に使おうか。</p>
     <dl id="controls"></dl>
+    <div id="inapp"></div>
     <div class="selL">遊び方</div><div id="modeSel"><button type="button" class="diffb" data-m="sage">大魔導士</button><button type="button" class="diffb" data-m="app">魔法使い見習い</button></div>
     <div id="facSel"><button type="button" class="diffb" data-f="emp">帝国軍</button><button type="button" class="diffb" data-f="dem">魔王軍</button><button type="button" class="diffb" data-f="none">無所属</button></div>
     <div class="selL">画質（スマホが熱いときは省電力）</div><div id="gfxSel"><button type="button" class="diffb" data-g="0">高</button><button type="button" class="diffb" data-g="1">標準</button><button type="button" class="diffb" data-g="2">省電力</button></div>
@@ -401,6 +404,11 @@ body.mobile #guide .gpc{display:none}body:not(.mobile) #guide .gsp{display:none}
   </div>
 </div>
 
+<script>
+// アプリ内ブラウザ（LINEなど）は、下になぞるとブラウザごと閉じる操作と重なるため、普通のブラウザで開き直す
+(function(){var ua=navigator.userAgent||'';window.__inapp=/\bLine\//i.test(ua)?'line':/FBAN|FBAV|Instagram|Twitter|MicroMessenger/i.test(ua)?'other':'';
+  if(window.__inapp==='line'&&!/[?&]openExternalBrowser=1/.test(location.search)){var u=location.href.split('#')[0];location.replace(u+(u.indexOf('?')<0?'?':'&')+'openExternalBrowser=1'+location.hash);}})();
+</script>
 <script>
 window.addEventListener('error',function(e){var m=document.getElementById('loadmsg');var b=document.getElementById('start');
   if(m&&b&&b.disabled)m.textContent='読み込みに失敗しました。通信状況を確認して再読み込みしてください。';});
@@ -4199,6 +4207,14 @@ $('#guideBtn').addEventListener('click',e=>{e.stopPropagation();toggleGuide();})
 $('#guide .x').addEventListener('click',e=>{e.stopPropagation();toggleGuide();});
 $('#guide').addEventListener('pointerdown',e=>e.stopPropagation());
 function firstGuide(){let seen=false;try{seen=!!localStorage.getItem('hatenMadouou.guided');localStorage.setItem('hatenMadouou.guided','1');}catch(e){}if(!seen)setTimeout(()=>{if(!guideOpen)toggleGuide();},1800);}
+// ================= アプリ内ブラウザ対策 =================
+// ゲーム画面の上をなぞってもページがスクロール・引っ張られないようにする（一覧パネルの中はスクロールできる）
+document.addEventListener('touchmove',e=>{if(e.target.closest&&e.target.closest('#book,#quest,#wmap,#realm,#story,#ach,#guide,#warp,#title,#ending'))return;e.preventDefault();},{passive:false});
+if(window.__inapp){const el=$('#inapp');el.classList.add('on');
+  const ext=()=>{const u=location.href.split('#')[0].replace(/[?&]openExternalBrowser=1/,'');return u+(u.indexOf('?')<0?'?':'&')+'openExternalBrowser=1';};
+  el.innerHTML=window.__inapp==='line'?'LINEの中のブラウザでは、画面を下になぞるとブラウザごと閉じてしまうことがあります。Safari などのブラウザで遊ぶのがおすすめです。<br><button type="button">ブラウザで開く</button>'
+    :'アプリの中のブラウザでは、なぞる操作でブラウザが閉じることがあります。右上のメニューから「ブラウザで開く」を選ぶのがおすすめです。';
+  const b=el.querySelector('button');if(b)b.addEventListener('click',e=>{e.stopPropagation();location.href=ext();});}
 // ================= save =================
 // 進行状況（魔晶・工房の強化・勢力・難易度・撃破数）と、世界の記録（建てた物・壊した物）を保存する。
 const SAVE_KEY=APP?'hatenMadouou.save.app.'+MODE.fac:'hatenMadouou.save';const ECO_FIXED=7+VILL.length;let saveReady=false;
