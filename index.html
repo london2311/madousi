@@ -168,6 +168,22 @@ body.mobile #controls{order:4;margin:0;}
   #controls{font-size:11px;line-height:1.6;}
   #start{padding:10px 30px;font-size:18px;}
 }
+/* スマホ：移動ボタンは右下に3列×2段、縦画面では威力ボタンを左下へ寄せる */
+body.mobile #acts{grid-template-columns:repeat(3,44px);gap:7px;right:10px;bottom:calc(var(--sb) + 60px);}
+body.mobile .act{width:44px;height:44px;font-size:16px;}
+body.mobile #qtrack{left:14px;right:auto;text-align:left;top:calc(var(--st) + 132px);width:min(260px,38vw);}
+@media (max-width:560px){
+  body.mobile #tier{left:10px;transform:none;bottom:calc(var(--sb) + 56px);gap:4px;}
+  body.mobile #tier button{min-width:38px;height:32px;font-size:13px;}
+  body.mobile #acts{bottom:calc(var(--sb) + 54px);}
+  body.mobile #power{top:calc(var(--st) + 60px);left:14px;transform:none;font-size:10px;gap:5px;}
+  body.mobile #power .pb{width:80px;}
+  body.mobile #topbtns{top:calc(var(--st) + 82px);left:10px;gap:4px;max-width:calc(100vw - 120px);}
+  body.mobile .tb{font-size:11px;padding:4px 7px;}
+  body.mobile #stats{width:40vw;}
+  body.mobile #ruinTime,body.mobile #kills,body.mobile #barr{display:none;}
+  body.mobile #qtrack{left:auto;right:14px;text-align:right;top:calc(var(--st) + 204px);width:40vw;}
+}
 @media (prefers-reduced-motion: reduce){ #spellName.show,#banner.show,#combo.show{animation-duration:.01s;} }
 #tier{position:absolute;left:50%;bottom:calc(var(--sb) + 84px);transform:translateX(-50%);display:flex;gap:6px;pointer-events:auto;z-index:5}
 #tier button{font-family:var(--mincho),serif;font-size:15px;min-width:44px;height:34px;border-radius:17px;border:1px solid #fff4;background:#0008;color:#ddd;cursor:pointer}
@@ -259,7 +275,7 @@ body.spec #qtrack{display:none}
 #bossbar .bh i,#bossbar .bs i{display:block;height:100%;width:100%}
 #bossbar .bh i{background:linear-gradient(90deg,#ff8a6a,#ff3a5a);box-shadow:0 0 8px #ff4a6a}
 #bossbar .bs i{background:linear-gradient(90deg,#bfe4ff,#8a9cff)}
-#diffSel,#modeSel,#facSel{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+#diffSel,#modeSel,#facSel,#gfxSel{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
 #modeSel .diffb.on,#facSel .diffb.on{background:linear-gradient(180deg,#e8d0ff,#7a4ab0);color:#fff;border-color:#f0e0ff}
 #facSel{display:none}body.app #facSel{display:flex}
 .selL{font-size:12px;color:var(--gold);margin:0 0 5px;letter-spacing:.2em}
@@ -308,7 +324,7 @@ body.spec #qtrack{display:none}
     <div class="bar hp"><i></i><b>2400</b></div>
     <div class="bar mp"><i></i><b>∞</b></div>
   </div>
-  <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button><button class="tb" id="realmBtn" type="button">国勢</button><button class="tb" id="specBtn" type="button">観戦</button><button class="tb" id="achBtn" type="button">実績</button><button class="tb" id="storyBtn" type="button">物語</button></div>
+  <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="gfxBtn" type="button">画質</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button><button class="tb" id="realmBtn" type="button">国勢</button><button class="tb" id="specBtn" type="button">観戦</button><button class="tb" id="achBtn" type="button">実績</button><button class="tb" id="storyBtn" type="button">物語</button></div>
   <div id="stats">
     <div class="lbl">王都ルーンヘイム 壊滅率</div>
     <div class="pct" id="ruinPct">0%</div>
@@ -358,6 +374,7 @@ body.spec #qtrack{display:none}
     <dl id="controls"></dl>
     <div class="selL">遊び方</div><div id="modeSel"><button type="button" class="diffb" data-m="sage">大魔導士</button><button type="button" class="diffb" data-m="app">魔法使い見習い</button></div>
     <div id="facSel"><button type="button" class="diffb" data-f="emp">帝国軍</button><button type="button" class="diffb" data-f="dem">魔王軍</button><button type="button" class="diffb" data-f="none">無所属</button></div>
+    <div class="selL">画質（スマホが熱いときは省電力）</div><div id="gfxSel"><button type="button" class="diffb" data-g="0">高</button><button type="button" class="diffb" data-g="1">標準</button><button type="button" class="diffb" data-g="2">省電力</button></div>
     <div class="selL">難易度</div><div id="diffSel"><button type="button" class="diffb" data-d="0">イージー</button><button type="button" class="diffb on" data-d="1">ノーマル</button><button type="button" class="diffb" data-d="2">ハード</button></div>
     <button id="start" type="button" disabled>降臨する</button>
     <div id="loadmsg">世界を生成しています…</div>
@@ -430,7 +447,12 @@ function later(t,fn){timers.push({t,fn});}
 // ================= renderer / scene =================
 const canvas=$('#view');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:false,powerPreference:'high-performance'});
-const PR=Math.min(window.devicePixelRatio||1, IS_MOBILE?1.5:1.75);
+// 画質：高／標準／省電力。解像度・影・光のにじみ・1秒あたりの描画回数を切り替えて、端末の発熱を抑える
+const GFX_N=['高','標準','省電力'];
+let GFX=(()=>{try{const r=localStorage.getItem('hatenMadouou.gfx');const v=r==null?-1:+r;if(v===0||v===1||v===2)return v;}catch(e){}return IS_MOBILE?1:0;})();
+const gfxPR=g=>Math.min(window.devicePixelRatio||1,[IS_MOBILE?1.5:1.75,IS_MOBILE?1.1:1.25,IS_MOBILE?.8:1][g]);
+const GFX_FPS=[0,60,30];
+let PR=gfxPR(GFX);
 renderer.setPixelRatio(PR);
 renderer.setSize(innerWidth,innerHeight);
 renderer.shadowMap.enabled=true;
@@ -3127,14 +3149,20 @@ function titleCam(dt){titleT+=dt*.05;const r=330;camera.position.set(Math.sin(ti
 // ================= main loop =================
 let gameTime=0;const clock=new THREE.Clock();
 function resize(){
-  const w=innerWidth,h=innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);
-  if(composer){composer.setSize(w,h);}
+  const w=innerWidth,h=innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setPixelRatio(PR);renderer.setSize(w,h);
+  if(composer){composer.setPixelRatio(PR);composer.setSize(w,h);}
   const sc=h*PR/(2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2)));glow.mat.uniforms.uScale.value=sc;smoke.mat.uniforms.uScale.value=sc;
 }
-addEventListener('resize',resize);resize();
+let lastFrameT=0;
+function setGfx(g,announce){GFX=g;try{localStorage.setItem('hatenMadouou.gfx',String(g));}catch(e){}PR=gfxPR(g);
+  sun.castShadow=g<2;if(bloom)bloom.enabled=g<2;resize();
+  document.querySelectorAll('#gfxSel [data-g]').forEach(b=>b.classList.toggle('on',+b.dataset.g===g));const gb=document.querySelector('#gfxBtn');if(gb)gb.textContent='画質 '+GFX_N[g];
+  if(announce)showBanner('画質 '+GFX_N[g],g===2?'解像度を下げ、影と光のにじみを省き、1秒30回の描画に':g===1?'解像度を少し下げ、1秒60回までの描画に':'最高の画質で描画');}
+addEventListener('resize',resize);setGfx(GFX);
 
 function frame(){
   requestAnimationFrame(frame);
+  {const cap=GFX_FPS[GFX];if(cap){const now=performance.now();if(now-lastFrameT<1000/cap-2)return;lastFrameT=now;}}
   {const d=Math.min(clock.getDelta(),.05),n=SPEC?SPEC.speed:1;for(let k=0;k<n;k++)step(d);}
   if(composer){finalPass.uniforms.flash.value=post.flash;finalPass.uniforms.flashCol.value.copy(post.flashCol);finalPass.uniforms.tint.value=post.tint*.35;finalPass.uniforms.aberr.value=post.aberr+shakeAmt*.004;finalPass.uniforms.time.value=gameTime%100;
     composer.render();}
@@ -3483,10 +3511,13 @@ function setDiff(d){DIFF=d;for(const B of BARRIERS){const k=B.hp/B.max;B.max=BAR
   for(const C of COUNTRIES){C.total=0;C.dest=0;}destroyedHp=0;TOTAL_HP=0;
   for(const b of buildings){const C=COUNTRIES[b.country];C.total+=b.maxHp;TOTAL_HP+=b.maxHp;if(b.destroyed){C.dest+=b.maxHp;destroyedHp+=b.maxHp;}}
   for(const e of enemies){if(!e.alive)continue;const nm=e.baseHp*((e.kind==='mage'||e.kind==='brute')?MAGE_HP[d]:EHP[d]);e.hp=e.hp/e.maxHp*nm;e.maxHp=nm;if(e.kind==='mage'||e.kind==='brute'){e.shMax=MAGE_SH[d]*(e.shMul||1);e.shield=Math.min(e.shield,e.shMax);}}
-  document.querySelectorAll('.diffb').forEach(b=>b.classList.toggle('on',+b.dataset.d===d));$('#diffBtn').textContent='難易度 '+DN[d];saveGame();}
-document.querySelectorAll('.diffb').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setDiff(+b.dataset.d);}));
+  document.querySelectorAll('#diffSel .diffb').forEach(b=>b.classList.toggle('on',+b.dataset.d===d));$('#diffBtn').textContent='難易度 '+DN[d];saveGame();}
+document.querySelectorAll('#diffSel .diffb').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setDiff(+b.dataset.d);}));
 $('#diffBtn').addEventListener('click',e=>{e.stopPropagation();setDiff((DIFF+1)%3);showBanner('難易度 '+DN[DIFF],'');});
 $('#bookBtn').addEventListener('click',e=>{e.stopPropagation();toggleBook();});
+$('#gfxBtn').addEventListener('click',e=>{e.stopPropagation();setGfx((GFX+1)%3,true);});
+document.querySelectorAll('#gfxSel [data-g]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setGfx(+b.dataset.g);}));
+setGfx(GFX);
 $('#book .bx').addEventListener('click',e=>{e.stopPropagation();toggleBook();});
 $('#book .bd').addEventListener('click',e=>{e.stopPropagation();SLOTS=SLOT_DEF.map(id=>SPELLS.findIndex(s=>s.id===id));saveSlots();rebuildBar();});
 $('#book').addEventListener('pointerdown',e=>e.stopPropagation());
