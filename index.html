@@ -263,7 +263,7 @@ body.mobile #topbtns{max-width:calc(100vw - 230px)}
 #book .cm b{font-family:var(--mincho),serif;font-size:14px;color:#fff3cf}
 #book .cm.un b{color:#8a8070}#book .cnt{flex:1;font-size:13px;color:#d8ccb0}
 #book .bf button{font-family:var(--mincho),serif;font-size:14px;padding:7px 14px;border-radius:16px;border:1px solid rgba(232,193,112,.5);background:#ffffff10;color:#f3e6c8;cursor:pointer}
-#warp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);display:flex;flex-direction:column;gap:10px;padding:22px 26px;border-radius:14px;
+#warp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);display:flex;flex-direction:column;gap:10px;max-height:88vh;overflow-y:auto;padding:22px 26px;border-radius:14px;
   background:rgba(14,10,28,.88);border:1px solid rgba(232,193,112,.5);box-shadow:0 0 40px rgba(120,80,220,.35);pointer-events:auto;opacity:0;visibility:hidden;transition:.2s;z-index:20;min-width:260px}
 #warp.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
 #warp .wt{font-family:var(--mincho),serif;color:var(--gold);letter-spacing:.3em;text-align:center;font-size:18px;margin-bottom:4px}
@@ -515,7 +515,7 @@ const crackTex=canvasTex(512,512,(x,w,h)=>{x.translate(w/2,h/2);x.strokeStyle='#
     while(r<240){r+=14+rand()*16;a+=(rand()-.5)*.5;px=Math.cos(a)*r;py=Math.sin(a)*r;x.lineTo(px,py);x.lineWidth=Math.max(1.5,7-r/40);}x.stroke();}});
 
 // ================= terrain =================
-const WORLD=6400, HALF=WORLD/2, SEG=IS_MOBILE?320:512, STEP=WORLD/SEG, NV=SEG+1;
+const WORLD=9600, HALF=WORLD/2, SEG=IS_MOBILE?400:704, STEP=WORLD/SEG, NV=SEG+1;
 const TOWN_R=150, TOWN_H=14;
 function baseHeight0(x,z){
   let h=fbm(x*.0021+3.1,z*.0021-1.7,5)*40+20;
@@ -538,9 +538,13 @@ const EMX=-2250,EMZ=0,ER=430,EMH=46,DMX=2300,DMZ=0,DR=430,DMH=40;
 const C6X=-700,C6Z=-1650,C6R=115;
 const VILL=[{n:'ミルデン村',x:-1000,z:1050,jp:0,mill:2,wheat:2,pad:0,dojo:0},{n:'ハーロウ村',x:-1550,z:-650,jp:0,mill:1,wheat:2,pad:0,dojo:1},{n:'エルム村',x:-1750,z:1450,jp:0,mill:1,wheat:1,pad:0,dojo:0},
   {n:'ソラノ村',x:-300,z:1650,jp:0,mill:2,wheat:2,pad:0,dojo:0},{n:'稲穂村',x:150,z:-1500,jp:1,mill:0,wheat:0,pad:3,dojo:0},{n:'霞ヶ里',x:-1300,z:-2000,jp:1,mill:1,wheat:1,pad:2,dojo:1},
-  {n:'ロウ村',x:-2700,z:-1500,jp:0,mill:1,wheat:2,pad:0,dojo:1},{n:'風待村',x:-450,z:-2500,jp:1,mill:0,wheat:1,pad:2,dojo:0}];
-const BFIELDS=[{n:'ガルド平原',x:-1350,z:620},{n:'黒鉄の荒野',x:-1200,z:-1050},{n:'灰燼の海岸',x:2050,z:950},{n:'血塗れの砂丘',x:2100,z:-1000}];
-C6H=clamp(baseHeight0(C6X,C6Z),30,105);for(const v of VILL)FLATS.push({x:v.x,z:v.z,r:115,t:160,h:clamp(baseHeight0(v.x,v.z),8,90)});for(const f of BFIELDS)FLATS.push({x:f.x,z:f.z,r:230,t:220,h:clamp(baseHeight0(f.x,f.z),8,80)});
+  {n:'ロウ村',x:-2700,z:-1500,jp:0,mill:1,wheat:2,pad:0,dojo:1},{n:'風待村',x:-450,z:-2500,jp:1,mill:0,wheat:1,pad:2,dojo:0},
+  {n:'白嶺村',x:-3700,z:-3100,jp:0,mill:1,wheat:1,pad:0,dojo:1},{n:'雪花の里',x:-1500,z:-3900,jp:1,mill:0,wheat:1,pad:2,dojo:0},{n:'ヨルン村',x:-3800,z:2700,jp:0,mill:2,wheat:2,pad:0,dojo:0},
+  {n:'サフラン村',x:3900,z:1800,jp:0,mill:1,wheat:2,pad:0,dojo:0},{n:'星見の里',x:2700,z:3400,jp:1,mill:1,wheat:1,pad:2,dojo:1},{n:'南風村',x:-600,z:3700,jp:0,mill:2,wheat:2,pad:0,dojo:0}];
+const BFIELDS=[{n:'ガルド平原',x:-1350,z:620},{n:'黒鉄の荒野',x:-1200,z:-1050},{n:'灰燼の海岸',x:2050,z:950},{n:'血塗れの砂丘',x:2100,z:-1000},{n:'北限の雪原',x:-2600,z:-3000},{n:'赤砂の大地',x:3500,z:-900}];
+// 拡大した世界の新しい土地：古の遺跡と、魔人の眠る封印の地
+const RUINS={x:-4000,z:1200,n:'古の遺跡'},SEAL={x:3800,z:-3800,n:'封印の地 虚ろの祭壇'};
+C6H=clamp(baseHeight0(C6X,C6Z),30,105);for(const v of VILL)FLATS.push({x:v.x,z:v.z,r:115,t:160,h:clamp(baseHeight0(v.x,v.z),8,90)});for(const f of BFIELDS)FLATS.push({x:f.x,z:f.z,r:230,t:220,h:clamp(baseHeight0(f.x,f.z),8,80)});for(const f of[RUINS,SEAL])FLATS.push({x:f.x,z:f.z,r:120,t:200,h:clamp(baseHeight0(f.x,f.z),12,70)});
 let DIFF=1;const DN=['イージー','ノーマル','ハード'],EHP=[1,1.8,3.5],DMG=[.3,.55,1.1],BHP=[1,2.2,4.5],MAGE_HP=[12000,30000,70000],MAGE_SH=[3000,8000,18000],MAGE_RATE=[1.4,1,.72];
 const HOUSE_MK=[];let SETTLE_N=0;
 const COUNTRIES=[
@@ -821,7 +825,7 @@ function snd(type,vol=1,pos=null){
 }
 
 // ================= vegetation =================
-const TREE_N=IS_MOBILE?3500:9000;
+const TREE_N=IS_MOBILE?4800:13000;
 const trunkGeo=new THREE.CylinderGeometry(.22,.38,1,6).translate(0,.5,0);
 const coniferGeo=THREE.BufferGeometryUtils.mergeBufferGeometries([
   new THREE.ConeGeometry(1,1.1,7).translate(0,1.25,0),new THREE.ConeGeometry(.8,.95,7).translate(0,1.75,0),new THREE.ConeGeometry(.55,.8,7).translate(0,2.2,0)]);
@@ -838,7 +842,7 @@ const broads=new THREE.InstancedMesh(broadGeo,leafMat,nBro);
 const dummy=new THREE.Object3D();
 {
   let ic=0,ib=0,tries=0;
-  while((ic<nCon||ib<nBro-500)&&tries<260000){
+  while((ic<nCon||ib<nBro-500)&&tries<420000){
     tries++;const x=R(-HALF+20,HALF-20),z=R(-HALF+20,HALF-20),h=heightAt(x,z);
     const d=Math.hypot(x,z);if(d<TOWN_R+30||nearTown(x,z)||Math.max(Math.abs(x-HX),Math.abs(z-HZ))<55||h<2.5||h>112||roadDist(x,z)<8)continue;
     if(Math.hypot(x,z+300)<30)continue;
@@ -882,7 +886,7 @@ function removeTreesIn(x,z,r,fling){treesIn(x,z,r,(t)=>removeTree(t,fling&&Math.
 
 // rocks
 {
-  const n=IS_MOBILE?400:1000;const rg=new THREE.DodecahedronGeometry(1,0);
+  const n=IS_MOBILE?600:1600;const rg=new THREE.DodecahedronGeometry(1,0);
   const rm=new THREE.InstancedMesh(rg,new THREE.MeshStandardMaterial({color:0x7c766e,roughness:.9,flatShading:true}),n);
   let k=0;for(let i=0;i<n*4&&k<n;i++){const x=R(-HALF,HALF),z=R(-HALF,HALF),h=heightAt(x,z);if(h<1||Math.hypot(x,z)<TOWN_R+10||nearTown(x,z))continue;
     dummy.position.set(x,h,z);dummy.rotation.set(rand()*3,rand()*3,rand()*3);const s=R(.6,3.5)*(h>60?2:1);dummy.scale.set(s,s*R(.5,1),s*R(.7,1.2));dummy.updateMatrix();rm.setMatrixAt(k++,dummy.matrix);}
@@ -2047,7 +2051,7 @@ function updHome(dt){
   if(Math.random()<dt*6)glow.emit(HX+rr(-.8,.8),F+4+rr(-.8,.8),HZ+8+rr(-.8,.8),0,rr(.3,1),0,rr(.6,1.2),.35,.1,PC.violetB,PC.gold,.8,0,0);
 }
 function homeSpawn(){player.pos.set(HX,F,HZ+2);player.vel.set(0,0,0);player.flying=false;document.querySelector('[data-a="fly"]').classList.remove('on');player.face=Math.PI;camYaw=Math.PI;camPitch=.3;}
-const WARPS=[{n:'天穹楼',d:'大魔導士の居城'},{n:'王都ルーンヘイム',d:'西洋の王都'},{n:'月詠国 神楽京',d:'東方の城下町'},{n:'蒼海の国 アズラーン',d:'白亜と碧の海上都市'},{n:'天空要塞都市 エーテリア',d:'雲上に浮かぶ要塞'},{n:'神聖ヴァルガルド帝国 帝都',d:'人類最大の帝国（西の果て）'},{n:'魔都ネクロディア',d:'魔王の座す都（東の大陸）'},{n:'東雲国 桜花京',d:'桜と黒漆の城下町'}];
+const WARPS=[{n:'天穹楼',d:'大魔導士の居城'},{n:'王都ルーンヘイム',d:'西洋の王都'},{n:'月詠国 神楽京',d:'東方の城下町'},{n:'蒼海の国 アズラーン',d:'白亜と碧の海上都市'},{n:'天空要塞都市 エーテリア',d:'雲上に浮かぶ要塞'},{n:'神聖ヴァルガルド帝国 帝都',d:'人類最大の帝国（西の果て）'},{n:'魔都ネクロディア',d:'魔王の座す都（東の大陸）'},{n:'東雲国 桜花京',d:'桜と黒漆の城下町'},{n:'古の遺跡',d:'西の果てに眠る太古の都の跡'},{n:'封印の地',d:'北東の果て、虚ろの祭壇'}];
 let warpOpen=false;
 function toggleWarp(){warpOpen=!warpOpen;$('#warp').classList.toggle('on',warpOpen);if(warpOpen&&document.pointerLockElement)document.exitPointerLock();}
 function travelTo(i){
@@ -2061,6 +2065,8 @@ function travelTo(i){
   else if(i===7){const x=C6X+C6R+60,z=C6Z;player.pos.set(x,groundAt(x,z),z);player.face=-Math.PI/2;camYaw=-Math.PI/2;camPitch=.2;}
   else if(i===6){const x=DMX-DR-45,z=DMZ;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   else if(i===4){const x=C4X-C4R+12,z=C4Z;player.pos.set(x,C4Y,z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
+  else if(i===8){const x=RUINS.x+150,z=RUINS.z;player.pos.set(x,groundAt(x,z),z);player.face=-Math.PI/2;camYaw=-Math.PI/2;camPitch=.2;}
+  else if(i===9){const x=SEAL.x-170,z=SEAL.z+60;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   else{const x=C3X-C3R-22,z=C3Z;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   showBanner(WARPS[i].n,i===0?'大魔導士の居城':'転移完了');
   magicCircle(player.pos,5,lin(5,3,9),1.2,{y:.2,spin:3});burst(player.pos.clone().setY(player.pos.y+1),80,14,1,2,.3,PC.violetB,PC.gold,1,2,0);
@@ -3105,7 +3111,7 @@ function step(dt){
     if(!started&&e.kind!=='boss'&&!e.fly){e.animate(dt,false);continue;}e.update(dt);}
   for(let i=fx.length-1;i>=0;i--){if(!fx[i].update(dt))fx.splice(i,1);}
   cullT-=dt;if(cullT<=0){cullT=.3;cullWorld();}
-  updWorld(dt);updCrowd(dt);updBarriers(dt);
+  updWorld(dt);updCrowd(dt);updSites(dt);updBarriers(dt);
   updBuildings(dt);updDebris(dt);updHome(dt);updFlora(dt);updSkyCity(dt);updFarm(dt);
   for(let i=burningTrees.length-1;i>=0;i--){const b=burningTrees[i];b.life-=dt;const t=b.t;
     if(Math.random()<dt*25)glow.emit(t.x+rr(-1,1)*t.s*.4,t.y+t.s*rr(1,2.6),t.z+rr(-1,1)*t.s*.4,0,rr(4,8),0,rr(.5,1),rr(2,4),.4,PC.fireA,PC.fireB,1,.5,-2);
@@ -3427,6 +3433,7 @@ function drawWorldMap(){const cv=$('#wmap canvas'),x=cv.getContext('2d'),W=cv.wi
   x.font='12px serif';x.textAlign='center';COUNTRIES.forEach((C,i)=>{const [a,b]=P(C.x,C.z);x.strokeStyle=C.rule==='vassal'?'#c9a0ff':C.rule==='ally'?'#8fe8a0':C.faction==='dem'?'#ff5a5a':C.faction==='emp'?'#ffe08a':'#fff';x.lineWidth=2;x.beginPath();x.arc(a,b,Math.max(5,C.r*sc),0,7);x.stroke();
     x.fillStyle='#fff';x.shadowColor='#000';x.shadowBlur=4;x.fillText(C.label.replace('神聖ヴァルガルド帝国 ',''),a,b-Math.max(7,C.r*sc)-4);x.shadowBlur=0;});
   {const [a,b]=P(HX,HZ);x.fillStyle='#d8b0ff';x.fillRect(a-3,b-3,6,6);x.fillText('天穹楼',a,b-8);}
+  for(const S of[RUINS,SEAL]){const [a,b]=P(S.x,S.z);x.fillStyle=S===SEAL?'#c070ff':'#d8c8a0';x.beginPath();x.arc(a,b,4,0,7);x.fill();x.fillText(S===SEAL?'封印の地':S.n,a,b-8);}
   for(const m of ACTIVE)if(m.tgt&&m.tgt.alive){const [a,b]=P(m.tgt.pos.x,m.tgt.pos.z);x.strokeStyle='#ff4040';x.lineWidth=2;x.beginPath();x.arc(a,b,7,0,7);x.stroke();}
   for(const bt of BATTLES)if(!bt.over){const [a,b]=P(bt.f.x,bt.f.z);x.font='16px serif';x.fillStyle='#ffb040';x.fillText('⚔',a,b+5);x.font='12px serif';x.fillText(bt.f.n,a,b+18);}
   for(const r of RAIDS)if(r.units.some(u=>u.alive)){const C=COUNTRIES[r.ci];const [a,b]=P(C.x,C.z);x.fillStyle='#ff3030';x.fillText('⚔',a+12,b+4);}
@@ -3757,6 +3764,31 @@ function renderSaveInfo(){const el=$('#saveInfo');const s=readSave();if(!s){el.i
     saveReady=false;try{localStorage.removeItem(SAVE_KEY);}catch(e2){}location.reload();});}
 addEventListener('pagehide',saveGame);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveGame();});
+// ================= 新しい土地（古の遺跡・封印の地） =================
+function initSites(){const M3=THREE.BufferGeometryUtils.mergeBufferGeometries;
+  const st=new THREE.MeshStandardMaterial({color:0x8a8478,roughness:.95,flatShading:true}),dk=new THREE.MeshStandardMaterial({color:0x2a2430,roughness:.8,flatShading:true});
+  // 古の遺跡：崩れた列柱と門
+  {const g=new THREE.Group();const y=groundAt(RUINS.x,RUINS.z);g.position.set(RUINS.x,y,RUINS.z);const P=[];
+    for(let i=0;i<16;i++){const a=i/16*Math.PI*2,r=62,h=[18,12,6,16,3,14,9,18][i%8];P.push(new THREE.CylinderGeometry(2,2.3,h,10).translate(Math.cos(a)*r,h/2,Math.sin(a)*r));
+      if(h>=16&&i%2===0)P.push(new THREE.BoxGeometry(6,1.6,6).translate(Math.cos(a)*r,h+.8,Math.sin(a)*r));}
+    for(let i=0;i<22;i++){const a=R(0,6.28),r=R(10,90);P.push(new THREE.BoxGeometry(R(2,6),R(1,3),R(2,5)).rotateY(R(0,3)).rotateZ(R(-.4,.4)).translate(Math.cos(a)*r,.6,Math.sin(a)*r));}
+    P.push(new THREE.BoxGeometry(5,26,5).translate(-11,13,0),new THREE.BoxGeometry(5,26,5).translate(11,13,0),new THREE.BoxGeometry(30,5,6).translate(0,28,0));
+    P.push(new THREE.CylinderGeometry(28,32,2,24).translate(0,1,0));
+    const m=new THREE.Mesh(M3(P),st);m.castShadow=m.receiveShadow=true;g.add(m);scene.add(g);RUINS.g=g;}
+  // 封印の地：段状の祭壇、四本の封印柱、宙に浮く黒水晶
+  {const g=new THREE.Group();const y=groundAt(SEAL.x,SEAL.z);SEAL.y=y;g.position.set(SEAL.x,y,SEAL.z);
+    const base=new THREE.Mesh(M3([new THREE.CylinderGeometry(46,50,3,32).translate(0,1.5,0),new THREE.CylinderGeometry(34,38,3,32).translate(0,4.5,0),new THREE.CylinderGeometry(20,24,3,24).translate(0,7.5,0)]),dk);base.receiveShadow=true;g.add(base);
+    SEAL.pillars=[];const runeM=new THREE.MeshBasicMaterial({color:lin(4,1.4,7)});
+    for(let i=0;i<4;i++){const a=i/4*Math.PI*2+Math.PI/4,x=Math.cos(a)*66,z=Math.sin(a)*66;const p=new THREE.Group();p.position.set(x,0,z);
+      const body=new THREE.Mesh(new THREE.BoxGeometry(5,42,5).translate(0,21,0),dk);body.castShadow=true;p.add(body);
+      const rune=new THREE.Mesh(new THREE.BoxGeometry(5.3,30,1.2).translate(0,22,0),runeM.clone());rune.rotation.y=-a+Math.PI/2;p.add(rune);
+      p.add(new THREE.Mesh(new THREE.OctahedronGeometry(3).translate(0,46,0),runeM));g.add(p);SEAL.pillars.push({g:p,rune,lit:true});}
+    const cry=new THREE.Mesh(new THREE.OctahedronGeometry(7,0),new THREE.MeshStandardMaterial({color:0x1a0a24,emissive:lin(1.2,.2,2),roughness:.2,metalness:.6}));cry.scale.set(1,1.8,1);cry.position.y=26;g.add(cry);SEAL.cry=cry;
+    const ringM=new THREE.MeshBasicMaterial({color:lin(3,1,5),transparent:true,opacity:.6,blending:THREE.AdditiveBlending,depthWrite:false});
+    SEAL.rings=[0,1,2].map(k=>{const r=new THREE.Mesh(new THREE.TorusGeometry(12+k*3,.25,6,48),ringM);r.position.y=26;r.rotation.x=Math.PI/2+k*.5;g.add(r);return r;});
+    scene.add(g);SEAL.g=g;}}
+function updSites(dt){if(!SEAL.g)return;const t=gameTime;SEAL.cry.rotation.y+=dt*.4;SEAL.cry.position.y=26+Math.sin(t*.8)*1.5;SEAL.rings.forEach((r,k)=>{r.rotation.z+=dt*(.3+k*.2);});
+  if((SEAL.x-VIEW.x)**2+(SEAL.z-VIEW.z)**2<900*900&&Math.random()<dt*20){const a=Math.random()*6.28,r=rr(8,50);glow.emit(SEAL.x+Math.cos(a)*r,SEAL.y+rr(2,6),SEAL.z+Math.sin(a)*r,0,rr(3,8),0,rr(1.5,3),rr(1,2),.2,PC.violetA,PC.violetB,.7,.2,-1);}}
 // ================= 村々・道場 =================
 function tintEnemy(e,hx,k){const c=new THREE.Color(hx);e.g.traverse(o=>{if(o.isMesh&&o.material&&o.material.color&&!o.material.isMeshBasicMaterial){o.material.color.lerp(c,k);}});if(e.base)e.base=e.mats.map(m=>({c:m.color.clone(),e:m.emissive?m.emissive.clone():null}));}
 const VMAT={};
@@ -3802,6 +3834,7 @@ function initVillages(){
   for(let t=-C6R+16;t<C6R-16;t+=16)for(const s2 of[-7.5,7.5]){if(Math.abs(t)>12){plantTree(C6X+t,C6Z+s2*1.02+(s2>0?.5:-.5),true);}}
 }
 initVillages();
+initSites();
 initCrowd();
 initEconomy();
 BN0=buildings.length;
