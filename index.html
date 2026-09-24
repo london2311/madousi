@@ -100,6 +100,8 @@ button:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px;}
   color:#fff3c8;text-shadow:0 0 6px #ff9a3a,0 1px 2px #000;font-size:22px;display:none;}
 .dmg.hurt{color:#ff9a8a;text-shadow:0 0 8px #ff2a1a,0 1px 2px #000;}
 .bar.hp.low i{background:linear-gradient(90deg,#ffb0a0,#ff4a3a);box-shadow:0 0 10px #ff4a3a;}
+.dmg.harv{color:#fff0b0;text-shadow:0 0 8px #e0a020,0 1px 2px #000;font-size:17px;letter-spacing:.08em;}
+.dmg.trade{color:#bfe8ff;text-shadow:0 0 8px #3a90e0,0 1px 2px #000;font-size:17px;letter-spacing:.08em;}
 .dmg.nul{color:#bfe9ff;text-shadow:0 0 8px #58c8ff,0 1px 2px #000;font-size:16px;letter-spacing:.2em;}
 
 /* spell bar */
@@ -2062,6 +2064,7 @@ function dmgText(p,val,nul,hurt){
   const o=dmgEls[dmgI];dmgI=(dmgI+1)%dmgEls.length;o.t=nul?.9:1.1;o.p.copy(p);o.dx=rr(-30,30);o.el.textContent=nul?'無効':val.toLocaleString();
   o.el.className='dmg'+(nul?' nul':'')+(hurt?' hurt':'');o.el.style.fontSize=nul?'':Math.min(40,16+Math.log10(val+1)*6)+'px';o.el.style.display='block';
 }
+function floatText(p,txt,cls){const o=dmgEls[dmgI];dmgI=(dmgI+1)%dmgEls.length;o.t=1.8;o.p.copy(p);o.dx=0;o.el.textContent=txt;o.el.className='dmg '+cls;o.el.style.fontSize='';o.el.style.display='block';}
 const projV=V3();
 function updDmgText(dt){
   for(const o of dmgEls){if(o.t<=0)continue;o.t-=dt;o.p.y+=dt*3;
@@ -2111,6 +2114,8 @@ const SPELLS=[
   {id:'flowers',k:'花',name:'百花繚乱',read:'ひゃっかりょうらん',col:'#ff9ad0',c3:lin(8,3.5,6),cd:2,r:60},
   {id:'wheat',k:'麦',name:'黄金の麦穂',read:'こがねのむぎほ',col:'#f0d060',c3:lin(8,6,1.5),cd:2.5,r:60},
   {id:'paddy',k:'田',name:'瑞穂の水田',read:'みずほのすいでん',col:'#80d0c0',c3:lin(2.5,6,5.5),cd:2.5,r:60},
+  {id:'veg',k:'畑',name:'実りの畑',read:'みのりのはたけ',col:'#9ad060',c3:lin(4,7,2),cd:2.5,r:60},
+  {id:'port',k:'港',name:'潮騒の港',read:'しおさいのみなと',col:'#6ab0e8',c3:lin(1.5,4,8),cd:6,r:60},
 ];
 const cds=SPELLS.map(()=>0);let selSpell=0;
 function announce(s){const el=$('#spellName');el.innerHTML=`${s.name}<small>${s.read}</small>`;el.style.setProperty('--sc',s.col);el.classList.remove('show');void el.offsetWidth;el.classList.add('show');}
@@ -2391,6 +2396,21 @@ const SP={
     if(C.settle)for(let i=0;i<Math.min(built*2,40);i++)later(1+i*.1,()=>{const a=Math.random()*6.28,r=Math.sqrt(Math.random())*C.r*.8;const x=C.x+Math.cos(a)*r,z=C.z+Math.sin(a)*r;if(groundAt(x,z)>1)new Enemy('citizen',x,z,{tc:{x:C.x,z:C.z,r:C.r-4},inTown:false});});
     if(built===0)showBanner('空き地が足りない','');
   },
+  veg(P,s,K){
+    FARMS++;
+    const S=[20,42,80,140][K.t],G=P.clone();G.y=groundAt(P.x,P.z);const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));const FLD=addField(G.x,G.z,S*S*.8,'veg');
+    const inside=(x,z)=>{const dx=x-G.x,dz=z-G.z;return Math.abs(dx*f.x+dz*f.z)<S/2&&Math.abs(dx*rt.x+dz*rt.z)<S/2;};
+    magicCircle(G,S*.35,lin(4,7,2),2.5,{y:.5,spin:.4});snd('whoosh',.8);later(.3,()=>snd('chime',.8));
+    treesIn(G.x,G.z,S*.72,(t)=>{if(inside(t.x,t.z)&&fieldOk(t.x,t.z))removeTree(t,false);});killFlowers(G.x,G.z,0);
+    tintGround(G,S*.75,[.26,.17,.08],.8,(x,z)=>inside(x,z)&&fieldOk(x,z));
+    const items=[],sp=Math.max(IS_MOBILE?2.6:2,S/(IS_MOBILE?40:55));let row=0;
+    for(let u=-S/2+1;u<S/2-1;u+=sp*1.6){row++;const kind=row%4;for(let v=-S/2+1;v<S/2-1;v+=sp){const x=G.x+f.x*u+rt.x*v+rr(-.2,.2),z=G.z+f.z*u+rt.z*v+rr(-.2,.2);if(fieldOk(x,z))items.push({x,z,kind,d:Math.hypot(u,v)});}}
+    waveSpawn(G,items,[1.2,1.8,2.6,3.4][K.t],it=>{spawnVeg(it.x,heightAt(it.x,it.z),it.z,it.kind,FLD);if(Math.random()<.01)glow.emit(it.x,heightAt(it.x,it.z)+1,it.z,0,rr(1,3),0,1,.8,.1,PC.green,PC.gold,.8,0,0);});
+  },
+  port(P,s,K){
+    const site=findCoast(P);if(!site){showBanner('港は海辺に築く','岸辺に照準を合わせて唱えよ');return;}
+    buildPort(site,K);
+  },
   flowers(P,s,K){
     FARMS++;
     const RM=[20,45,90,160][K.t];addField(P.x,P.z,RM*RM*3.1,'flowers');const N=Math.round([400,1400,3500,7000][K.t]*(IS_MOBILE?.45:1)),G=P.clone();G.y=groundAt(P.x,P.z);
@@ -2406,7 +2426,7 @@ const SP={
   },
   wheat(P,s,K){
     FARMS++;
-    const S=[24,50,96,170][K.t],G=P.clone();G.y=groundAt(P.x,P.z);addField(G.x,G.z,S*S*.8,'wheat');const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));
+    const S=[24,50,96,170][K.t],G=P.clone();G.y=groundAt(P.x,P.z);const FLD=addField(G.x,G.z,S*S*.8,'wheat');const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));
     const inside=(x,z)=>{const dx=x-G.x,dz=z-G.z;return Math.abs(dx*f.x+dz*f.z)<S/2&&Math.abs(dx*rt.x+dz*rt.z)<S/2;};
     magicCircle(G,S*.35,lin(8,6,1.5),2.5,{y:.5,spin:.4});snd('whoosh',.8);later(.3,()=>snd('chime',.8));
     treesIn(G.x,G.z,S*.72,(t)=>{if(inside(t.x,t.z)&&fieldOk(t.x,t.z))removeTree(t,false);});killFlowers(G.x,G.z,0);
@@ -2414,24 +2434,24 @@ const SP={
     const items=[],sp=Math.max(IS_MOBILE?2.3:1.7,S/(IS_MOBILE?55:72));for(let u=-S/2;u<S/2;u+=sp)for(let v=-S/2;v<S/2;v+=sp*.8){const x=G.x+f.x*u+rt.x*v+rr(-.3,.3),z=G.z+f.z*u+rt.z*v+rr(-.3,.3);
       if(!fieldOk(x,z))continue;if(Math.abs((v/sp/.8)%6)<.9)continue;items.push({x,z,d:Math.hypot(u,v)});}
     const cA=new THREE.Color(1.35,1.0,.35),cB=new THREE.Color(1.15,.8,.25);
-    waveSpawn(G,items,[1.2,1.8,2.6,3.4][K.t],it=>{const y=heightAt(it.x,it.z);spawnCrop(it.x,y,it.z,Math.random()<.5?cA:cB,rr(.9,1.2),rr(1.3,1.7));
+    waveSpawn(G,items,[1.2,1.8,2.6,3.4][K.t],it=>{const y=heightAt(it.x,it.z);spawnCrop(it.x,y,it.z,Math.random()<.5?cA:cB,rr(.9,1.2),rr(1.3,1.7),FLD);
       if(Math.random()<.01)glow.emit(it.x,y+1.5,it.z,0,rr(1,3),0,1,.8,.1,PC.gold,PC.gold,.8,0,0);});
     if(K.t>=2){const c=K.t===3?3:1;for(let k=0;k<c;k++){const u=k===0?0:rr(-.35,.35)*S,v=S/2+6;const x=G.x+f.x*u+rt.x*(k%2?-v:v),z=G.z+f.z*u+rt.z*(k%2?-v:v);if(fieldOk(x,z))later(1+k*.5,()=>windmill(x,z,yaw));}}
   },
   paddy(P,s,K){
     FARMS++;
-    const S=[20,40,80,140][K.t],PS=10,G=P.clone();G.y=groundAt(P.x,P.z);addField(G.x,G.z,S*S*.8,'paddy');const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));
+    const S=[20,40,80,140][K.t],PS=10,G=P.clone();G.y=groundAt(P.x,P.z);const FLD=addField(G.x,G.z,S*S*.8,'paddy');const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));
     magicCircle(G,S*.35,lin(2.5,6,5.5),2.5,{y:.5,spin:.4});snd('whoosh',.8);later(.4,()=>snd('chime',.8));
     const n=Math.max(2,Math.round(S/PS)),items=[];
     for(let a=0;a<n;a++)for(let b=0;b<n;b++){const u=(a-(n-1)/2)*PS,v=(b-(n-1)/2)*PS;const x=G.x+f.x*u+rt.x*v,z=G.z+f.z*u+rt.z*v;
       let ok=true,hmax=-1e9,hmin=1e9;for(const [du,dv] of [[-1,-1],[1,-1],[-1,1],[1,1],[0,0]]){const px=x+(f.x*du+rt.x*dv)*PS*.5,pz=z+(f.z*du+rt.z*dv)*PS*.5;if(!fieldOk(px,pz)){ok=false;break;}const h=heightAt(px,pz);hmax=Math.max(hmax,h);hmin=Math.min(hmin,h);}
       if(!ok||hmax-hmin>9)continue;items.push({x,z,top:hmax+.35,bot:hmin-1.5,d:Math.hypot(u,v)});}
     treesIn(G.x,G.z,S*.75,(t)=>{for(const it of items)if(Math.hypot(t.x-it.x,t.z-it.z)<PS*.75){removeTree(t,false);break;}});
-    const rc=new THREE.Color(.35,.85,.25),rc2=new THREE.Color(.28,.7,.2);
+    const rc=RICE_A,rc2=RICE_B;
     waveSpawn(G,items,[1.2,1.8,2.6,3.4][K.t],it=>{const i=padI;padI=(padI+1)%PAD_N;padEarth.count=padWater.count=Math.max(padEarth.count,i+1);plots[i]={x:it.x,z:it.z,s:PS};
       dummy.position.set(it.x,it.top,it.z);dummy.rotation.set(0,yaw,0);dummy.scale.set(PS,it.top-it.bot,PS);dummy.updateMatrix();padEarth.setMatrixAt(i,dummy.matrix);
       dummy.position.y=it.top+.03;dummy.scale.set(PS-1.1,1,PS-1.1);dummy.updateMatrix();padWater.setMatrixAt(i,dummy.matrix);padEarth.instanceMatrix.needsUpdate=padWater.instanceMatrix.needsUpdate=true;
-      const st=IS_MOBILE?1.8:1.35;for(let a=-PS/2+1.1;a<PS/2-.9;a+=st)for(let b=-PS/2+1.1;b<PS/2-.9;b+=st){const x=it.x+f.x*a+rt.x*b,z=it.z+f.z*a+rt.z*b;spawnCrop(x,it.top,z,Math.random()<.5?rc:rc2,rr(.7,.9),rr(.55,.75));}
+      const st=IS_MOBILE?1.8:1.35;for(let a=-PS/2+1.1;a<PS/2-.9;a+=st)for(let b=-PS/2+1.1;b<PS/2-.9;b+=st){const x=it.x+f.x*a+rt.x*b,z=it.z+f.z*a+rt.z*b;spawnCrop(x,it.top,z,Math.random()<.5?rc:rc2,rr(.7,.9),rr(.55,.75),FLD);}
       if(Math.random()<.3)burst(V3(it.x,it.top+.3,it.z),6,4,.8,1,.2,PC.waterA,PC.waterB,.7,1,4);});
   },
   gold(P,s,K){
@@ -2690,7 +2710,8 @@ const cropGeo=(()=>{const parts=[];for(let k=0;k<3;k++){const a=k/3*Math.PI*2,r=
 const cropMesh=new THREE.InstancedMesh(cropGeo,new THREE.MeshStandardMaterial({roughness:.8,flatShading:true}),CROP_N);cropMesh.frustumCulled=false;cropMesh.castShadow=false;
 for(let i=0;i<CROP_N;i++){cropMesh.setMatrixAt(i,zeroM);cropMesh.setColorAt(i,tmpC.setRGB(1,1,1));}cropMesh.count=0;scene.add(cropMesh);
 const crops=new Array(CROP_N).fill(null);let cropI=0;const cropGrow=[];
-function spawnCrop(x,y,z,col,sx,sy){const i=cropI;cropI=(cropI+1)%CROP_N;cropMesh.count=Math.max(cropMesh.count,i+1);crops[i]={x,y,z,sx,sy,t:0,ry:Math.random()*6};cropMesh.setColorAt(i,col);cropMesh.instanceColor.needsUpdate=true;cropGrow.push(i);}
+function spawnCrop(x,y,z,col,sx,sy,f){const i=cropI;cropI=(cropI+1)%CROP_N;cropMesh.count=Math.max(cropMesh.count,i+1);const c={x,y,z,sx,sy,t:0,ry:Math.random()*6,col,f:f||null};crops[i]=c;
+  if(f){f.idx.push(i);c.gk=cropStageK(f);cropMesh.setColorAt(i,tmpC.copy(SPROUT).lerp(col,c.gk));}else{c.gk=1;cropMesh.setColorAt(i,col);}cropMesh.instanceColor.needsUpdate=true;cropGrow.push(i);}
 function killCrops(x,z,r){let ch=false;for(let i=0;i<CROP_N;i++){const c=crops[i];if(c&&Math.hypot(c.x-x,c.z-z)<r){crops[i]=null;cropMesh.setMatrixAt(i,zeroM);ch=true;}}if(ch)cropMesh.instanceMatrix.needsUpdate=true;}
 const PAD_N=IS_MOBILE?320:720;
 const padEarth=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1).translate(0,-.5,0),new THREE.MeshStandardMaterial({color:0x5a4430,roughness:1}),PAD_N);
@@ -2712,9 +2733,10 @@ function tintGround(G,rad,col,k0,test){const i0=Math.max(0,Math.floor((G.x-rad+H
   tGeo.attributes.color.needsUpdate=true;}
 function updFarm(dt){
   if(cropGrow.length){for(let k=cropGrow.length-1;k>=0;k--){const i=cropGrow[k],c=crops[i];if(!c){cropGrow.splice(k,1);continue;}c.t+=dt;const e=Math.min(c.t/.5,1);
-    dummy.position.set(c.x,c.y,c.z);dummy.rotation.set(0,c.ry,0);dummy.scale.set(c.sx*(.3+.7*e),c.sy*e+.001,c.sx*(.3+.7*e));dummy.updateMatrix();cropMesh.setMatrixAt(i,dummy.matrix);if(e>=1)cropGrow.splice(k,1);}
+    const gk=.35+.65*(c.gk==null?1:c.gk);dummy.position.set(c.x,c.y,c.z);dummy.rotation.set(0,c.ry,0);dummy.scale.set(c.sx*(.3+.7*e)*(.7+.3*gk),c.sy*e*gk+.001,c.sx*(.3+.7*e)*(.7+.3*gk));dummy.updateMatrix();cropMesh.setMatrixAt(i,dummy.matrix);if(e>=1)cropGrow.splice(k,1);}
     cropMesh.instanceMatrix.needsUpdate=true;}
   for(const m of MILLS)m.hub.rotation.z+=dt*.8;
+  updFields(dt);updVeg(dt);updPorts(dt);
 }
 const GOLD_T=hex(0xd9a02a);
 const GOLDM=new THREE.MeshStandardMaterial({color:0xffc84a,metalness:.75,roughness:.26,emissive:0x6a4400,emissiveIntensity:.7});
@@ -3209,11 +3231,103 @@ $('#quest .qx').addEventListener('click',e=>{e.stopPropagation();toggleQuest();}
 for(const id of['#quest','#wmap'])$(id).addEventListener('pointerdown',e=>e.stopPropagation());
 $('#quest').addEventListener('click',e=>{e.stopPropagation();const t=e.target;if(t.dataset.acc)acceptMission(+t.dataset.acc);else if(t.dataset.dec){const i=OFFERS.findIndex(m=>m.id===+t.dataset.dec);if(i>=0)OFFERS.splice(i,1);renderQuest();}
   else if(t.dataset.buy){const it=SHOP.find(x=>x.k===t.dataset.buy);const l=UPG[it.k];if(l<it.max&&MANA>=it.c(l)){MANA-=it.c(l);UPG[it.k]++;it.fx();snd('coin',1);renderQuest();saveGame();}else toast('魔晶が足りない');}});
+// ================= 田園の実り・港 =================
+const GROW_T={wheat:80,paddy:100,veg:60};
+const SPROUT=new THREE.Color(.28,.72,.2),RICE_A=new THREE.Color(1.25,1.02,.38),RICE_B=new THREE.Color(1.05,.85,.3);
+const cropStageK=f=>Math.min(1,Math.floor(Math.min(f.t,1)*4)/3);
+// 作物は若葉→育ち→実りと色と丈が変わり、実ってしばらくすると収穫され、また芽吹く
+function updFields(dt){for(const f of FIELDS){if(!f.idx.length&&f.type!=='veg')continue;f.t+=dt/f.grow;
+  const st=Math.min(3,Math.floor(Math.min(f.t,1)*4));if(st!==f.st){f.st=st;fieldStage(f);}
+  if(f.t>=1.25)harvest(f);}}
+function fieldStage(f){const k=Math.min(1,f.st/3);
+  if(f.type==='veg'){for(const i of f.idx){const v=vegs[i];if(!v||v.f!==f)continue;v.gk=k;vegMesh.setColorAt(i,tmpC.copy(SPROUT).lerp(VEG_COL[v.kind],k));vegPlace(i);}vegMesh.instanceColor.needsUpdate=vegMesh.instanceMatrix.needsUpdate=true;return;}
+  let live=0;for(const i of f.idx){const c=crops[i];if(!c||c.f!==f)continue;live++;c.gk=k;cropMesh.setColorAt(i,tmpC.copy(SPROUT).lerp(c.col,k));
+    dummy.position.set(c.x,c.y,c.z);dummy.rotation.set(0,c.ry,0);const gk=.35+.65*k;dummy.scale.set(c.sx*(.7+.3*gk),c.sy*gk+.001,c.sx*(.7+.3*gk));dummy.updateMatrix();cropMesh.setMatrixAt(i,dummy.matrix);}
+  if(!live){f.idx.length=0;return;}cropMesh.instanceColor.needsUpdate=cropMesh.instanceMatrix.needsUpdate=true;}
+function harvest(f){f.t=0;f.st=-1;const ci=f.ci>=0?f.ci:nearestCi(f.x,f.z);f.ci=ci;const C=COUNTRIES[ci];
+  const live=f.type==='veg'?f.idx.filter(i=>vegs[i]&&vegs[i].f===f).length:f.idx.filter(i=>crops[i]&&crops[i].f===f).length;if(!live){f.idx.length=0;return;}
+  const k=live/f.idx.length,dr=C&&C.total?C.dest/C.total:0;const amt=Math.round(f.area/100*FIELD_Y[f.type]*(f.grow/60)*1.3*k*(1-dr*.5));
+  if(C&&C.eco)C.eco.food+=amt;HARVEST+=amt;
+  if(!started)return;const near=Math.hypot(f.x-player.pos.x,f.z-player.pos.z)<450;if(!near)return;
+  const y=groundAt(f.x,f.z);floatText(V3(f.x,y+6,f.z),`収穫 食料+${amt.toLocaleString()}`,'harv');snd('coin',.35,V3(f.x,y,f.z));
+  const L=f.type==='veg'?f.idx:f.idx;for(let n=0;n<Math.min(40,L.length);n++){const i=L[Math.random()*L.length|0];const c=f.type==='veg'?vegs[i]:crops[i];if(c)glow.emit(c.x,c.y+1,c.z,rr(-1,1),rr(3,7),rr(-1,1),rr(.8,1.4),rr(.8,1.4),.2,PC.gold,PC.white,.9,.5,-1);}}
+let HARVEST=0;
+// ---- 野菜畑 ----
+const VEG_N=IS_MOBILE?3000:8000;
+const VEG_COL=[new THREE.Color(.45,1.1,.3),new THREE.Color(1.6,.55,.08),new THREE.Color(1.5,.12,.1),new THREE.Color(.5,.18,.75)];// キャベツ・南瓜・トマト・茄子
+const vegMesh=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(.5,1),new THREE.MeshStandardMaterial({roughness:.55,flatShading:true}),VEG_N);vegMesh.frustumCulled=false;
+for(let i=0;i<VEG_N;i++){vegMesh.setMatrixAt(i,zeroM);vegMesh.setColorAt(i,tmpC.setRGB(1,1,1));}vegMesh.count=0;scene.add(vegMesh);
+const vegs=new Array(VEG_N).fill(null);let vegI=0;const vegGrow=[];
+function vegPlace(i,e=1){const v=vegs[i];const s=v.s*(.3+.7*v.gk)*e;dummy.position.set(v.x,v.y+s*.35,v.z);dummy.rotation.set(0,v.ry,0);dummy.scale.set(s,s*(v.kind===1?.7:v.kind===3?1.5:.9),s);dummy.updateMatrix();vegMesh.setMatrixAt(i,dummy.matrix);}
+function spawnVeg(x,y,z,kind,f){const i=vegI;vegI=(vegI+1)%VEG_N;vegMesh.count=Math.max(vegMesh.count,i+1);const v={x,y,z,kind,s:[1.3,1.5,.9,.8][kind]*rr(.85,1.15),ry:Math.random()*6,t:0,f,gk:cropStageK(f)};vegs[i]=v;f.idx.push(i);
+  vegMesh.setColorAt(i,tmpC.copy(SPROUT).lerp(VEG_COL[kind],v.gk));vegMesh.instanceColor.needsUpdate=true;vegGrow.push(i);}
+function updVeg(dt){if(!vegGrow.length)return;for(let k=vegGrow.length-1;k>=0;k--){const i=vegGrow[k],v=vegs[i];if(!v){vegGrow.splice(k,1);continue;}v.t+=dt;const e=Math.min(v.t/.5,1);vegPlace(i,e);if(e>=1)vegGrow.splice(k,1);}vegMesh.instanceMatrix.needsUpdate=true;}
+function killVeg(x,z,r){let ch=false;for(let i=0;i<VEG_N;i++){const v=vegs[i];if(v&&Math.hypot(v.x-x,v.z-z)<r){vegs[i]=null;vegMesh.setMatrixAt(i,zeroM);ch=true;}}if(ch)vegMesh.instanceMatrix.needsUpdate=true;}
+// ---- 港と交易船 ----
+const PORTS=[],SHIPS=[];let PORT_N=0,TRADE=0;
+const PM={};
+function portMats(){if(PM.wood)return;PM.wood=new THREE.MeshStandardMaterial({color:0x6a4a2c,roughness:.85});PM.dark=new THREE.MeshStandardMaterial({color:0x3a2a1a,roughness:.9});
+  PM.sail=new THREE.MeshStandardMaterial({color:0xf2ead8,roughness:.9,side:THREE.DoubleSide});PM.flag=new THREE.MeshStandardMaterial({color:0x8a1a2a,roughness:.8,side:THREE.DoubleSide,emissive:lin(.2,.02,.04)});
+  PM.lamp=new THREE.MeshBasicMaterial({color:lin(6,4.5,2)});
+  const g=new THREE.BoxGeometry(3.4,1.8,11,1,1,4);const pa=g.attributes.position;for(let i=0;i<pa.count;i++){let x=pa.getX(i);const y=pa.getY(i),z=pa.getZ(i);
+    if(z>5)x*=.06;else if(z>2)x*=.75;if(y<0)x*=.55;pa.setX(i,x);}g.computeVertexNormals();PM.hull=g;}
+// 照準の近くで、陸地から海が見える岸辺を探す
+function findCoast(P){let best=null,bd=1e9;
+  for(let r=0;r<=90;r+=6)for(let a=0;a<(r?20:1);a++){const an=a/20*Math.PI*2,x=P.x+Math.cos(an)*r,z=P.z+Math.sin(an)*r;const h=heightAt(x,z);if(h<.8||h>14)continue;
+    if(Math.hypot(x-HX,z-HZ)<80||Math.hypot(x-C4X,z-C4Z)<C4R+20)continue;
+    for(let k=0;k<16;k++){const t=k/16*Math.PI*2,dx=Math.sin(t),dz=Math.cos(t);if(heightAt(x+dx*26,z+dz*26)<-3&&heightAt(x+dx*48,z+dz*48)<-4){if(r<bd){bd=r;best={x,z,dx,dz};}break;}}
+    if(best&&r>bd)return best;}
+  return best;}
+function makeShip(){portMats();const g=new THREE.Group();const hull=new THREE.Mesh(PM.hull,PM.wood);hull.position.y=.3;hull.castShadow=true;g.add(hull);
+  const deck=new THREE.Mesh(new THREE.BoxGeometry(2.8,.25,7.5),PM.dark);deck.position.set(0,1.25,-.6);g.add(deck);
+  const mast=new THREE.Mesh(new THREE.CylinderGeometry(.14,.2,10,6),PM.dark);mast.position.set(0,6,.4);g.add(mast);
+  const sail=new THREE.Mesh(new THREE.PlaneGeometry(5.4,5.6,4,1),PM.sail);sail.position.set(0,6.6,.6);g.add(sail);
+  const flag=new THREE.Mesh(new THREE.PlaneGeometry(1.4,.7),PM.flag);flag.position.set(.7,11.2,.4);g.add(flag);
+  g.scale.setScalar(1.25);scene.add(g);return {g,sail};}
+function buildPort(site,K){portMats();const {x,z,dx,dz}=site;const y=groundAt(x,z),ry=Math.atan2(dx,dz);
+  let ci=countryAt(x,z);if(ci<0){const n=nearestCi(x,z),C=COUNTRIES[n];if(n>=0&&Math.hypot(C.x-x,C.z-z)-C.r<260&&!C.faction)ci=n;}
+  if(ci<0){SETTLE_N++;ci=COUNTRIES.length;COUNTRIES.push({label:'潮騒の港町'+(PORT_N?' 其の'+['','一','二','三','四','五','六','七','八','九','十'][Math.min(PORT_N+1,10)]:''),x,z,r:60,total:0,dest:0,start:-1,done:false,doneAt:0,settle:true});
+    HOUSE_MK[ci]=(hx,hz)=>HOUSE_MK[0](hx,hz,ci);ecoInitOne(ci);COUNTRIES[ci].eco.pop=40;}
+  PORT_N++;const C=COUNTRIES[ci];
+  magicCircle(V3(x,y,z),24,lin(1.5,4,8),2.5,{y:.5,spin:.5});snd('whoosh',1);later(.4,()=>snd('chime',.9));shake(.4,V3(x,y,z));
+  // 桟橋
+  const L=30+K.t*6;const pier=new THREE.Group();pier.position.set(x,0,z);pier.rotation.y=ry;scene.add(pier);
+  const deck=new THREE.Mesh(new THREE.BoxGeometry(5,.5,L),PM.wood);deck.position.set(0,Math.max(y,1.2)+.1,L/2-2);deck.receiveShadow=true;pier.add(deck);
+  for(let k=2;k<L;k+=5)for(const sx of[-2.2,2.2]){const pl=new THREE.Mesh(new THREE.CylinderGeometry(.25,.25,8,6),PM.dark);pl.position.set(sx,Math.max(y,1.2)-3.5,k);pier.add(pl);}
+  // 倉庫と灯台（建物として扱う）
+  const add=b=>{b.maxHp=b.hp=b.baseHp*BHP[DIFF];C.total+=b.maxHp;TOTAL_HP+=b.maxHp;return b;};
+  CUR_C=ci;const wx=x-dx*12,wz=z-dz*12;const wh=add(addBuilding(houseGeo(14,7,10,4),[houseMats[0],roofMats[2]],wx,wz,groundAt(wx,wz),8,11,1400,'house'));wh.mesh.rotation.y=ry;
+  const lx=x-dz*14,lz=z+dx*14;const lh=add(addBuilding(towerGeo(3,24,4.2,6,10),[stoneMat,roofMats[0]],lx,lz,groundAt(lx,lz),4,30,1600,'tower'));CUR_C=0;
+  const lamp=new THREE.Mesh(new THREE.SphereGeometry(1.3,12,8),PM.lamp);lamp.position.set(lx,groundAt(lx,lz)+25.5,lz);scene.add(lamp);
+  for(const b of[wh,lh]){b.mesh.visible=false;later(.6,()=>{b.mesh.visible=true;growBuilding(b);burst(V3(b.x,b.y+1,b.z),30,8,1.4,4,10,PC.dust,PC.dustB,.6,1,-1,smoke);});}
+  const port={x,z,dx,dz,ci,wh,lh,lamp,pier,end:V3(x+dx*(L+4),0,z+dz*(L+4)),ships:[]};PORTS.push(port);
+  const NS=[1,2,3,4][K.t];for(let i=0;i<NS&&SHIPS.length<(IS_MOBILE?10:18);i++){const sh=makeShip();const o={...sh,port,st:'dock',wait:2+i*4,pos:port.end.clone().add(V3(-dz*i*9,0,dx*i*9)),yaw:ry,tgt:null,spd:rr(13,17),cargo:0};
+    o.g.position.copy(o.pos);o.g.rotation.y=ry;port.ships.push(o);SHIPS.push(o);}
+  if(C.eco)C.eco.ports=(C.eco.ports||0)+1;
+  showBanner('潮騒の港',C.label+'に港が開かれた');}
+function seaLine(a,b){const d=a.distanceTo(b),n=Math.ceil(d/15);for(let i=1;i<=n;i++){const t=i/n;if(heightAt(lerp(a.x,b.x,t),lerp(a.z,b.z,t))>-2.5)return false;}return true;}
+function pickVoyage(o){const p=o.port;for(let k=0;k<16;k++){const a=Math.atan2(p.dx,p.dz)+rr(-1.2,1.2),d=rr(260,760);const t=V3(p.end.x+Math.sin(a)*d,0,p.end.z+Math.cos(a)*d);if(seaLine(p.end,t))return t;}
+  return V3(p.end.x+p.dx*90,0,p.end.z+p.dz*90);}
+function updPorts(dt){
+  for(const p of PORTS){const alive=!p.wh.destroyed;p.lamp.visible=!p.lh.destroyed;if(p.lamp.visible&&Math.random()<dt*6)glow.emit(p.lamp.position.x,p.lamp.position.y,p.lamp.position.z,0,0,0,.6,5,3,PC.gold,PC.fireA,.6,0,0);p.dead=!alive;}
+  for(const o of SHIPS){const p=o.port;
+    if(o.st==='dock'){o.wait-=dt;if(o.wait<=0&&!p.dead){o.tgt=pickVoyage(o);o.st='out';}}
+    else{const T=o.st==='out'?o.tgt:p.end;const dx=T.x-o.pos.x,dz=T.z-o.pos.z,d=Math.hypot(dx,dz);
+      const want=Math.atan2(dx,dz);let dy=want-o.yaw;dy=Math.atan2(Math.sin(dy),Math.cos(dy));o.yaw+=clamp(dy,-dt*.6,dt*.6);
+      const sp=o.spd*(d<40?Math.max(.25,d/40):1)*(Math.abs(dy)>.8?.4:1);o.pos.x+=Math.sin(o.yaw)*sp*dt;o.pos.z+=Math.cos(o.yaw)*sp*dt;
+      if(d<6){if(o.st==='out'){o.st='back';o.cargo=1;}else{o.st='dock';o.wait=rr(8,16);if(o.cargo){o.cargo=0;tradeReturn(o);}}}}
+    const bob=Math.sin(gameTime*1.3+o.spd)*.25;o.g.position.set(o.pos.x,bob-.2,o.pos.z);o.g.rotation.set(Math.sin(gameTime*1.1+o.spd)*.04,o.yaw,Math.sin(gameTime*.9+o.spd*2)*.05);
+    o.sail.scale.z=1;o.sail.position.z=.6+(o.st==='dock'?0:.35);
+    if(o.st!=='dock'&&Math.random()<dt*8&&Math.hypot(o.pos.x-player.pos.x,o.pos.z-player.pos.z)<600)smoke.emit(o.pos.x-Math.sin(o.yaw)*7,.3,o.pos.z-Math.cos(o.yaw)*7,0,.4,0,1.6,1.5,5,lin(.9,.95,1),lin(.6,.7,.75),.35,.5,0);}}
+function tradeReturn(o){const p=o.port,C=COUNTRIES[p.ci];if(p.dead)return;TRADE++;
+  const hap=C&&C.eco?C.eco.hap:60;const mana=Math.round(rw(18)*(.6+hap/100));MANA+=mana;
+  if(C&&C.eco){C.eco.food+=160;C.eco.wood+=70;C.eco.ore+=45;}
+  if(started&&Math.hypot(p.x-player.pos.x,p.z-player.pos.z)<500){floatText(V3(p.end.x,6,p.end.z),`交易 魔晶+${mana}`,'trade');snd('coin',.5,p.end);}}
 // ================= 国勢（経済） =================
 // 国ごとの人口・幸福度・戦力と、食料・木材・鉱石の蓄えを1秒ごとに動かす。数値は「1分あたり」で考える。
 const FIELDS=[];
-const FIELD_Y={wheat:1,paddy:1.3,flowers:0};
-function addField(x,z,area,type){FIELDS.push({x,z,area,type,ci:-1});}
+const FIELD_Y={wheat:1,paddy:1.3,veg:1.5,flowers:0};
+function addField(x,z,area,type){const f={x,z,area,type,ci:-1,idx:[],t:0,st:-1,grow:GROW_T[type]||80};FIELDS.push(f);if(FIELDS.length>400){const o=FIELDS.findIndex(q=>q.type==='flowers');FIELDS.splice(o>=0?o:0,1);}return f;}
 const ORE_BASE=[26,34,12,60,160,160,28];// 王都・神楽京・アズラーン・エーテリア・帝都・魔都・桜花京（村は少し）
 let ecoT=0,ecoSlow=0,realmOpen=false;
 const fmtN=v=>Math.round(v).toLocaleString();
@@ -3226,6 +3340,7 @@ function initEconomy(){COUNTRIES.forEach((C,i)=>ecoInitOne(i));ecoRecount();}
 // 重い集計（畑・森・兵力）は数秒ごと
 function ecoRecount(){
   for(const C of COUNTRIES){if(!C.eco)continue;C.eco.fieldY=0;C.eco.flowerA=0;}
+  for(const C of COUNTRIES)if(C.eco)C.eco.ports=0;for(const p of PORTS)if(!p.dead&&COUNTRIES[p.ci]&&COUNTRIES[p.ci].eco)COUNTRIES[p.ci].eco.ports++;
   for(const f of FIELDS){if(f.ci<0||f.ci>=COUNTRIES.length)f.ci=nearestCi(f.x,f.z);const E=COUNTRIES[f.ci]&&COUNTRIES[f.ci].eco;if(!E)continue;
     if(f.type==='flowers')E.flowerA+=f.area;else E.fieldY+=f.area/100*FIELD_Y[f.type];}
   COUNTRIES.forEach((C,ci)=>{const E=C.eco;if(!E)return;
@@ -3242,7 +3357,7 @@ function updEconomy(dt){ecoT-=dt;if(ecoT>0)return;ecoT=1;const k=1/60;
     const p0=E.pop,f0=E.food,w0=E.wood,o0=E.ore;
     // 食料：町の周りの農地（人口に見合う分）＋畑。消費は人口の1/10。
     const base=C.village?E.cap/10*.6:E.cap/10*.95;
-    const prodF=(base+E.fieldY)*(1-dr*.9)*(.6+E.hap/250);
+    const prodF=base*(1-dr*.9)*(.6+E.hap/250);
     const useF=E.pop/10;E.food=Math.max(0,E.food+(prodF-useF)*k);
     // 木材：近くの森から。建物の修繕と暮らしに使う。
     const prodW=Math.min(E.wood0,400)*.1*(1-dr*.7),useW=E.pop/60+(dr>.05?E.cap/40*dr:0);E.wood=Math.max(0,E.wood+(prodW-useW)*k);
@@ -3252,7 +3367,7 @@ function updEconomy(dt){ecoT-=dt;if(ecoT>0)return;ecoT=1;const k=1/60;
     E.food=Math.min(E.food,E.pop*20+500);E.wood=Math.min(E.wood,E.cap*6+500);E.ore=Math.min(E.ore,E.cap*4+(ORE_BASE[ci]||5)*40);
     // 幸福度
     const raid=RAIDS.some(r=>r.ci===ci&&r.units.some(u=>u.alive));
-    let tgt=62+Math.min(14,E.flowerA/3000)+Math.min(8,E.fieldY/20)-dr*70-(C.angered?14:0)-(raid?16:0)-(E.food<=0?30:0)-(E.wood<=0?6:0)+(E.happyT>gameTime?12:0);
+    let tgt=62+Math.min(14,E.flowerA/3000)+Math.min(8,E.fieldY/20)-dr*70-(C.angered?14:0)-(raid?16:0)-(E.food<=0?30:0)-(E.wood<=0?6:0)+(E.happyT>gameTime?12:0)+Math.min(8,(E.ports||0)*4);
     if(C.faction==='dem')tgt-=6;E.hap=clamp(E.hap+(clamp(tgt,0,100)-E.hap)*.04,0,100);
     // 人口：満ち足りれば増え、飢えや荒廃で減る
     let g=E.food>0?E.pop*.03*(E.hap-40)/60:-E.pop*.06;if(E.pop>E.cap)g=Math.min(g,-(E.pop-E.cap)*.25);else g=Math.min(g,(E.cap-E.pop)*.5);
@@ -3309,16 +3424,16 @@ function makeDojo(ci,x,z,ry){const M3=THREE.BufferGeometryUtils.mergeBufferGeome
     const bar=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,1.6,6),VMAT.dw);bar.rotation.z=Math.PI/2;bar.position.y=1.7;g.add(bar);const hd=new THREE.Mesh(new THREE.SphereGeometry(.32,8,6),VMAT.straw);hd.position.y=2.5;g.add(hd);scene.add(g);}
   for(let k=0;k<4;k++){const e=new Enemy('knight',yx+rr(-6,6),yz+rr(-5,5),{tc:{x:yx,z:yz,r:12},aggroR:14});e.inTown=false;tintEnemy(e,[0xf0ece0,0x2a3a6a,0x6a1818,0x2a2a2a][k],.6);}
   return b;}
-function villageWheat(cx,cz,S,yaw){addField(cx,cz,S*S*.8,'wheat');const f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));const sp=IS_MOBILE?2.4:1.8;
+function villageWheat(cx,cz,S,yaw){const FLD=addField(cx,cz,S*S*.8,'wheat');FLD.t=Math.random();const f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));const sp=IS_MOBILE?2.4:1.8;
   const cA=new THREE.Color(1.35,1.0,.35),cB=new THREE.Color(1.15,.8,.25);const G=V3(cx,0,cz);
   tintGround(G,S*.75,[.34,.24,.1],.75,(x,z)=>{const dx=x-cx,dz=z-cz;return Math.abs(dx*f.x+dz*f.z)<S/2&&Math.abs(dx*rt.x+dz*rt.z)<S/2;});
-  for(let u=-S/2;u<S/2;u+=sp)for(let v=-S/2;v<S/2;v+=sp*.8){if(Math.abs((v/sp/.8)%6)<.9)continue;const x=cx+f.x*u+rt.x*v,z=cz+f.z*u+rt.z*v;spawnCrop(x,heightAt(x,z),z,Math.random()<.5?cA:cB,rr(.9,1.2),rr(1.3,1.7));}}
-function villagePaddy(cx,cz,S,yaw){addField(cx,cz,S*S*.8,'paddy');const PS=10,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));const n=Math.max(2,Math.round(S/PS));const rc=new THREE.Color(.35,.85,.25),rc2=new THREE.Color(.28,.7,.2);
+  for(let u=-S/2;u<S/2;u+=sp)for(let v=-S/2;v<S/2;v+=sp*.8){if(Math.abs((v/sp/.8)%6)<.9)continue;const x=cx+f.x*u+rt.x*v,z=cz+f.z*u+rt.z*v;spawnCrop(x,heightAt(x,z),z,Math.random()<.5?cA:cB,rr(.9,1.2),rr(1.3,1.7),FLD);}}
+function villagePaddy(cx,cz,S,yaw){const FLD=addField(cx,cz,S*S*.8,'paddy');FLD.t=Math.random();const PS=10,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));const n=Math.max(2,Math.round(S/PS));const rc=RICE_A,rc2=RICE_B;
   for(let a=0;a<n;a++)for(let b=0;b<n;b++){const u=(a-(n-1)/2)*PS,v=(b-(n-1)/2)*PS;const x=cx+f.x*u+rt.x*v,z=cz+f.z*u+rt.z*v;let hmax=-1e9,hmin=1e9;
     for(const [du,dv] of [[-1,-1],[1,-1],[-1,1],[1,1]]){const h=heightAt(x+(f.x*du+rt.x*dv)*PS*.5,z+(f.z*du+rt.z*dv)*PS*.5);hmax=Math.max(hmax,h);hmin=Math.min(hmin,h);}if(hmin<.5)continue;
     const top=hmax+.35,bot=hmin-1.5;const i=padI;padI=(padI+1)%PAD_N;padEarth.count=padWater.count=Math.max(padEarth.count,i+1);plots[i]={x,z,s:PS};
     dummy.position.set(x,top,z);dummy.rotation.set(0,yaw,0);dummy.scale.set(PS,top-bot,PS);dummy.updateMatrix();padEarth.setMatrixAt(i,dummy.matrix);dummy.position.y=top+.03;dummy.scale.set(PS-1.1,1,PS-1.1);dummy.updateMatrix();padWater.setMatrixAt(i,dummy.matrix);
-    const st=IS_MOBILE?1.9:1.4;for(let p=-PS/2+1.1;p<PS/2-.9;p+=st)for(let q=-PS/2+1.1;q<PS/2-.9;q+=st){const px=x+f.x*p+rt.x*q,pz=z+f.z*p+rt.z*q;spawnCrop(px,top,pz,Math.random()<.5?rc:rc2,rr(.7,.9),rr(.55,.75));}}
+    const st=IS_MOBILE?1.9:1.4;for(let p=-PS/2+1.1;p<PS/2-.9;p+=st)for(let q=-PS/2+1.1;q<PS/2-.9;q+=st){const px=x+f.x*p+rt.x*q,pz=z+f.z*p+rt.z*q;spawnCrop(px,top,pz,Math.random()<.5?rc:rc2,rr(.7,.9),rr(.55,.75),FLD);}}
   padEarth.instanceMatrix.needsUpdate=padWater.instanceMatrix.needsUpdate=true;}
 function initVillages(){
   VMAT.th=new THREE.MeshStandardMaterial({color:0x9a7a48,roughness:1});VMAT.jr=new THREE.MeshStandardMaterial({color:0x2e3238,map:tileTex,roughness:.5,metalness:.3});
@@ -3343,7 +3458,7 @@ function initVillages(){
 initVillages();
 initEconomy();
 setDiff(loadSave());saveReady=true;renderSaveInfo();
-window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
