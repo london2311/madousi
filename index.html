@@ -736,7 +736,7 @@ const terrain=new THREE.Mesh(tGeo,new THREE.MeshStandardMaterial({vertexColors:t
 terrain.receiveShadow=true;scene.add(terrain);
 
 const craterQ=[];
-function crater(x,z,r,depth,scorch=1){if(barrierAt(x,z))return;craterQ.push({x,z,r,depth,scorch});}
+function crater(x,z,r,depth,scorch=1){if(barrierAt(x,z))return;craterQ.push({x,z,r:r*1.15,depth:depth*2.2,scorch});}
 function applyCraters(){
   if(!craterQ.length)return;
   let minx=SEG,maxx=0,minz=SEG,maxz=0;
@@ -746,10 +746,11 @@ function applyCraters(){
     const z0=Math.floor((c.z-c.r*1.5+HALF)/STEP),z1=Math.ceil((c.z+c.r*1.5+HALF)/STEP);
     for(let iz=Math.max(0,z0);iz<=Math.min(SEG,z1);iz++)for(let ix=Math.max(0,x0);ix<=Math.min(SEG,x1);ix++){
       const i=iz*NV+ix,x=-HALF+ix*STEP,z=-HALF+iz*STEP,d=Math.hypot(x-c.x,z-c.z),q=d/c.r;
-      let dh=0;if(q<1)dh=-c.depth*(1-q*q);else if(q<1.5)dh=c.depth*.22*Math.sin((q-1)/.5*Math.PI);
-      hgrid[i]=Math.max(hgrid[i]+dh,-45);tPos[i*3+1]=hgrid[i];
+      let dh=0;if(q<1)dh=-c.depth*Math.pow(1-q*q,.8);else if(q<1.5)dh=c.depth*.28*Math.sin((q-1)/.5*Math.PI);
+      hgrid[i]=Math.max(hgrid[i]+dh,-180);tPos[i*3+1]=hgrid[i];
       const s=clamp(1-q/1.35,0,1)*c.scorch;
-      if(s>0){const k=s*.85;tCol[i*3]=lerp(tCol[i*3],.035,k);tCol[i*3+1]=lerp(tCol[i*3+1],.028,k);tCol[i*3+2]=lerp(tCol[i*3+2],.025,k);}
+      // えぐれた底ほど黒く、赤熱した岩肌がのぞく
+      if(s>0){const k=s*.9,glowK=q<.6&&c.depth>8?(1-q/.6)*.35:0;tCol[i*3]=lerp(tCol[i*3],.035+glowK*.9,k);tCol[i*3+1]=lerp(tCol[i*3+1],.028+glowK*.18,k);tCol[i*3+2]=lerp(tCol[i*3+2],.025,k);}
     }
     minx=Math.min(minx,x0-1);maxx=Math.max(maxx,x1+1);minz=Math.min(minz,z0-1);maxz=Math.max(maxz,z1+1);
     removeTreesIn(c.x,c.z,c.r*1.1,true);killFlowers(c.x,c.z,c.r*1.1);killCrops(c.x,c.z,c.r*1.1);killPlots(c.x,c.z,c.r);killMills(c.x,c.z,c.r);
@@ -2194,7 +2195,7 @@ function travelTo(i){
 function travel(){toggleWarp();}
 
 // ================= tier =================
-let TIER=1;const TN=['弱','中','強','極'],TD=[.5,1,2,4],TCD=[.5,1,1.4,2.2];
+let TIER=1;const TN=['弱','中','強','極'],TD=[.5,1,2,4],TCD=[.4,.6,.75,1];
 const TK=[{s:.45,n:.35,t:0},{s:1,n:1,t:1},{s:1.9,n:2.4,t:2},{s:3.4,n:4.5,t:3}];
 WARPS.forEach((w,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`${i+1}　${w.n}<small>${w.d}</small>`;b.addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();travelTo(i);});$('#warp').appendChild(b);});
 document.querySelectorAll('#tier button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setTier(+b.dataset.t);}));
@@ -2306,7 +2307,7 @@ function cast(i){
   if(!started||pDead||SPEC)return;
   const s=SPELLS[i];selSpell=i;updBarSel();
   if(!spellOk(s)){toast(`「${s.name}」は Lv${SPELL_LV[s.id]} で習得する`);return;}
-  if(cds[i]>0)return;cds[i]=s.cd*TCD[TIER];
+  if(cds[i]>0)return;cds[i]=s.anc?s.cd:s.cd*TCD[TIER]*.5;
   const P=aimPoint.clone();
   const to=V3(P.x-player.pos.x,0,P.z-player.pos.z);if(to.lengthSq()>1)player.face=Math.atan2(to.x,to.z);
   player.castAnim=.5;heroParts.orbM.color.copy(s.c3);
@@ -2835,18 +2836,33 @@ function fireDome(p,R){const m=new THREE.Mesh(geoSphere,new THREE.MeshBasicMater
     m.material.opacity=t<.35?1:Math.max(0,1-(t-.35)/2.2);m.material.color.setRGB(10-t*2.5,5-t*1.6,Math.max(.2,1.4-t*.6));
     if(Math.random()<dt*20)glow.emit(p.x+rr(-R,R)*.5,p.y+rr(0,R*.6),p.z+rr(-R,R)*.5,0,rr(5,15),0,rr(1,2),rr(R*.1,R*.2),.4,PC.fireA,PC.fireB,1,.4,-2);
     if(t>2.6){scene.remove(m);m.material.dispose();return false;}return true;}});}
-function protonBeam(o,tgt,len,W,owner,power){const dir=V3(tgt.x-o.x,0,tgt.z-o.z);if(dir.lengthSq()<1)dir.set(0,0,1);dir.normalize();
-  const hit=tgt.clone();hit.y=groundAt(hit.x,hit.z);const col=lin(10,6,2.5),n=Math.max(4,Math.floor(len/(W*1.8)));
-  snd('crack',1.2,hit);later(.1,()=>snd('bigboom',1.3,hit));screenFlash(lin(1.6,1.1,.6),owner==='player'?.6:.4);
-  for(let k=0;k<6;k++)later(k*.18,()=>{beamFx(o,hit,W*(k===0?1.2:.8),col,.3);glowSphere(o,1,W*.6,lin(8,5,2),.25);});
-  flashLight(hit.clone().setY(hit.y+30),lin(1,.7,.35),220,len*1.2,3.2);
-  for(let i=0;i<=n;i++)later(.12+i*(2.4/n),()=>{const p=hit.clone().addScaledVector(dir,i*len/n);p.x+=rr(-W,W)*.4;p.z+=rr(-W,W)*.4;p.y=groundAt(p.x,p.z);
-    const R=W*2.4;fireDome(p,R);shockwave(p,R*1.8,lin(6,3,1),.9,1.4);
-    burst(p,IS_MOBILE?40:80,R*1.6,1.3,R*.3,2,PC.fireA,PC.fireB,1,1.8,-6,glow,R*1.2,R*.3);
-    burst(p,IS_MOBILE?12:24,R*.6,7,R*.45,R*1.8,PC.smokeA,PC.smokeB,.75,.4,-5,smoke,R*2.2,R*.3);
-    crater(p.x,p.z,R*.8,R*.18,1.4);if(i%3===0)shake(.8,p);if(i%4===0)snd('boom',.7,p);scorchTrees(p.x,p.z,R*1.2);
-    if(owner==='player'){damageArea(p,R,power,30,'fire',{up:30,ignite:1,bmul:2.5,trees:false});if(typeof titanArea==='function')titanArea(p,R,power*TD[TIER]*2);}
-    else npcBlast(p,R,power,power*.15);});}
+// 天を衝く爆炎の柱（光線が触れた跡に、壁のように立ち上がる）
+const pillarGeo=new THREE.CylinderGeometry(.55,1,1,14,1,true).translate(0,.5,0);
+function firePillar(p,R,H,delay){later(delay,()=>{const mk=(c,op)=>{const m=new THREE.Mesh(pillarGeo,new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:op,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,fog:false}));m.position.copy(p);scene.add(m);return m;};
+  const outer=mk(lin(1.5,.32,.04),.62),inner=mk(lin(2.6,1.2,.3),.6);let t=0;const L=5.5;
+  shockwave(p,R*2.2,lin(6,3,1),.9,1.4);crater(p.x,p.z,R*.9,R*.28,1.6);snd('boom',.6,p);
+  addFx({update(dt){t+=dt;const rise=1-Math.pow(1-Math.min(1,t/.9),3),fade=t>L-2?Math.max(0,(L-t)/2):1;
+    outer.scale.set(R*(1+t*.12),H*rise,R*(1+t*.12));inner.scale.set(R*.45,H*.92*rise,R*.45);outer.material.opacity=.6*fade;inner.material.opacity=.7*fade*(t<.3?1:Math.max(.25,1-(t-.3)/2.5));
+    outer.material.color.setRGB(Math.max(.45,1.5-t*.18),Math.max(.08,.32-t*.04),.03);
+    if(Math.random()<dt*(IS_MOBILE?8:18)){const h=rr(0,H*rise);glow.emit(p.x+rr(-R,R)*.6,p.y+h,p.z+rr(-R,R)*.6,rr(-4,4),rr(15,40),rr(-4,4),rr(1,2),rr(R*.2,R*.45),.4,PC.fireA,PC.fireB,fade,.4,-4);}
+    if(Math.random()<dt*(IS_MOBILE?3:6))smoke.emit(p.x+rr(-R,R)*.5,p.y+H*rise*rr(.6,1),p.z+rr(-R,R)*.5,rr(-6,6),rr(10,25),rr(-6,6),rr(5,9),R*.8,R*2.4,PC.smokeA,PC.smokeB,.55*fade,.3,-2);
+    if(t>=L){scene.remove(outer,inner);outer.material.dispose();inner.material.dispose();return false;}return true;}});});}
+// プロトンビーム：光線が大地を薙ぎ払い、その跡から天を衝く爆炎が壁のように立ち上がる
+function protonBeam(o,tgt,len,W,owner,power){const dir=V3(tgt.x-o.x,0,tgt.z-o.z);if(dir.lengthSq()<1)dir.set(0,0,1);dir.normalize();const side=V3(dir.z,0,-dir.x);
+  const hit=tgt.clone();hit.y=groundAt(hit.x,hit.z);const col=lin(10,6,2.5),n=Math.min(IS_MOBILE?22:40,Math.max(6,Math.floor(len/(W*2.2))));
+  const sgn=Math.random()<.5?-1:1,SW=1.7;// 薙ぎ払いにかかる時間
+  const path=[];for(let i=0;i<=n;i++){const u=i/n;const p=hit.clone().addScaledVector(side,sgn*(u-.5)*len).addScaledVector(dir,Math.sin(u*Math.PI)*len*.12+rr(-W,W)*.3);p.y=groundAt(p.x,p.z);path.push(p);}
+  snd('crack',1.2,hit);screenFlash(lin(1.6,1.1,.6),owner==='player'?.6:.4);flashLight(hit.clone().setY(hit.y+60),lin(1,.7,.35),260,len*1.3,SW+5);
+  let t=0,lastBeam=-1;addFx({update(dt){t+=dt;const k=Math.min(1,t/SW),fi=k*n,i0=Math.floor(fi),p=path[Math.min(n,i0)].clone().lerp(path[Math.min(n,i0+1)],fi-i0);
+    if(t-lastBeam>.06){lastBeam=t;beamFx(o,p,W*.7,lin(3,1.8,.8),.14);}
+    for(let q=0;q<(IS_MOBILE?6:14);q++)glow.emit(p.x+rr(-W,W),p.y+rr(0,W*.6),p.z+rr(-W,W),rr(-10,10),rr(10,40),rr(-10,10),rr(.4,.9),rr(W*.2,W*.5),.4,PC.white,PC.fireA,1,.6,-2);
+    if(Math.random()<.4)shake(.35,p);return t<SW;}});
+  later(.1,()=>snd('bigboom',1.1,hit));
+  for(let i=0;i<=n;i++){const p=path[i],R=W*2.1,d=SW*(i/n)+.55+rr(0,.15);
+    firePillar(p,R,W*18*rr(.8,1.2),d);
+    later(d,()=>{burst(p,IS_MOBILE?20:40,R*1.8,1.3,R*.3,2,PC.fireA,PC.fireB,1,1.8,-6,glow,R,R*.3);if(i%3===0){shake(.9,p);snd('bigboom',.5,p);}scorchTrees(p.x,p.z,R*1.4);
+      if(owner==='player'){damageArea(p,R*1.3,power,30,'fire',{up:30,ignite:1,bmul:2.5,trees:false});if(typeof titanArea==='function')titanArea(p,R*1.3,power*TD[TIER]*2);}
+      else npcBlast(p,R*1.3,power,power*.15);});}}
 function playerProton(P,K){const len=[300,700,1400,2600][K.t],W=[10,16,24,36][K.t];player.lift=1.4;
   magicCircle(player.pos,10+K.t*4,lin(8,5,2),2,{y:.3,spin:3,follow:player.pos});snd('chime',1);
   let t=0;addFx({update(dt){t+=dt;const tp=staffTip();for(let q=0;q<10;q++){const a=Math.random()*6.28,b=Math.random()*3.14,r=rr(5,12);
