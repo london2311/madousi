@@ -242,7 +242,15 @@ body.mobile #topbtns{max-width:calc(100vw - 230px)}
 #bossbar .bh i,#bossbar .bs i{display:block;height:100%;width:100%}
 #bossbar .bh i{background:linear-gradient(90deg,#ff8a6a,#ff3a5a);box-shadow:0 0 8px #ff4a6a}
 #bossbar .bs i{background:linear-gradient(90deg,#bfe4ff,#8a9cff)}
-#diffSel{display:flex;gap:8px;margin:0 0 14px}
+#diffSel,#modeSel,#facSel{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+#modeSel .diffb.on,#facSel .diffb.on{background:linear-gradient(180deg,#e8d0ff,#7a4ab0);color:#fff;border-color:#f0e0ff}
+#facSel{display:none}body.app #facSel{display:flex}
+.selL{font-size:12px;color:var(--gold);margin:0 0 5px;letter-spacing:.2em}
+#me .lv{font-size:12px;color:#bfe0ff;margin-left:.5em;font-family:var(--gothic)}
+.bar.mp.xp i{background:linear-gradient(90deg,#ffe9a8,#d0a040);box-shadow:0 0 8px #ffd070}
+#book .bc.lock{opacity:.4}
+#me .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp.lock{opacity:.3;filter:grayscale(1)}
 .diffb{font-family:var(--mincho),serif;font-size:14px;padding:7px 14px;border-radius:18px;border:1px solid rgba(232,193,112,.5);background:rgba(20,12,40,.6);color:#e8dcc0;cursor:pointer}
 .diffb.on{background:linear-gradient(180deg,#ffd98a,#c07a20);color:#1a0d00;border-color:#ffe6a8}
 #book{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:min(560px,92vw);max-height:84vh;overflow:auto;padding:18px 18px 14px;border-radius:14px;
@@ -329,7 +337,9 @@ body.mobile #topbtns{max-width:calc(100vw - 230px)}
   <div id="titleLeft">
     <p class="lead">最強の名を冠する大魔導士。魔王すら片手で退けてしまう力を持ちながら、山頂の天穹楼で迎えるのは、今日も平凡で少し退屈な一日。<br>炎も雷も、星さえも。その気になれば国ひとつ消せる魔法を、さて、今日は何に使おうか。</p>
     <dl id="controls"></dl>
-    <div id="diffSel"><button type="button" class="diffb" data-d="0">イージー</button><button type="button" class="diffb on" data-d="1">ノーマル</button><button type="button" class="diffb" data-d="2">ハード</button></div>
+    <div class="selL">遊び方</div><div id="modeSel"><button type="button" class="diffb" data-m="sage">大魔導士</button><button type="button" class="diffb" data-m="app">魔法使い見習い</button></div>
+    <div id="facSel"><button type="button" class="diffb" data-f="emp">帝国軍</button><button type="button" class="diffb" data-f="dem">魔王軍</button><button type="button" class="diffb" data-f="none">無所属</button></div>
+    <div class="selL">難易度</div><div id="diffSel"><button type="button" class="diffb" data-d="0">イージー</button><button type="button" class="diffb on" data-d="1">ノーマル</button><button type="button" class="diffb" data-d="2">ハード</button></div>
     <button id="start" type="button" disabled>降臨する</button>
     <div id="loadmsg">世界を生成しています…</div>
     <div id="saveInfo"></div>
@@ -359,6 +369,13 @@ THREE.ColorManagement.legacyMode = false;
 
 // ================= utilities =================
 let REPLAY=false;// セーブから世界を建て直している間は画面効果を出さない
+// 遊び方：大魔導士（sage）／魔法使い見習い（app）。見習いは所属（帝国軍・魔王軍・無所属）を選ぶ。セーブは別枠
+const MODE=(()=>{try{const v=JSON.parse(localStorage.getItem('hatenMadouou.mode')||'null');if(v&&v.m==='app')return {m:'app',fac:['emp','dem','none'].includes(v.fac)?v.fac:'none'};}catch(e){}return {m:'sage',fac:'none'};})();
+const APP=MODE.m==='app';
+let LV=1,EXP=0;
+const LV_MAX=30,expNeed=l=>Math.round(60*Math.pow(l,1.6));
+const SPELL_LV={fire:1,ice:1,flowers:1,thunder:3,wheat:2,veg:2,bloom:4,water:4,paddy:3,wind:6,earth:8,people:9,pierce:10,build:11,port:12,restore:14,meteor:18,gold:24,ultima:28};
+const TIER_LV=[1,5,12,22],FLY_LV=7;
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const rand = mulberry32(20260923);
 const R = (a,b)=>a+(b-a)*rand();
@@ -2050,7 +2067,7 @@ function updHome(dt){
   if(Math.random()<dt*40)glow.emit(HX+rr(-1.8,1.8),F+.8,HZ-HR+2.3,rr(-.3,.3),rr(1.5,3),rr(0,.3),rr(.4,.9),rr(.6,1.2),.2,PC.fireA,PC.fireB,1,.3,-1);
   if(Math.random()<dt*6)glow.emit(HX+rr(-.8,.8),F+4+rr(-.8,.8),HZ+8+rr(-.8,.8),0,rr(.3,1),0,rr(.6,1.2),.35,.1,PC.violetB,PC.gold,.8,0,0);
 }
-function homeSpawn(){player.pos.set(HX,F,HZ+2);player.vel.set(0,0,0);player.flying=false;document.querySelector('[data-a="fly"]').classList.remove('on');player.face=Math.PI;camYaw=Math.PI;camPitch=.3;}
+function homeSpawn(){if(APP){appHome();return;}player.pos.set(HX,F,HZ+2);player.vel.set(0,0,0);player.flying=false;document.querySelector('[data-a="fly"]').classList.remove('on');player.face=Math.PI;camYaw=Math.PI;camPitch=.3;}
 const WARPS=[{n:'天穹楼',d:'大魔導士の居城'},{n:'王都ルーンヘイム',d:'西洋の王都'},{n:'月詠国 神楽京',d:'東方の城下町'},{n:'蒼海の国 アズラーン',d:'白亜と碧の海上都市'},{n:'天空要塞都市 エーテリア',d:'雲上に浮かぶ要塞'},{n:'神聖ヴァルガルド帝国 帝都',d:'人類最大の帝国（西の果て）'},{n:'魔都ネクロディア',d:'魔王の座す都（東の大陸）'},{n:'東雲国 桜花京',d:'桜と黒漆の城下町'},{n:'古の遺跡',d:'西の果てに眠る太古の都の跡'},{n:'封印の地',d:'北東の果て、虚ろの祭壇'}];
 let warpOpen=false;
 function toggleWarp(){warpOpen=!warpOpen;$('#warp').classList.toggle('on',warpOpen);if(warpOpen&&document.pointerLockElement)document.exitPointerLock();}
@@ -2068,7 +2085,7 @@ function travelTo(i){
   else if(i===8){const x=RUINS.x+150,z=RUINS.z;player.pos.set(x,groundAt(x,z),z);player.face=-Math.PI/2;camYaw=-Math.PI/2;camPitch=.2;}
   else if(i===9){const x=SEAL.x-170,z=SEAL.z+60;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   else{const x=C3X-C3R-22,z=C3Z;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
-  showBanner(WARPS[i].n,i===0?'大魔導士の居城':'転移完了');
+  showBanner(WARPS[i].n,i===0?WARPS[0].d:'転移完了');
   magicCircle(player.pos,5,lin(5,3,9),1.2,{y:.2,spin:3});burst(player.pos.clone().setY(player.pos.y+1),80,14,1,2,.3,PC.violetB,PC.gold,1,2,0);
 }
 function travel(){toggleWarp();}
@@ -2078,7 +2095,7 @@ let TIER=1;const TN=['弱','中','強','極'],TD=[.5,1,2,4],TCD=[.5,1,1.4,2.2];
 const TK=[{s:.45,n:.35,t:0},{s:1,n:1,t:1},{s:1.9,n:2.4,t:2},{s:3.4,n:4.5,t:3}];
 WARPS.forEach((w,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`${i+1}　${w.n}<small>${w.d}</small>`;b.addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();travelTo(i);});$('#warp').appendChild(b);});
 document.querySelectorAll('#tier button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setTier(+b.dataset.t);}));
-function setTier(t){TIER=clamp(t,0,3);document.querySelectorAll('#tier button').forEach(b=>b.classList.toggle('on',+b.dataset.t===TIER));}
+function setTier(t){TIER=clamp(t,0,maxTier());document.querySelectorAll('#tier button').forEach(b=>b.classList.toggle('on',+b.dataset.t===TIER));}
 // ================= damage =================
 function damageArea(pos,r,dmg,knock,type,opts={}){
   dmg*=TD[TIER];knock*=(TIER>1?1.3:TIER<1?.6:1);
@@ -2168,6 +2185,7 @@ function announce(s){const el=$('#spellName');el.innerHTML=`${s.name}<small>${s.
 function cast(i){
   if(!started||pDead||SPEC)return;
   const s=SPELLS[i];selSpell=i;updBarSel();
+  if(!spellOk(s)){toast(`「${s.name}」は Lv${SPELL_LV[s.id]} で習得する`);return;}
   if(cds[i]>0)return;cds[i]=s.cd*TCD[TIER];
   const P=aimPoint.clone();
   const to=V3(P.x-player.pos.x,0,P.z-player.pos.z);if(to.lengthSq()>1)player.face=Math.atan2(to.x,to.z);
@@ -2899,7 +2917,7 @@ addEventListener('mousemove',e=>{
 });
 addEventListener('wheel',e=>{if(SPEC){SPEC.dist=clamp(SPEC.dist+e.deltaY*.35,40,900);SPEC.lastIn=gameTime;return;}if(started)camDist=clamp(camDist+e.deltaY*.02,7,60);},{passive:true});
 addEventListener('contextmenu',e=>e.preventDefault());
-function toggleFly(){player.flying=!player.flying;if(player.flying){player.vel.y=14;}document.querySelector('[data-a="fly"]').classList.toggle('on',player.flying);}
+function toggleFly(){if(APP&&LV<FLY_LV&&!player.flying){toast(`飛翔は Lv${FLY_LV} で習得する`);return;}player.flying=!player.flying;if(player.flying){player.vel.y=14;}document.querySelector('[data-a="fly"]').classList.toggle('on',player.flying);}
 function toggleMute(){muted=!muted;$('#muteBtn').textContent=muted?'音 オフ':'音 オン';if(master)master.gain.value=muted?0:.55;}
 $('#muteBtn').addEventListener('click',toggleMute);
 
@@ -2939,12 +2957,13 @@ function rebuildBar(){barEl.innerHTML='';SPELLS.forEach(s=>s.el=null);
     b.setAttribute('aria-label',s.name);b.innerHTML=`<span>${s.k}</span><kbd>${(k+1)%10}</kbd>`;
     b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();cast(si);});barEl.appendChild(b);s.el=b;});
   if(!SLOTS.includes(selSpell)&&SLOTS.length)selSpell=SLOTS[0];updBarSel();renderBook();}
-function updBarSel(){SPELLS.forEach((s,i)=>s.el&&s.el.classList.toggle('sel',i===selSpell));}
+function updBarSel(){SPELLS.forEach((s,i)=>{if(!s.el)return;s.el.classList.toggle('sel',i===selSpell);s.el.classList.toggle('lock',!spellOk(s));});}
 let bookOpen=false;
 function toggleBook(){bookOpen=!bookOpen;$('#book').classList.toggle('on',bookOpen);if(bookOpen){renderBook();if(document.pointerLockElement)document.exitPointerLock();}}
 function renderBook(){const g=$('#book .bg');if(!g)return;g.innerHTML='';
   SPELLS.forEach((s,i)=>{const k=SLOTS.indexOf(i);const c=document.createElement('button');c.type='button';c.className='bc'+(k>=0?' on':'');c.style.setProperty('--c',s.col);
-    c.innerHTML=`<span class="bk">${s.k}</span><span class="bt">${s.name}<small>${s.read}</small></span><span class="bn">${k>=0?(k+1)%10:'―'}</span>`;
+    const lk=!spellOk(s);if(lk)c.classList.add('lock');
+    c.innerHTML=`<span class="bk">${s.k}</span><span class="bt">${s.name}<small>${lk?'Lv'+SPELL_LV[s.id]+'で習得':s.read}</small></span><span class="bn">${k>=0?(k+1)%10:'―'}</span>`;
     c.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();const j=SLOTS.indexOf(i);if(j>=0){if(SLOTS.length>1)SLOTS.splice(j,1);}else if(SLOTS.length<10)SLOTS.push(i);else{showBanner('枠は10個まで','外してから加えてください');return;}saveSlots();rebuildBar();});
     g.appendChild(c);});
   renderComboBook();
@@ -3140,8 +3159,8 @@ requestAnimationFrame(frame);
 $('#start').disabled=false;$('#loadmsg').textContent='';
 $('#start').addEventListener('click',()=>{
   started=true;initAudio();$('#title').classList.add('gone');$('#hud').classList.add('on');
-  homeSpawn();
-  setTimeout(()=>showBanner('天穹楼','大魔導士の居城'),600);
+  appStart();homeSpawn();
+  setTimeout(()=>APP?showBanner(APP_BASE.n,'見習い魔法使い（'+FAC_N[MODE.fac]+'）の修行が始まる'):showBanner('天穹楼','大魔導士の居城'),600);
   if(!IS_MOBILE)tryLock();
   magicCircle(player.pos,6,lin(6,4,1.5),2,{y:.2,spin:2});burst(player.pos.clone().setY(player.pos.y+1),120,18,1.5,2,.3,PC.gold,PC.violetB,1,2,0);
   shockwave(player.pos,30,lin(4,3,1.2),1);snd('chime',.8);
@@ -3187,7 +3206,7 @@ function crowdDamage(u,dmg,imp,src,type){if(u.st!==1)return;if(src==='p')dmg*=P_
   if(type==='ice')u.fr=Math.max(u.fr,5);else if(type==='thunder')u.fr=Math.max(u.fr,1.2);
   if(u.hp>0)return;u.st=2;u.t=0;if(u.g)u.g.n[u.sd]--;
   if(imp){u.vx=imp.x;u.vy=Math.max(imp.y,6);u.vz=imp.z;u.fling=true;}else{u.vx=u.vz=0;u.vy=0;u.fling=false;}
-  if(src==='p'){kills++;const side=CR_SIDE[u.sd];KB[side+'_crowd']=(KB[side+'_crowd']||0)+1;if(u.sd===1)KB.demon=(KB.demon||0)+1;
+  if(src==='p'){kills++;gainExp(u.el?20:6);const side=CR_SIDE[u.sd];KB[side+'_crowd']=(KB[side+'_crowd']||0)+1;if(u.sd===1)KB.demon=(KB.demon||0)+1;
     if(u.mode==='battle'){FAC[side].rep-=.15;FAC[CR_SIDE[1-u.sd]].rep+=.05;}else if(u.mode==='raid'){addFavor(u.g.ci,.5);}else if(u.mode==='garrison'){COUNTRIES[u.sd?5:4].angered=true;}}}
 function crowdArea(pos,r,dmg,knock,up,type){for(const u of CRW){if(u.st!==1)continue;const dx=u.x-pos.x,dz=u.z-pos.z,d=Math.hypot(dx,dz);if(d>=r||Math.abs(u.y-pos.y)>r+10)continue;
     const f=1-d/r*.5,L=d||1;crowdDamage(u,dmg*f*rr(.9,1.1),knock>0?V3(dx/L*knock*f,up*f,dz/L*knock*f):null,'p',type);}}
@@ -3350,7 +3369,7 @@ function startBattle(){if(BATTLES.some(b=>!b.over))return;const eH=1-COUNTRIES[4
       m.war=side;m.bt=bt;m.raidGo=true;m.home.set(f.x,m.pos.y,f.z);m.engR=220;MAGES.push(m);bt.u[side].push(m);}}
   bt.n=[0,0];const nc=(nm+nq)*9;spawnBattleCrowd(bt,0,nc);spawnBattleCrowd(bt,1,nc);
   toast(`⚔ 帝国軍と魔王軍が「${f.n}」で激突（N で地図・${IS_MOBILE?'「観戦」':'V'} で観戦）`);snd('growl',.8);
-  for(const k of['emp','dem'])if(!FAC[k].hostile){const side=k,bt2=bt;offerMission({fac:k,title:`${f.n}の戦い`,desc:`${f.n}で${k==='emp'?'帝国軍':'魔王軍'}を勝利に導け（制限5分）`,mana:rw(550),rep:12,repO:-8,pwr:k==='emp'?2:-2,lim:300,
+  for(const k of['emp','dem'])if(!FAC[k].hostile&&(!APP||MODE.fac==='none'||k===MODE.fac)){const side=k,bt2=bt;offerMission({fac:k,title:`${f.n}の戦い`,desc:`${f.n}で${k==='emp'?'帝国軍':'魔王軍'}を勝利に導け（制限5分）`,mana:rw(550),rep:12,repO:-8,pwr:k==='emp'?2:-2,lim:300,
     check(){if(!bt2.over)return[0,`帝国 ${btAlive(bt2,'emp')}　魔王 ${btAlive(bt2,'dem')}`];return bt2.win===side?[1]:[-1];}});}}
 function btAlive(bt,side){return bt.u[side].filter(u=>u.alive).length+(bt.n?bt.n[side==='emp'?0:1]:0);}
 function updBattles(dt){for(const bt of BATTLES){if(bt.over){if(gameTime>bt.clear){for(const s2 of['emp','dem'])for(const u of bt.u[s2])if(u.alive&&!u.aggro&&!u.active){scene.remove(u.g);u.alive=false;u.dead=true;}bt.clear=1e12;}continue;}
@@ -3358,7 +3377,7 @@ function updBattles(dt){for(const bt of BATTLES){if(bt.over){if(gameTime>bt.clea
     if(!ea&&!da)w='draw';else if(!da)w='emp';else if(!ea)w='dem';else if(gameTime-bt.t0>330)w=ea>=da?'emp':'dem';
     if(w){bt.over=true;bt.win=w;bt.clear=gameTime+60;for(const s2 of['emp','dem'])for(const u of bt.u[s2])u.war=null;
       if(w==='emp'){PWR_BIAS+=1.5;showBanner('帝国軍、'+bt.f.n+'にて勝利','人類の勢力が増した');}else if(w==='dem'){PWR_BIAS-=1.5;showBanner('魔王軍、'+bt.f.n+'にて勝利','魔王軍の勢力が増した');}}}}
-function countKill(e){if(e.raid!=null&&COUNTRIES[e.raid])addFavor(e.raid,1.5);if(e.kind==='citizen'){const ci=countryAt(e.pos.x,e.pos.z);if(ci>=0&&COUNTRIES[ci].eco)COUNTRIES[ci].eco.pop=Math.max(0,COUNTRIES[ci].eco.pop-6);}if(e.war){const o=e.war==='emp'?'dem':'emp';FAC[e.war].rep-=1.2;FAC[o].rep+=.4;}const k=(e.fac||'x')+'_'+(e.rank||e.kind);KB[k]=(KB[k]||0)+1;KB[e.kind]=(KB[e.kind]||0)+1;}
+function countKill(e){gainExp(expFor(e));if(e.raid!=null&&COUNTRIES[e.raid])addFavor(e.raid,1.5);if(e.kind==='citizen'){const ci=countryAt(e.pos.x,e.pos.z);if(ci>=0&&COUNTRIES[ci].eco)COUNTRIES[ci].eco.pop=Math.max(0,COUNTRIES[ci].eco.pop-6);}if(e.war){const o=e.war==='emp'?'dem':'emp';FAC[e.war].rep-=1.2;FAC[o].rep+=.4;}const k=(e.fac||'x')+'_'+(e.rank||e.kind);KB[k]=(KB[k]||0)+1;KB[e.kind]=(KB[e.kind]||0)+1;}
 function worldPower(){let H=0,D=0;COUNTRIES.forEach((C,i)=>{if(!C.total)return;const k=1-C.dest/C.total;const w=i===4||i===5?10:C.settle?.5:1;if(C.faction==='dem')D+=w*k;else H+=w*k;});
   for(const m of MAGES){if(!m.alive)continue;const w=m.rank==='king'?6:m.rank==='elite'?.5:m.rank==='soldier'?.08:.3;if(m.fac==='dem')D+=w;else H+=w;}
   {let ce=0,cd=0;for(const u of CRW)if(u.st===1){if(u.sd)cd++;else ce++;}H+=ce*.004;D+=cd*.004;}
@@ -3400,7 +3419,7 @@ function genMission(fac){const L=[];
 function offerMission(m){m.id=++MID;m.exp=gameTime+240;OFFERS.push(m);if(OFFERS.length>4)OFFERS.shift();toast(`📜 ${FAC[m.fac].name}より依頼「${m.title}」（J で依頼書）`);snd('bell',.7);renderQuest();}
 function acceptMission(id){const i=OFFERS.findIndex(m=>m.id===id);if(i<0)return;if(ACTIVE.length>=3){toast('受けられる依頼は3件まで');return;}const m=OFFERS.splice(i,1)[0];m.t0=gameTime;m.init&&m.init();ACTIVE.push(m);renderQuest();}
 function finishMission(m,ok){ACTIVE.splice(ACTIVE.indexOf(m),1);
-  if(ok){MANA+=m.mana;if(m.defCi!=null)addFavor(m.defCi,15);FAC[m.fac].rep+=m.rep;const o=m.fac==='emp'?'dem':'emp';if(m.repO)FAC[o].rep+=m.repO;PWR_BIAS+=m.pwr;showBanner('依頼達成　'+m.title,`魔晶 +${m.mana}　${FAC[m.fac].name}の信頼 +${m.rep}`);snd('coin',1);}
+  if(ok){MANA+=m.mana;gainExp(Math.round(m.mana*.6));if(m.defCi!=null)addFavor(m.defCi,15);FAC[m.fac].rep+=m.rep;const o=m.fac==='emp'?'dem':'emp';if(m.repO)FAC[o].rep+=m.repO;PWR_BIAS+=m.pwr;showBanner('依頼達成　'+m.title,`魔晶 +${m.mana}　${FAC[m.fac].name}の信頼 +${m.rep}`);snd('coin',1);}
   else{FAC[m.fac].rep-=5;showBanner('依頼失敗　'+m.title,'');}
   for(const k of['emp','dem'])if(FAC[k].rep<=-40&&!FAC[k].hostile){FAC[k].hostile=true;COUNTRIES[k==='emp'?4:5].angered=true;toast(`⚔ ${FAC[k].name}はあなたを敵と定めた`);}
   renderQuest();saveGame();}
@@ -3410,7 +3429,7 @@ function updWorld(dt){if(!started)return;
   warT-=dt;if(warT<=0){warT=rr(160,250);startBattle();}updBattles(dt);
   for(const k of['emp','dem'])if(FAC[k].rep<=-40&&!FAC[k].hostile){FAC[k].hostile=true;COUNTRIES[k==='emp'?4:5].angered=true;toast(`⚔ ${FAC[k].name}はあなたを敵と定めた`);}
   for(const k of['emp','dem']){const C=COUNTRIES[k==='emp'?4:5];if(C.angered&&!FAC[k].hostile){FAC[k].hostile=true;FAC[k].rep=Math.min(FAC[k].rep,-40);toast(`⚔ ${FAC[k].name}と交戦状態に入った`);}}
-  offerT-=dt;if(offerT<=0){offerT=rr(70,120);const f=['emp','dem'].filter(k=>!FAC[k].hostile);if(f.length&&OFFERS.length<3)offerMission(genMission(f[Math.random()*f.length|0]));}
+  offerT-=dt;if(offerT<=0){offerT=rr(70,120);const f=['emp','dem'].filter(k=>!FAC[k].hostile&&(!APP||MODE.fac==='none'||k===MODE.fac));if(f.length&&OFFERS.length<3)offerMission(genMission(f[Math.random()*f.length|0]));}
   for(let i=OFFERS.length-1;i>=0;i--)if(gameTime>OFFERS[i].exp)OFFERS.splice(i,1);
   saveT-=dt;if(saveT<=0){saveT=20;saveGame();}
   updEconomy(dt);updRule(dt);
@@ -3455,7 +3474,7 @@ $('#quest .qx').addEventListener('click',e=>{e.stopPropagation();toggleQuest();}
 for(const id of['#quest','#wmap'])$(id).addEventListener('pointerdown',e=>e.stopPropagation());
 $('#quest').addEventListener('click',e=>{e.stopPropagation();const t=e.target;if(t.dataset.acc)acceptMission(+t.dataset.acc);else if(t.dataset.dec){const i=OFFERS.findIndex(m=>m.id===+t.dataset.dec);if(i>=0)OFFERS.splice(i,1);renderQuest();}
   else if(t.dataset.peace){const k=t.dataset.peace,c=peaceCost(k);if(MANA>=c){MANA-=c;makePeace(k);renderQuest();}else toast('魔晶が足りない');}
-  else if(t.dataset.buy){const it=SHOP.find(x=>x.k===t.dataset.buy);const l=UPG[it.k];if(l<it.max&&MANA>=it.c(l)){MANA-=it.c(l);UPG[it.k]++;it.fx();snd('coin',1);renderQuest();saveGame();}else toast('魔晶が足りない');}});
+  else if(t.dataset.buy){const it=SHOP.find(x=>x.k===t.dataset.buy);const l=UPG[it.k];if(l<it.max&&MANA>=it.c(l)){MANA-=it.c(l);UPG[it.k]++;if(APP&&it.k!=='df')applyLevel();else it.fx();snd('coin',1);renderQuest();saveGame();}else toast('魔晶が足りない');}});
 // ================= 田園の実り・港 =================
 const GROW_T={wheat:80,paddy:100,veg:60};
 const SPROUT=new THREE.Color(.28,.72,.2),RICE_A=new THREE.Color(1.25,1.02,.38),RICE_B=new THREE.Color(1.05,.85,.3);
@@ -3733,21 +3752,60 @@ function worldLoad(w){if(!w||typeof w!=='object')return;
   const each=(L,fn)=>{if(Array.isArray(L))for(const a of L){if(!Array.isArray(a))continue;const s0=a[0]|0,n=a[1]|0;for(let i=s0;i<s0+n&&i<buildings.length;i++)if(i>=0)fn(buildings[i]);}};
   each(w.d,ruinQuiet);each(w.g,goldQuiet);}
 function postLoad(){COUNTRIES.forEach(C=>{if(C.total&&C.dest>0){C.start=0;if(C.dest/C.total>=.95){C.done=true;C.doneAt=0;}}});}
+// ================= 魔法使い見習い =================
+// 見習いは Lv1 から。倒した敵や依頼の経験で育ち、威力・体力が伸び、魔法と威力段階を順に覚える。
+const APP_BASE={emp:{x:EMX+ER+60,z:EMZ+40,n:'帝都の見習い寮',d:'帝国軍の魔導兵見習いの宿舎'},dem:{x:DMX-DR-60,z:DMZ-40,n:'魔都の見習い塔',d:'魔王軍の術士見習いの塔'},none:{x:-1000+60,z:1050+60,n:'ミルデン村の下宿',d:'どこにも属さない見習いの住まい'}}[MODE.fac];
+const FAC_N={emp:'帝国軍',dem:'魔王軍',none:'無所属'};
+function spellOk(s){return !APP||LV>=(SPELL_LV[s.id]||1);}
+function maxTier(){if(!APP)return 3;let t=0;for(let i=0;i<4;i++)if(LV>=TIER_LV[i])t=i;return t;}
+function applyLevel(){if(!APP)return;updBarSel();const hp0=PLAYER_MAX;PLAYER_MAX=700+70*(LV-1)+UPG.hp*400;P_MUL=(.25+.75*(LV-1)/(LV_MAX-1))*(1+UPG.pw*.15);
+  pHP=Math.min(PLAYER_MAX,pHP+(PLAYER_MAX-hp0));if(TIER>maxTier())setTier(maxTier());updTierBtns();updXpBar();if(typeof renderBook==='function'&&bookOpen)renderBook();}
+function updTierBtns(){document.querySelectorAll('#tier button').forEach(b=>{const t=+b.dataset.t;b.disabled=APP&&t>maxTier();b.style.opacity=b.disabled?.35:'';});}
+function updXpBar(){if(!APP)return;const k=LV>=LV_MAX?1:EXP/expNeed(LV);$('#me .bar.mp i').style.width=(k*100).toFixed(1)+'%';$('#me .bar.mp b').textContent=LV>=LV_MAX?'極':Math.floor(k*100)+'%';$('#me .lv').textContent='Lv'+LV;}
+function gainExp(n){if(!APP||LV>=LV_MAX||!(n>0))return;EXP+=n;let up=false;const learned=[];
+  while(LV<LV_MAX&&EXP>=expNeed(LV)){EXP-=expNeed(LV);LV++;up=true;for(const s of SPELLS)if(SPELL_LV[s.id]===LV)learned.push(s.name);
+    for(let t=1;t<4;t++)if(TIER_LV[t]===LV)learned.push(TN[t]+'の威力');if(LV===FLY_LV)learned.push('飛翔');}
+  if(up){applyLevel();pHP=PLAYER_MAX;showBanner('レベルアップ　Lv'+LV,learned.length?'習得：'+learned.join('・'):'魔力が高まった');snd('chime',1);
+    burst(player.pos.clone().setY(player.pos.y+1.5),80,12,1.4,1.6,.3,PC.gold,PC.white,1,1.5,-3);if(LV>=LV_MAX)toast('✦ 見習いの域を超えた。いつか、あの大魔導士のように。');}
+  updXpBar();}
+const EXP_K={wolf:12,knight:15,archer:10,golem:40,wyvern:35,demon:15,boss:1500,citizen:0,brute:400};
+function expFor(e){if(e.kind==='mage')return e.rank==='king'?3000:e.rank==='elite'?600:e.rank==='soldier'?60:350;return EXP_K[e.kind]||10;}
+function appStart(){if(!APP)return;
+  const own=MODE.fac,foe=own==='emp'?'dem':own==='dem'?'emp':null;
+  if(!readSave()){if(foe){FAC[foe].hostile=true;FAC[foe].rep=-40;FAC[own].rep=30;}}
+  applyLevel();pHP=PLAYER_MAX;}
+function appHome(){const B=APP_BASE;player.pos.set(B.x,groundAt(B.x,B.z),B.z);player.vel.set(0,0,0);player.flying=false;document.querySelector('[data-a="fly"]').classList.remove('on');
+  player.face=Math.atan2(-B.x,-B.z);camYaw=player.face;camPitch=.25;}
+// タイトルの遊び方選択：変えたらそのモードのセーブで読み込み直す
+function setModeUI(){document.body.classList.toggle('app',APP);document.querySelectorAll('#modeSel [data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===MODE.m));
+  document.querySelectorAll('#facSel [data-f]').forEach(b=>b.classList.toggle('on',APP&&b.dataset.f===MODE.fac));}
+function chooseMode(m,f){const nm={m,fac:f||MODE.fac||'none'};if(nm.m===MODE.m&&(nm.m==='sage'||nm.fac===MODE.fac))return;try{localStorage.setItem('hatenMadouou.mode',JSON.stringify(nm));}catch(e){}
+  $('#loadmsg').textContent='世界を読み込み直しています…';$('#start').disabled=true;setTimeout(()=>location.reload(),150);}
+document.querySelectorAll('#modeSel [data-m]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();
+  if(b.dataset.m==='app'&&!APP){document.body.classList.add('app');document.querySelectorAll('#modeSel [data-m]').forEach(x=>x.classList.toggle('on',x===b));$('#loadmsg').textContent='所属を選ぶと、見習いとしての修行が始まる';}
+  else if(b.dataset.m==='sage')chooseMode('sage');}));
+document.querySelectorAll('#facSel [data-f]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();chooseMode('app',b.dataset.f);}));
+setModeUI();
+if(APP){$('#me .name').firstChild.textContent='見習い魔法使い';$('#me .ttl').insertAdjacentHTML('beforebegin','<span class="lv"></span>');$('#me .bar.mp').classList.add('xp');
+  WARPS[0]={n:APP_BASE.n,d:APP_BASE.d};const wb=$('#warp').querySelectorAll('button')[0];if(wb)wb.innerHTML=`1　${APP_BASE.n}<small>${APP_BASE.d}</small>`;
+  $('#titleLeft .lead').innerHTML=`世界には、最強の名を冠する大魔導士がいるという。<br>あなたはまだ、見習いの魔法使い。所属は${FAC_N[MODE.fac]}。小さな火球ひとつから、今日の修行を始めよう。`;
+  $('#start').textContent='修行を始める';}
 // ================= save =================
 // 進行状況（魔晶・工房の強化・勢力・難易度・撃破数）と、世界の記録（建てた物・壊した物）を保存する。
-const SAVE_KEY='hatenMadouou.save';const ECO_FIXED=7+VILL.length;let saveReady=false;
+const SAVE_KEY=APP?'hatenMadouou.save.app.'+MODE.fac:'hatenMadouou.save';const ECO_FIXED=7+VILL.length;let saveReady=false;
 function saveGame(){if(!saveReady||!started)return;
   try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,at:Date.now(),diff:DIFF,mana:MANA,upg:UPG,pwr:PWR_BIAS,kills,kb:KB,built:BUILT,farms:FARMS,
-    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,world:worldSave(),endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
+    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,world:worldSave(),lv:LV,exp:EXP,endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
     rule:COUNTRIES.map(C=>[C.rule==='vassal'?1:C.rule==='ally'?2:0,Math.round(C.favor||0)]),
     eco:COUNTRIES.map(C=>C.eco?[Math.round(C.eco.pop),Math.round(C.eco.hap),Math.round(C.eco.food),Math.round(C.eco.wood),Math.round(C.eco.ore)]:null)}));}catch(e){}}
 function readSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&typeof s==='object'?s:null;}catch(e){return null;}}
 function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v==='number'&&isFinite(v)?v:d;
   try{worldLoad(s.world);}catch(e){REPLAY=false;}
   MANA=Math.max(0,Math.floor(num(s.mana,0)));
-  for(const it of SHOP){const l=Math.max(0,Math.min(it.max,Math.floor(num(s.upg&&s.upg[it.k],0))));for(let i=0;i<l;i++)it.fx();UPG[it.k]=l;}
+  for(const it of SHOP){const l=Math.max(0,Math.min(it.max,Math.floor(num(s.upg&&s.upg[it.k],0))));if(!APP||it.k==='df')for(let i=0;i<l;i++)it.fx();UPG[it.k]=l;}
   pHP=PLAYER_MAX;
   for(const k of['emp','dem']){const f=s.fac&&s.fac[k];if(!f)continue;FAC[k].rep=num(f.rep,0);FAC[k].hostile=!!f.hostile;}
+  LV=clamp(Math.floor(num(s.lv,1)),1,LV_MAX);EXP=Math.max(0,num(s.exp,0));
   PWR_BIAS=num(s.pwr,0);kills=Math.max(0,Math.floor(num(s.kills,0)));BUILT=Math.max(0,num(s.built,0));FARMS=Math.max(0,num(s.farms,0));
   if(s.kb&&typeof s.kb==='object')for(const k in s.kb){const v=num(s.kb[k],0);if(v>0)KB[k]=v;}
   if(Array.isArray(s.eco))s.eco.forEach((a,i)=>{const C=COUNTRIES[i];if(!C||!C.eco||!Array.isArray(a))return;const [p,h,f,w,o]=a.map(v=>Math.max(0,num(v,0)));C.eco.pop=p;C.eco.hap=Math.min(100,h);C.eco.food=f;C.eco.wood=w;C.eco.ore=o;});
@@ -3759,7 +3817,7 @@ function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v=
 function renderSaveInfo(){const el=$('#saveInfo');const s=readSave();if(!s){el.innerHTML='';return;}
   const d=new Date(s.at||0),lv=SHOP.reduce((a,it)=>a+(UPG[it.k]||0),0);
   const ends=ENDINGS.filter(E=>END_SEEN.has(E.id)).map(E=>E.n).join('・');const wl=(s.world&&Array.isArray(s.world.log))?s.world.log:[];const nb=wl.filter(e=>e.k==='h'||e.k==='l').length,nf=wl.filter(e=>e.k==='f').length,np=wl.filter(e=>e.k==='p').length;
-  el.innerHTML=`<b>前回の記録</b>（${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}）　魔晶 ${MANA}・強化 計Lv${lv}・撃破 ${kills}・実績 ${ACH.size}/${ACHS.length}<button type="button" id="saveDel">記録を消す</button>`+(nb||nf||np?`<br><b>築いた物</b> 建物 ${nb}・田畑と花畑 ${nf}・港 ${np}`:'')+(ends?`<br><b>到達した結末</b> ${END_SEEN.size}/${ENDINGS.length}　${ends}`:'');
+  el.innerHTML=`<b>前回の記録</b>（${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}）　${APP?'Lv'+LV+'・':''}魔晶 ${MANA}・強化 計Lv${lv}・撃破 ${kills}・実績 ${ACH.size}/${ACHS.length}<button type="button" id="saveDel">記録を消す</button>`+(nb||nf||np?`<br><b>築いた物</b> 建物 ${nb}・田畑と花畑 ${nf}・港 ${np}`:'')+(ends?`<br><b>到達した結末</b> ${END_SEEN.size}/${ENDINGS.length}　${ends}`:'');
   $('#saveDel').addEventListener('click',e=>{e.stopPropagation();if(!confirm('保存された記録（魔晶・強化・勢力の信頼など）を消して、最初からやり直しますか？（実績と称号は残ります）'))return;
     saveReady=false;try{localStorage.removeItem(SAVE_KEY);}catch(e2){}location.reload();});}
 addEventListener('pagehide',saveGame);
