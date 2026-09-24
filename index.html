@@ -437,7 +437,7 @@ const MODE=(()=>{try{const v=JSON.parse(localStorage.getItem('hatenMadouou.mode'
 const APP=MODE.m==='app';
 let LV=1,EXP=0;
 const LV_MAX=30,expNeed=l=>Math.round(60*Math.pow(l,1.6));
-const SPELL_LV={inferno:26,rift:25,raincall:20,tsunami:17,crow:10,s_fire:13,s_ice:15,s_thun:16,dragon:30,fire:1,ice:1,flowers:1,thunder:3,wheat:2,veg:2,bloom:4,water:4,paddy:3,wind:6,earth:8,people:9,pierce:10,build:11,port:12,restore:14,meteor:18,gold:24,ultima:28};
+const SPELL_LV={proton:29,inferno:26,rift:25,raincall:20,tsunami:17,crow:10,s_fire:13,s_ice:15,s_thun:16,dragon:30,fire:1,ice:1,flowers:1,thunder:3,wheat:2,veg:2,bloom:4,water:4,paddy:3,wind:6,earth:8,people:9,pierce:10,build:11,port:12,restore:14,meteor:18,gold:24,ultima:28};
 const TIER_LV=[1,5,12,22],FLY_LV=7;
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const rand = mulberry32(20260923);
@@ -2264,13 +2264,14 @@ const SPELLS=[
   {id:'rift',k:'断',name:'断界の一閃',read:'だんかいのいっせん',col:'#f0f0ff',c3:lin(8,8,12),cd:26,r:40},
   {id:'raincall',k:'嵐',name:'天候支配・雷雨',read:'てんこうしはい・らいう',col:'#8898c8',c3:lin(3,4,9),cd:40,r:500},
   {id:'tsunami',k:'濤',name:'大津波',read:'おおつなみ',col:'#2a8ac8',c3:lin(1,3.5,7),cd:24,r:300},
+  {id:'proton',k:'砲',name:'巨神の咆哮',read:'プロトンビーム',col:'#ffb070',c3:lin(10,6,2.5),cd:45,r:60},
   {id:'crow',k:'烏',name:'夜烏の変化',read:'よがらすのへんげ',col:'#9a86c8',c3:lin(2,1.4,4),cd:14,r:10},
   {id:'s_fire',k:'焔',name:'炎の精霊',read:'ほのおのせいれい',col:'#ff6a2a',c3:lin(9,3,.6),cd:18,r:40},
   {id:'s_ice',k:'霜',name:'氷の精霊',read:'こおりのせいれい',col:'#8fe0ff',c3:lin(2,6,10),cd:18,r:40},
   {id:'s_thun',k:'霆',name:'雷の精霊',read:'いかずちのせいれい',col:'#b8c8ff',c3:lin(5,6,12),cd:18,r:40},
   {id:'dragon',k:'龍',name:'神龍降臨',read:'しんりゅうこうりん',col:'#ffe28a',c3:lin(9,7,2.5),cd:80,r:300},
 ];
-const SPELL_DESC={"inferno":"自分を中心に、極なら直径2kmを業火で焼き尽くす。建物も森も大地も黒く焦げる。自分は焼かれない。","rift":"照準の方向へ光の一閃を放ち、大地を一刀両断する。極なら大陸を割るほどの裂け目が走る。","raincall":"天候を支配して雷雨を呼ぶ。空が暗くなり雨が降り、周りの敵へ雷が落ち続ける。","tsunami":"照準の方向へ巨大な津波を押し出す。津波に氷の魔法をかけると凍りつき、その上を歩ける氷の丘になる。","fire": "火球を放ち、着弾点で爆発する。建物や木を燃やす。威力を上げると火球の数が増える。", "thunder": "近くの敵へ次々と雷を落とす。当たった敵は一瞬しびれる。極では天から巨大な雷柱。", "ice": "一帯を凍らせ、氷柱で貫く。凍った敵は動けない。極では巨大な氷山が長く残り、周りを凍らせ続ける。", "water": "前方へ大津波を押し出し、敵も建物も押し流す。雷を重ねると連鎖魔法「雷水陣」。", "wind": "竜巻を起こし、敵を巻き上げながらさまよう。炎を重ねると「焔旋風」。", "earth": "大地を割り、岩の槍を突き上げて敵を打ち上げる。氷を重ねると「砕氷崩山」。", "ultima": "溜めてから放つ極光の大爆発。広い範囲のすべてを消し飛ばす、大魔導士の奥の手。", "meteor": "空から隕石の雨を降らせる。建物を壊すのが得意。", "pierce": "光の槍を撃ち抜く。まっすぐ遠くまで貫き、強敵との一騎打ちに向く。", "gold": "一帯の地面・木・建物・敵を黄金に変える。黄金になった建物は壊れた扱いになる。", "restore": "壊れた建物・燃えた木・えぐれた地面を元に戻す。国を復興させると喜ばれる。", "bloom": "花と木を芽吹かせ、地面を豊かにする。強以上で大樹（世界樹）が生える。", "people": "住人を呼び寄せ、その国の人口を増やす。", "build": "家や塔を建てる。国の外で唱えると新しい町ができる。", "flowers": "花畑を広げる。近くの国の幸福度が上がる。", "wheat": "麦畑を作る。実ると収穫され、近くの国の食料になる。", "paddy": "水田を作る。稲が黄金色に実ると収穫され、食料になる。", "veg": "野菜畑（キャベツ・南瓜・トマト・茄子）を作る。育つのが早い。", "port": "岸辺に港を築く。交易船が行き来して、資源と魔晶を持ち帰る。岸辺を狙って唱える。", "crow": "体を烏の群れに変える。その間はどんな攻撃も受け付けず、移動も速くなる。いざという時の守りに。", "s_fire": "炎の精霊を呼ぶ。頭上に控え、敵対している相手へ火球を撃つ。住人や平時の衛兵は狙わない。", "s_ice": "氷の精霊を呼ぶ。敵対している相手を凍らせ、氷柱で縫い止める。", "s_thun": "雷の精霊を呼ぶ。敵対している相手へ、次々と跳ねる稲妻を放つ。", "dragon": "天から神龍を呼ぶ。一帯を息吹で薙ぎ払い、最後にすべてを無に帰す。大結界も大きく削る。"};
+const SPELL_DESC={"proton":"巨神兵と同じ破壊の光。力を溜めて照準へ光線を放つと、着弾点から先へ爆発が大地を這うように連なり、一帯を焼き払う。","inferno":"自分を中心に、極なら直径2kmを業火で焼き尽くす。建物も森も大地も黒く焦げる。自分は焼かれない。","rift":"照準の方向へ光の一閃を放ち、大地を一刀両断する。極なら大陸を割るほどの裂け目が走る。","raincall":"天候を支配して雷雨を呼ぶ。空が暗くなり雨が降り、周りの敵へ雷が落ち続ける。","tsunami":"照準の方向へ巨大な津波を押し出す。津波に氷の魔法をかけると凍りつき、その上を歩ける氷の丘になる。","fire": "火球を放ち、着弾点で爆発する。建物や木を燃やす。威力を上げると火球の数が増える。", "thunder": "近くの敵へ次々と雷を落とす。当たった敵は一瞬しびれる。極では天から巨大な雷柱。", "ice": "一帯を凍らせ、氷柱で貫く。凍った敵は動けない。極では巨大な氷山が長く残り、周りを凍らせ続ける。", "water": "前方へ大津波を押し出し、敵も建物も押し流す。雷を重ねると連鎖魔法「雷水陣」。", "wind": "竜巻を起こし、敵を巻き上げながらさまよう。炎を重ねると「焔旋風」。", "earth": "大地を割り、岩の槍を突き上げて敵を打ち上げる。氷を重ねると「砕氷崩山」。", "ultima": "溜めてから放つ極光の大爆発。広い範囲のすべてを消し飛ばす、大魔導士の奥の手。", "meteor": "空から隕石の雨を降らせる。建物を壊すのが得意。", "pierce": "光の槍を撃ち抜く。まっすぐ遠くまで貫き、強敵との一騎打ちに向く。", "gold": "一帯の地面・木・建物・敵を黄金に変える。黄金になった建物は壊れた扱いになる。", "restore": "壊れた建物・燃えた木・えぐれた地面を元に戻す。国を復興させると喜ばれる。", "bloom": "花と木を芽吹かせ、地面を豊かにする。強以上で大樹（世界樹）が生える。", "people": "住人を呼び寄せ、その国の人口を増やす。", "build": "家や塔を建てる。国の外で唱えると新しい町ができる。", "flowers": "花畑を広げる。近くの国の幸福度が上がる。", "wheat": "麦畑を作る。実ると収穫され、近くの国の食料になる。", "paddy": "水田を作る。稲が黄金色に実ると収穫され、食料になる。", "veg": "野菜畑（キャベツ・南瓜・トマト・茄子）を作る。育つのが早い。", "port": "岸辺に港を築く。交易船が行き来して、資源と魔晶を持ち帰る。岸辺を狙って唱える。", "crow": "体を烏の群れに変える。その間はどんな攻撃も受け付けず、移動も速くなる。いざという時の守りに。", "s_fire": "炎の精霊を呼ぶ。頭上に控え、敵対している相手へ火球を撃つ。住人や平時の衛兵は狙わない。", "s_ice": "氷の精霊を呼ぶ。敵対している相手を凍らせ、氷柱で縫い止める。", "s_thun": "雷の精霊を呼ぶ。敵対している相手へ、次々と跳ねる稲妻を放つ。", "dragon": "天から神龍を呼ぶ。一帯を息吹で薙ぎ払い、最後にすべてを無に帰す。大結界も大きく削る。"};
 const cds=SPELLS.map(()=>0);let selSpell=0;
 function announce(s){const el=$('#spellName');el.innerHTML=`${s.name}<small>${s.read}</small>`;el.style.setProperty('--sc',s.col);el.classList.remove('show');void el.offsetWidth;el.classList.add('show');}
 
@@ -2794,6 +2795,37 @@ function freezeWaves(P){let any=false;for(const w of WAVES){if(w.frozen)continue
       snd('shatter',1.3,c);snd('ice',1,c);screenFlash(lin(.8,1.1,1.5),.4);burst(c.clone().setY(c.y+w.H*.5),IS_MOBILE?100:220,40,1.2,2.4,.4,PC.iceA,PC.iceB,1,1,10,glow,0,w.W*.3);}}
   if(any)showBanner('大津波、凍結','凍った波の上を歩ける（約4分）');return any;}
 Object.assign(SP,{inferno(P,s,K){inferno(K);},rift(P,s,K){rift(P,K);},raincall(P,s,K){raincall(K);},tsunami(P,s,K){tsunami(P,K);}});
+// ================= プロトンビーム =================
+// 着弾点から先へ、爆発が大地を這うように連なって一帯を焼き払う。巨神兵と大魔導士のどちらも使う
+function npcBlast(p,r,dmg,pdmg){const imp=v=>{const d=v.clone().sub(p);d.y=0;if(d.lengthSq()<.01)d.set(1,0,0);return d.normalize().multiplyScalar(40).setY(26);};
+  for(const e of enemies){if(!e.alive||e.isTitan)continue;if(e.pos.distanceTo(p)<r+e.radius)e.hit(dmg,e.kind==='mage'||e.kind==='brute'?null:imp(e.pos),'npc');}
+  for(const u of CRW)if(u.st===1&&Math.hypot(u.x-p.x,u.z-p.z)<r)crowdDamage(u,dmg,V3(rr(-20,20),24,rr(-20,20)),'npc');
+  for(const b of buildings){if(b.destroyed)continue;if(Math.hypot(b.x-p.x,b.z-p.z)<r+b.rad)damageBuilding(b,dmg*1.5,.8,true);}
+  if(started&&!pDead&&player.pos.distanceTo(p)<r+4)hurtPlayer(pdmg);}
+// 地面から立ち上がる火球のドーム（しばらく燃え残る）
+function fireDome(p,R){const m=new THREE.Mesh(geoSphere,new THREE.MeshBasicMaterial({color:lin(10,5,1.4),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}));
+  m.position.copy(p);scene.add(m);let t=0;addFx({update(dt){t+=dt;const k=Math.min(1,t/.35);m.scale.set(R*(.3+.9*k),R*(.2+1.1*k)*(1-Math.max(0,t-1.2)*.3),R*(.3+.9*k));
+    m.material.opacity=t<.35?1:Math.max(0,1-(t-.35)/2.2);m.material.color.setRGB(10-t*2.5,5-t*1.6,Math.max(.2,1.4-t*.6));
+    if(Math.random()<dt*20)glow.emit(p.x+rr(-R,R)*.5,p.y+rr(0,R*.6),p.z+rr(-R,R)*.5,0,rr(5,15),0,rr(1,2),rr(R*.1,R*.2),.4,PC.fireA,PC.fireB,1,.4,-2);
+    if(t>2.6){scene.remove(m);m.material.dispose();return false;}return true;}});}
+function protonBeam(o,tgt,len,W,owner,power){const dir=V3(tgt.x-o.x,0,tgt.z-o.z);if(dir.lengthSq()<1)dir.set(0,0,1);dir.normalize();
+  const hit=tgt.clone();hit.y=groundAt(hit.x,hit.z);const col=lin(10,6,2.5),n=Math.max(4,Math.floor(len/(W*1.8)));
+  snd('crack',1.2,hit);later(.1,()=>snd('bigboom',1.3,hit));screenFlash(lin(1.6,1.1,.6),owner==='player'?.6:.4);
+  for(let k=0;k<6;k++)later(k*.18,()=>{beamFx(o,hit,W*(k===0?1.2:.8),col,.3);glowSphere(o,1,W*.6,lin(8,5,2),.25);});
+  flashLight(hit.clone().setY(hit.y+30),lin(1,.7,.35),220,len*1.2,3.2);
+  for(let i=0;i<=n;i++)later(.12+i*(2.4/n),()=>{const p=hit.clone().addScaledVector(dir,i*len/n);p.x+=rr(-W,W)*.4;p.z+=rr(-W,W)*.4;p.y=groundAt(p.x,p.z);
+    const R=W*2.4;fireDome(p,R);shockwave(p,R*1.8,lin(6,3,1),.9,1.4);
+    burst(p,IS_MOBILE?40:80,R*1.6,1.3,R*.3,2,PC.fireA,PC.fireB,1,1.8,-6,glow,R*1.2,R*.3);
+    burst(p,IS_MOBILE?12:24,R*.6,7,R*.45,R*1.8,PC.smokeA,PC.smokeB,.75,.4,-5,smoke,R*2.2,R*.3);
+    crater(p.x,p.z,R*.8,R*.18,1.4);if(i%3===0)shake(.8,p);if(i%4===0)snd('boom',.7,p);scorchTrees(p.x,p.z,R*1.2);
+    if(owner==='player'){damageArea(p,R,power,30,'fire',{up:30,ignite:1,bmul:2.5,trees:false});if(typeof titanArea==='function')titanArea(p,R,power*TD[TIER]*2);}
+    else npcBlast(p,R,power,power*.15);});}
+function playerProton(P,K){const len=[300,700,1400,2600][K.t],W=[10,16,24,36][K.t];player.lift=1.4;
+  magicCircle(player.pos,10+K.t*4,lin(8,5,2),2,{y:.3,spin:3,follow:player.pos});snd('chime',1);
+  let t=0;addFx({update(dt){t+=dt;const tp=staffTip();for(let q=0;q<10;q++){const a=Math.random()*6.28,b=Math.random()*3.14,r=rr(5,12);
+      glow.emit(tp.x+Math.sin(b)*Math.cos(a)*r,tp.y+Math.cos(b)*r,tp.z+Math.sin(b)*Math.sin(a)*r,-Math.sin(b)*Math.cos(a)*r*2.5,-Math.cos(b)*r*2.5,-Math.sin(b)*Math.sin(a)*r*2.5,.4,1.6,.3,PC.fireA,PC.white,1,0,0);}return t<1.2;}});
+  later(1.2,()=>protonBeam(staffTip(),P,len,W,'player',6000));}
+Object.assign(SP,{proton(P,s,K){playerProton(P,K);}});
 // ================= 召喚魔法 =================
 // 精霊は大魔導士のそばに浮かび、敵対している相手だけを自動で攻撃する。神龍は一帯を無に帰す。
 const SPIRITS=[];
