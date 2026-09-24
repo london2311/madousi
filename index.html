@@ -383,7 +383,7 @@ body.spec #lockBtns,body.spec #lockR{display:none !important}
   <div id="wmap"><div class="wt">世界地図</div><canvas width="520" height="520"></canvas><div class="bf"><button type="button" class="mx">閉じる</button></div></div>
   <div id="bossbar"><div class="bn"></div><div class="bh"><i></i></div><div class="bs"><i></i></div></div>
   <div id="warp"><div class="wt">転移先</div></div>
-  <div id="book"><div class="wt">魔法書 ─ ワンタッチ枠の編成</div><div class="bh2">押すと枠に加える／もう一度押すと外す。並びは加えた順で、キー1〜9・0（スマホは下の紋章）に対応。</div><div class="bg"></div><div class="cmbT">連鎖魔法 ─ 属性を重ねると起こる</div><div class="cmb"></div><div class="bf"><span class="cnt"></span><button type="button" class="bd">初期設定</button><button type="button" class="bx">閉じる</button></div></div>
+  <div id="book"><div class="wt">魔法書 ─ ワンタッチ枠の編成</div><div class="bh2">押すと枠に加える／もう一度押すと外す。並びは加えた順で、キー1〜9・0（スマホは下の紋章）に対応。</div><div class="bg"></div><div class="cmbT">古代魔法 ─ 大陸そのものを変える禁呪（威力の段階に関わらず全力）</div><div class="bg ancg"></div><div class="cmbT">連鎖魔法 ─ 属性を重ねると起こる</div><div class="cmb"></div><div class="bf"><span class="cnt"></span><button type="button" class="bd">初期設定</button><button type="button" class="bx">閉じる</button></div></div>
   <div id="bar"></div>
   <div id="tier"><button type="button" data-t="0">弱</button><button type="button" data-t="1" class="on">中</button><button type="button" data-t="2">強</button><button type="button" data-t="3">極</button></div>
   <div id="lockR"><div class="rt"></div><div class="ln"></div><div class="lb"><i></i></div></div>
@@ -449,7 +449,7 @@ const MODE=(()=>{try{const v=JSON.parse(localStorage.getItem('hatenMadouou.mode'
 const APP=MODE.m==='app';
 let LV=1,EXP=0;
 const LV_MAX=30,expNeed=l=>Math.round(60*Math.pow(l,1.6));
-const SPELL_LV={proton:29,inferno:26,rift:25,raincall:20,tsunami:17,crow:10,s_fire:13,s_ice:15,s_thun:16,dragon:30,fire:1,ice:1,flowers:1,thunder:3,wheat:2,veg:2,bloom:4,water:4,paddy:3,wind:6,earth:8,people:9,pierce:10,build:11,port:12,restore:14,meteor:18,gold:24,ultima:28};
+const SPELL_LV={a_sun:30,a_moon:30,a_jup:30,a_nep:30,a_black:30,a_fall:30,a_love:30,atf:21,mirror:23,proton:29,inferno:26,rift:25,raincall:20,tsunami:17,crow:10,s_fire:13,s_ice:15,s_thun:16,dragon:30,fire:1,ice:1,flowers:1,thunder:3,wheat:2,veg:2,bloom:4,water:4,paddy:3,wind:6,earth:8,people:9,pierce:10,build:11,port:12,restore:14,meteor:18,gold:24,ultima:28};
 const TIER_LV=[1,5,12,22],FLY_LV=7;
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const rand = mulberry32(20260923);
@@ -736,7 +736,7 @@ const terrain=new THREE.Mesh(tGeo,new THREE.MeshStandardMaterial({vertexColors:t
 terrain.receiveShadow=true;scene.add(terrain);
 
 const craterQ=[];
-function crater(x,z,r,depth,scorch=1){if(barrierAt(x,z))return;craterQ.push({x,z,r,depth,scorch});}
+function crater(x,z,r,depth,scorch=1){if(barrierAt(x,z))return;craterQ.push({x,z,r:r*1.15,depth:depth*2.2,scorch});}
 function applyCraters(){
   if(!craterQ.length)return;
   let minx=SEG,maxx=0,minz=SEG,maxz=0;
@@ -746,10 +746,11 @@ function applyCraters(){
     const z0=Math.floor((c.z-c.r*1.5+HALF)/STEP),z1=Math.ceil((c.z+c.r*1.5+HALF)/STEP);
     for(let iz=Math.max(0,z0);iz<=Math.min(SEG,z1);iz++)for(let ix=Math.max(0,x0);ix<=Math.min(SEG,x1);ix++){
       const i=iz*NV+ix,x=-HALF+ix*STEP,z=-HALF+iz*STEP,d=Math.hypot(x-c.x,z-c.z),q=d/c.r;
-      let dh=0;if(q<1)dh=-c.depth*(1-q*q);else if(q<1.5)dh=c.depth*.22*Math.sin((q-1)/.5*Math.PI);
-      hgrid[i]=Math.max(hgrid[i]+dh,-45);tPos[i*3+1]=hgrid[i];
+      let dh=0;if(q<1)dh=-c.depth*Math.pow(1-q*q,.8);else if(q<1.5)dh=c.depth*.28*Math.sin((q-1)/.5*Math.PI);
+      hgrid[i]=Math.max(hgrid[i]+dh,-180);tPos[i*3+1]=hgrid[i];
       const s=clamp(1-q/1.35,0,1)*c.scorch;
-      if(s>0){const k=s*.85;tCol[i*3]=lerp(tCol[i*3],.035,k);tCol[i*3+1]=lerp(tCol[i*3+1],.028,k);tCol[i*3+2]=lerp(tCol[i*3+2],.025,k);}
+      // えぐれた底ほど黒く、赤熱した岩肌がのぞく
+      if(s>0){const k=s*.9,glowK=q<.6&&c.depth>8?(1-q/.6)*.35:0;tCol[i*3]=lerp(tCol[i*3],.035+glowK*.9,k);tCol[i*3+1]=lerp(tCol[i*3+1],.028+glowK*.18,k);tCol[i*3+2]=lerp(tCol[i*3+2],.025,k);}
     }
     minx=Math.min(minx,x0-1);maxx=Math.max(maxx,x1+1);minz=Math.min(minz,z0-1);maxz=Math.max(maxz,z1+1);
     removeTreesIn(c.x,c.z,c.r*1.1,true);killFlowers(c.x,c.z,c.r*1.1);killCrops(c.x,c.z,c.r*1.1);killPlots(c.x,c.z,c.r);killMills(c.x,c.z,c.r);
@@ -2194,7 +2195,7 @@ function travelTo(i){
 function travel(){toggleWarp();}
 
 // ================= tier =================
-let TIER=1;const TN=['弱','中','強','極'],TD=[.5,1,2,4],TCD=[.5,1,1.4,2.2];
+let TIER=1;const TN=['弱','中','強','極'],TD=[.5,1,2,4],TCD=[.4,.6,.75,1];
 const TK=[{s:.45,n:.35,t:0},{s:1,n:1,t:1},{s:1.9,n:2.4,t:2},{s:3.4,n:4.5,t:3}];
 WARPS.forEach((w,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`${i+1}　${w.n}<small>${w.d}</small>`;b.addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();travelTo(i);});$('#warp').appendChild(b);});
 document.querySelectorAll('#tier button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setTier(+b.dataset.t);}));
@@ -2243,6 +2244,7 @@ let P_MUL=1,PLAYER_MAX=APP?2400:4000,HURT_WIN=[];let pHP=PLAYER_MAX,pHurtT=9,pDe
 const ATK={knight:70,archer:40,wolf:45,golem:220,wyvern:110,boss:380,demon:120};
 function hurtPlayer(dmg){
   if(pDead||pIfr>0||!started||SPEC)return;
+  if(shieldHit(dmg))return;
   if(CROW){if(Math.random()<.3)dmgText(player.pos.clone().setY(player.pos.y+3.4),0,true);return;}
   dmg=Math.round(dmg*DMG[DIFF]*DEF_MUL*rr(.9,1.1));
   // 反射障壁（大魔導士のみ）：2秒間に受けるのは最大体力の12%まで。超えた分は15%しか通さない（集中砲火でも簡単には倒れない）
@@ -2292,13 +2294,22 @@ const SPELLS=[
   {id:'raincall',k:'嵐',name:'天候支配・雷雨',read:'てんこうしはい・らいう',col:'#8898c8',c3:lin(3,4,9),cd:40,r:500},
   {id:'tsunami',k:'濤',name:'大津波',read:'おおつなみ',col:'#2a8ac8',c3:lin(1,3.5,7),cd:24,r:300},
   {id:'proton',k:'砲',name:'巨神の咆哮',read:'プロトンビーム',col:'#ffb070',c3:lin(10,6,2.5),cd:45,r:60},
+  {id:'atf',k:'壁',name:'絶対障壁',read:'ぜったいしょうへき',col:'#ff9a3a',c3:lin(8,4,1),cd:16,r:12},
+  {id:'mirror',k:'返',name:'魔法返し',read:'まほうがえし',col:'#c8a8ff',c3:lin(5,3.5,9),cd:18,r:12},
+  {id:'a_sun',k:'陽',name:'古代魔法・太陽',read:'こだいまほう・たいよう',col:'#ffb040',c3:lin(10,6,1.5),cd:60,r:120,anc:1},
+  {id:'a_moon',k:'月',name:'古代魔法・月光',read:'こだいまほう・げっこう',col:'#bfe4ff',c3:lin(4,6,10),cd:60,r:120,anc:1},
+  {id:'a_jup',k:'木',name:'古代魔法・木星',read:'こだいまほう・もくせい',col:'#e0a070',c3:lin(8,5,2.5),cd:70,r:300,anc:1},
+  {id:'a_nep',k:'海',name:'古代魔法・海王',read:'こだいまほう・かいおう',col:'#3a7ae0',c3:lin(1,3,9),cd:70,r:120,anc:1},
+  {id:'a_black',k:'黒',name:'古代魔法・黒',read:'こだいまほう・くろ',col:'#8a60c0',c3:lin(3,1,6),cd:60,r:200,anc:1},
+  {id:'a_fall',k:'墜',name:'古代魔法・天墜',read:'こだいまほう・てんつい',col:'#d8d8e8',c3:lin(6,6,8),cd:50,r:300,anc:1},
+  {id:'a_love',k:'愛',name:'古代魔法・神愛',read:'こだいまほう・しんあい',col:'#ffe0f0',c3:lin(9,7,8),cd:20,r:120,anc:1},
   {id:'crow',k:'烏',name:'夜烏の変化',read:'よがらすのへんげ',col:'#9a86c8',c3:lin(2,1.4,4),cd:14,r:10},
   {id:'s_fire',k:'焔',name:'炎の精霊',read:'ほのおのせいれい',col:'#ff6a2a',c3:lin(9,3,.6),cd:18,r:40},
   {id:'s_ice',k:'霜',name:'氷の精霊',read:'こおりのせいれい',col:'#8fe0ff',c3:lin(2,6,10),cd:18,r:40},
   {id:'s_thun',k:'霆',name:'雷の精霊',read:'いかずちのせいれい',col:'#b8c8ff',c3:lin(5,6,12),cd:18,r:40},
   {id:'dragon',k:'龍',name:'神龍降臨',read:'しんりゅうこうりん',col:'#ffe28a',c3:lin(9,7,2.5),cd:80,r:300},
 ];
-const SPELL_DESC={"proton":"巨神兵と同じ破壊の光。力を溜めて照準へ光線を放つと、着弾点から先へ爆発が大地を這うように連なり、一帯を焼き払う。","inferno":"自分を中心に、極なら直径2kmを業火で焼き尽くす。建物も森も大地も黒く焦げる。自分は焼かれない。","rift":"照準の方向へ光の一閃を放ち、大地を一刀両断する。極なら大陸を割るほどの裂け目が走る。","raincall":"天候を支配して雷雨を呼ぶ。空が暗くなり雨が降り、周りの敵へ雷が落ち続ける。","tsunami":"照準の方向へ巨大な津波を押し出す。津波に氷の魔法をかけると凍りつき、その上を歩ける氷の丘になる。","fire": "火球を放ち、着弾点で爆発する。建物や木を燃やす。威力を上げると火球の数が増える。", "thunder": "近くの敵へ次々と雷を落とす。当たった敵は一瞬しびれる。極では天から巨大な雷柱。", "ice": "一帯を凍らせ、氷柱で貫く。凍った敵は動けない。極では巨大な氷山が長く残り、周りを凍らせ続ける。", "water": "前方へ大津波を押し出し、敵も建物も押し流す。雷を重ねると連鎖魔法「雷水陣」。", "wind": "竜巻を起こし、敵を巻き上げながらさまよう。炎を重ねると「焔旋風」。", "earth": "大地を割り、岩の槍を突き上げて敵を打ち上げる。氷を重ねると「砕氷崩山」。", "ultima": "溜めてから放つ極光の大爆発。広い範囲のすべてを消し飛ばす、大魔導士の奥の手。", "meteor": "空から隕石の雨を降らせる。建物を壊すのが得意。", "pierce": "光の槍を撃ち抜く。まっすぐ遠くまで貫き、強敵との一騎打ちに向く。", "gold": "一帯の地面・木・建物・敵を黄金に変える。黄金になった建物は壊れた扱いになる。", "restore": "壊れた建物・燃えた木・えぐれた地面を元に戻す。国を復興させると喜ばれる。", "bloom": "花と木を芽吹かせ、地面を豊かにする。強以上で大樹（世界樹）が生える。", "people": "住人を呼び寄せ、その国の人口を増やす。", "build": "家や塔を建てる。国の外で唱えると新しい町ができる。", "flowers": "花畑を広げる。近くの国の幸福度が上がる。", "wheat": "麦畑を作る。実ると収穫され、近くの国の食料になる。", "paddy": "水田を作る。稲が黄金色に実ると収穫され、食料になる。", "veg": "野菜畑（キャベツ・南瓜・トマト・茄子）を作る。育つのが早い。", "port": "岸辺に港を築く。交易船が行き来して、資源と魔晶を持ち帰る。岸辺を狙って唱える。", "crow": "体を烏の群れに変える。その間はどんな攻撃も受け付けず、移動も速くなる。いざという時の守りに。", "s_fire": "炎の精霊を呼ぶ。頭上に控え、敵対している相手へ火球を撃つ。住人や平時の衛兵は狙わない。", "s_ice": "氷の精霊を呼ぶ。敵対している相手を凍らせ、氷柱で縫い止める。", "s_thun": "雷の精霊を呼ぶ。敵対している相手へ、次々と跳ねる稲妻を放つ。", "dragon": "天から神龍を呼ぶ。一帯を息吹で薙ぎ払い、最後にすべてを無に帰す。大結界も大きく削る。"};
+const SPELL_DESC={"a_sun":"空に第二の太陽を呼び、大陸のすべてを焼き払う。建物も森も軍勢も、灰になる。","a_moon":"青白い月を呼び、大陸のすべてを凍らせる。海は氷原となり、兵は氷像となって砕ける（約2分で解ける）。","a_jup":"木星ほどもある星を大陸に墜とす。すべてが無に帰し、巨大な穿孔が残る。","a_nep":"海を呼び、大陸を海の底に沈める。水面より低いものはすべて呑まれ、やがて潮は引く。","a_black":"照準に黒い穴を開き、敵も建物も山々も吸い込んで無に帰す。あとには深い渦の跡が残る。","a_fall":"見えない圧力が天から降り、照準の一帯を押し潰す。建物も山々も、まったいらになる。","a_love":"世界への愛。この大陸のあらゆる破壊を元に戻す。建物・森・大地・凍りや水没も、すべて。","atf":"八角形の光の壁を張り巡らせる。その間はどんな攻撃も通さず、近づく敵を弾き飛ばす。攻撃を受けるたび、その方向に障壁が浮かび上がる。","mirror":"受けた攻撃をそのまま何十倍にもして、撃ってきた近くの敵へ跳ね返す。その間は傷を負わない。","proton":"巨神兵と同じ破壊の光。力を溜めて照準へ光線を放つと、着弾点から先へ爆発が大地を這うように連なり、一帯を焼き払う。","inferno":"自分を中心に、極なら直径2kmを業火で焼き尽くす。建物も森も大地も黒く焦げる。自分は焼かれない。","rift":"照準の方向へ光の一閃を放ち、大地を一刀両断する。極なら大陸を割るほどの裂け目が走る。","raincall":"天候を支配して雷雨を呼ぶ。空が暗くなり雨が降り、周りの敵へ雷が落ち続ける。","tsunami":"照準の方向へ巨大な津波を押し出す。津波に氷の魔法をかけると凍りつき、その上を歩ける氷の丘になる。","fire": "火球を放ち、着弾点で爆発する。建物や木を燃やす。威力を上げると火球の数が増える。", "thunder": "近くの敵へ次々と雷を落とす。当たった敵は一瞬しびれる。極では天から巨大な雷柱。", "ice": "一帯を凍らせ、氷柱で貫く。凍った敵は動けない。極では巨大な氷山が長く残り、周りを凍らせ続ける。", "water": "前方へ大津波を押し出し、敵も建物も押し流す。雷を重ねると連鎖魔法「雷水陣」。", "wind": "竜巻を起こし、敵を巻き上げながらさまよう。炎を重ねると「焔旋風」。", "earth": "大地を割り、岩の槍を突き上げて敵を打ち上げる。氷を重ねると「砕氷崩山」。", "ultima": "溜めてから放つ極光の大爆発。広い範囲のすべてを消し飛ばす、大魔導士の奥の手。", "meteor": "空から隕石の雨を降らせる。建物を壊すのが得意。", "pierce": "光の槍を撃ち抜く。まっすぐ遠くまで貫き、強敵との一騎打ちに向く。", "gold": "一帯の地面・木・建物・敵を黄金に変える。黄金になった建物は壊れた扱いになる。", "restore": "壊れた建物・燃えた木・えぐれた地面を元に戻す。国を復興させると喜ばれる。", "bloom": "花と木を芽吹かせ、地面を豊かにする。強以上で大樹（世界樹）が生える。", "people": "住人を呼び寄せ、その国の人口を増やす。", "build": "家や塔を建てる。国の外で唱えると新しい町ができる。", "flowers": "花畑を広げる。近くの国の幸福度が上がる。", "wheat": "麦畑を作る。実ると収穫され、近くの国の食料になる。", "paddy": "水田を作る。稲が黄金色に実ると収穫され、食料になる。", "veg": "野菜畑（キャベツ・南瓜・トマト・茄子）を作る。育つのが早い。", "port": "岸辺に港を築く。交易船が行き来して、資源と魔晶を持ち帰る。岸辺を狙って唱える。", "crow": "体を烏の群れに変える。その間はどんな攻撃も受け付けず、移動も速くなる。いざという時の守りに。", "s_fire": "炎の精霊を呼ぶ。頭上に控え、敵対している相手へ火球を撃つ。住人や平時の衛兵は狙わない。", "s_ice": "氷の精霊を呼ぶ。敵対している相手を凍らせ、氷柱で縫い止める。", "s_thun": "雷の精霊を呼ぶ。敵対している相手へ、次々と跳ねる稲妻を放つ。", "dragon": "天から神龍を呼ぶ。一帯を息吹で薙ぎ払い、最後にすべてを無に帰す。大結界も大きく削る。"};
 const cds=SPELLS.map(()=>0);let selSpell=0;
 function announce(s){const el=$('#spellName');el.innerHTML=`${s.name}<small>${s.read}</small>`;el.style.setProperty('--sc',s.col);el.classList.remove('show');void el.offsetWidth;el.classList.add('show');}
 
@@ -2306,7 +2317,7 @@ function cast(i){
   if(!started||pDead||SPEC)return;
   const s=SPELLS[i];selSpell=i;updBarSel();
   if(!spellOk(s)){toast(`「${s.name}」は Lv${SPELL_LV[s.id]} で習得する`);return;}
-  if(cds[i]>0)return;cds[i]=s.cd*TCD[TIER];
+  if(cds[i]>0)return;cds[i]=s.anc?s.cd:s.cd*TCD[TIER]*.5;
   const P=aimPoint.clone();
   const to=V3(P.x-player.pos.x,0,P.z-player.pos.z);if(to.lengthSq()>1)player.face=Math.atan2(to.x,to.z);
   player.castAnim=.5;heroParts.orbM.color.copy(s.c3);
@@ -2835,18 +2846,33 @@ function fireDome(p,R){const m=new THREE.Mesh(geoSphere,new THREE.MeshBasicMater
     m.material.opacity=t<.35?1:Math.max(0,1-(t-.35)/2.2);m.material.color.setRGB(10-t*2.5,5-t*1.6,Math.max(.2,1.4-t*.6));
     if(Math.random()<dt*20)glow.emit(p.x+rr(-R,R)*.5,p.y+rr(0,R*.6),p.z+rr(-R,R)*.5,0,rr(5,15),0,rr(1,2),rr(R*.1,R*.2),.4,PC.fireA,PC.fireB,1,.4,-2);
     if(t>2.6){scene.remove(m);m.material.dispose();return false;}return true;}});}
-function protonBeam(o,tgt,len,W,owner,power){const dir=V3(tgt.x-o.x,0,tgt.z-o.z);if(dir.lengthSq()<1)dir.set(0,0,1);dir.normalize();
-  const hit=tgt.clone();hit.y=groundAt(hit.x,hit.z);const col=lin(10,6,2.5),n=Math.max(4,Math.floor(len/(W*1.8)));
-  snd('crack',1.2,hit);later(.1,()=>snd('bigboom',1.3,hit));screenFlash(lin(1.6,1.1,.6),owner==='player'?.6:.4);
-  for(let k=0;k<6;k++)later(k*.18,()=>{beamFx(o,hit,W*(k===0?1.2:.8),col,.3);glowSphere(o,1,W*.6,lin(8,5,2),.25);});
-  flashLight(hit.clone().setY(hit.y+30),lin(1,.7,.35),220,len*1.2,3.2);
-  for(let i=0;i<=n;i++)later(.12+i*(2.4/n),()=>{const p=hit.clone().addScaledVector(dir,i*len/n);p.x+=rr(-W,W)*.4;p.z+=rr(-W,W)*.4;p.y=groundAt(p.x,p.z);
-    const R=W*2.4;fireDome(p,R);shockwave(p,R*1.8,lin(6,3,1),.9,1.4);
-    burst(p,IS_MOBILE?40:80,R*1.6,1.3,R*.3,2,PC.fireA,PC.fireB,1,1.8,-6,glow,R*1.2,R*.3);
-    burst(p,IS_MOBILE?12:24,R*.6,7,R*.45,R*1.8,PC.smokeA,PC.smokeB,.75,.4,-5,smoke,R*2.2,R*.3);
-    crater(p.x,p.z,R*.8,R*.18,1.4);if(i%3===0)shake(.8,p);if(i%4===0)snd('boom',.7,p);scorchTrees(p.x,p.z,R*1.2);
-    if(owner==='player'){damageArea(p,R,power,30,'fire',{up:30,ignite:1,bmul:2.5,trees:false});if(typeof titanArea==='function')titanArea(p,R,power*TD[TIER]*2);}
-    else npcBlast(p,R,power,power*.15);});}
+// 天を衝く爆炎の柱（光線が触れた跡に、壁のように立ち上がる）
+const pillarGeo=new THREE.CylinderGeometry(.55,1,1,14,1,true).translate(0,.5,0);
+function firePillar(p,R,H,delay){later(delay,()=>{const mk=(c,op)=>{const m=new THREE.Mesh(pillarGeo,new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:op,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,fog:false}));m.position.copy(p);scene.add(m);return m;};
+  const outer=mk(lin(1.5,.32,.04),.62),inner=mk(lin(2.6,1.2,.3),.6);let t=0;const L=5.5;
+  shockwave(p,R*2.2,lin(6,3,1),.9,1.4);crater(p.x,p.z,R*.9,R*.28,1.6);snd('boom',.6,p);
+  addFx({update(dt){t+=dt;const rise=1-Math.pow(1-Math.min(1,t/.9),3),fade=t>L-2?Math.max(0,(L-t)/2):1;
+    outer.scale.set(R*(1+t*.12),H*rise,R*(1+t*.12));inner.scale.set(R*.45,H*.92*rise,R*.45);outer.material.opacity=.6*fade;inner.material.opacity=.7*fade*(t<.3?1:Math.max(.25,1-(t-.3)/2.5));
+    outer.material.color.setRGB(Math.max(.45,1.5-t*.18),Math.max(.08,.32-t*.04),.03);
+    if(Math.random()<dt*(IS_MOBILE?8:18)){const h=rr(0,H*rise);glow.emit(p.x+rr(-R,R)*.6,p.y+h,p.z+rr(-R,R)*.6,rr(-4,4),rr(15,40),rr(-4,4),rr(1,2),rr(R*.2,R*.45),.4,PC.fireA,PC.fireB,fade,.4,-4);}
+    if(Math.random()<dt*(IS_MOBILE?3:6))smoke.emit(p.x+rr(-R,R)*.5,p.y+H*rise*rr(.6,1),p.z+rr(-R,R)*.5,rr(-6,6),rr(10,25),rr(-6,6),rr(5,9),R*.8,R*2.4,PC.smokeA,PC.smokeB,.55*fade,.3,-2);
+    if(t>=L){scene.remove(outer,inner);outer.material.dispose();inner.material.dispose();return false;}return true;}});});}
+// プロトンビーム：光線が大地を薙ぎ払い、その跡から天を衝く爆炎が壁のように立ち上がる
+function protonBeam(o,tgt,len,W,owner,power){const dir=V3(tgt.x-o.x,0,tgt.z-o.z);if(dir.lengthSq()<1)dir.set(0,0,1);dir.normalize();const side=V3(dir.z,0,-dir.x);
+  const hit=tgt.clone();hit.y=groundAt(hit.x,hit.z);const col=lin(10,6,2.5),n=Math.min(IS_MOBILE?22:40,Math.max(6,Math.floor(len/(W*2.2))));
+  const sgn=Math.random()<.5?-1:1,SW=1.7;// 薙ぎ払いにかかる時間
+  const path=[];for(let i=0;i<=n;i++){const u=i/n;const p=hit.clone().addScaledVector(side,sgn*(u-.5)*len).addScaledVector(dir,Math.sin(u*Math.PI)*len*.12+rr(-W,W)*.3);p.y=groundAt(p.x,p.z);path.push(p);}
+  snd('crack',1.2,hit);screenFlash(lin(1.6,1.1,.6),owner==='player'?.6:.4);flashLight(hit.clone().setY(hit.y+60),lin(1,.7,.35),260,len*1.3,SW+5);
+  let t=0,lastBeam=-1;addFx({update(dt){t+=dt;const k=Math.min(1,t/SW),fi=k*n,i0=Math.floor(fi),p=path[Math.min(n,i0)].clone().lerp(path[Math.min(n,i0+1)],fi-i0);
+    if(t-lastBeam>.06){lastBeam=t;beamFx(o,p,W*.7,lin(3,1.8,.8),.14);}
+    for(let q=0;q<(IS_MOBILE?6:14);q++)glow.emit(p.x+rr(-W,W),p.y+rr(0,W*.6),p.z+rr(-W,W),rr(-10,10),rr(10,40),rr(-10,10),rr(.4,.9),rr(W*.2,W*.5),.4,PC.white,PC.fireA,1,.6,-2);
+    if(Math.random()<.4)shake(.35,p);return t<SW;}});
+  later(.1,()=>snd('bigboom',1.1,hit));
+  for(let i=0;i<=n;i++){const p=path[i],R=W*2.1,d=SW*(i/n)+.55+rr(0,.15);
+    firePillar(p,R,W*18*rr(.8,1.2),d);
+    later(d,()=>{burst(p,IS_MOBILE?20:40,R*1.8,1.3,R*.3,2,PC.fireA,PC.fireB,1,1.8,-6,glow,R,R*.3);if(i%3===0){shake(.9,p);snd('bigboom',.5,p);}scorchTrees(p.x,p.z,R*1.4);
+      if(owner==='player'){damageArea(p,R*1.3,power,30,'fire',{up:30,ignite:1,bmul:2.5,trees:false});if(typeof titanArea==='function')titanArea(p,R*1.3,power*TD[TIER]*2);}
+      else npcBlast(p,R*1.3,power,power*.15);});}}
 function playerProton(P,K){const len=[300,700,1400,2600][K.t],W=[10,16,24,36][K.t];player.lift=1.4;
   magicCircle(player.pos,10+K.t*4,lin(8,5,2),2,{y:.3,spin:3,follow:player.pos});snd('chime',1);
   let t=0;addFx({update(dt){t+=dt;const tp=staffTip();for(let q=0;q<10;q++){const a=Math.random()*6.28,b=Math.random()*3.14,r=rr(5,12);
@@ -2919,6 +2945,7 @@ function updTitans(dt){if(!TITANS.length)return;
       if(t.dying<3&&Math.random()<dt*10){const p=t.pos.clone().add(V3(rr(-20,20),rr(20,120),rr(-20,20)));glowSphere(p,2,rr(10,22),lin(8,3,.8),.5);snd('boom',.5,p);}
       if(t.dying>3&&!t.fell){t.fell=true;shake(2,t.pos);shockwave(t.pos,200,lin(4,2,.6),1.2,1.5);burst(t.pos,200,60,3,10,30,PC.dust,PC.dustB,.8,.8,-2,smoke,20,40);}continue;}
     if(!t.alive){if(!t.fell){g.rotation.x=-1.35;}continue;}
+    if(t.frz>0){t.frz-=dt;continue;}
     t.flash-=dt;titanMat.emissive.setRGB(t.flash>0?.8:.05,t.flash>0?.3:.02,t.flash>0?.1:.01);
     if(t.anger>0)t.anger-=dt;
     const pd=Math.hypot(player.pos.x-t.pos.x,player.pos.z-t.pos.z);const chase=(t.anger>0||(t.st==='home'&&COUNTRIES[TI].angered))&&!pDead&&pd<2200;
@@ -2950,6 +2977,165 @@ function titanBar(){let best=null,bd=900;for(const t of TITANS){if(!t.alive)cont
 let TITAN_LOAD=null;
 function titansReset(){const m=titanHpMax();for(const t of TITANS){const k=t.max?t.hp/t.max:1;t.max=m;t.hp=k*m;}
   if(TITAN_LOAD){TITAN_LOAD.forEach((a,i)=>{const t=TITANS[i];if(!t||!Array.isArray(a))return;if(a[0]===0){t.alive=false;t.hp=0;t.fell=true;t.dying=-1;t.g.rotation.x=-1.35;t.g.position.y=t.pos.y-8;}else t.hp=clamp(+a[1]||1,.01,1)*t.max;});TITAN_LOAD=null;}}
+// ================= 絶対障壁・魔法返し =================
+let FIELD=null,MIRROR=null;
+const octGeo=(()=>{const g=new THREE.CircleGeometry(1,8);g.rotateZ(Math.PI/8);return g;})();
+const octRing=new THREE.RingGeometry(.9,1,8,1);octRing.rotateZ(Math.PI/8);
+function octFlash(pos,normal,size,col){const q=new THREE.Quaternion().setFromUnitVectors(V3(0,0,1),normal.clone().normalize());
+  const mk=(g,op)=>{const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:op,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,fog:false}));m.position.copy(pos);m.quaternion.copy(q);scene.add(m);return m;};
+  const L=[mk(octGeo,.35)];for(let k=0;k<4;k++)L.push(mk(octRing,.9));let t=0;
+  addFx({update(dt){t+=dt;const f=Math.max(0,1-t/.7);L[0].scale.setScalar(size*(1+t*.3));L[0].material.opacity=.35*f;
+    for(let k=1;k<L.length;k++){const s2=size*(.25+k*.22+t*1.4);L[k].scale.setScalar(s2);L[k].material.opacity=.9*f*Math.max(0,1-(t*1.4+k*.15)/1.2);}
+    if(t>.7){for(const m of L){scene.remove(m);m.material.dispose();}return false;}return true;}});}
+function atField(K){const dur=[6,10,15,22][K.t];FIELD={end:gameTime+dur,t:0};const c=player.pos.clone().setY(player.pos.y+2);
+  for(let i=0;i<8;i++){const a=i/8*6.28;later(i*.04,()=>octFlash(c.clone().add(V3(Math.sin(a)*9,0,Math.cos(a)*9)),V3(Math.sin(a),0,Math.cos(a)),9,lin(2.2,.8,.15)));}
+  snd('chime',1);snd('null',1);showBanner('絶対障壁','何者も、この壁は越えられない（'+dur+'秒）');}
+function mirrorForm(K){const dur=[5,8,12,16][K.t];MIRROR={end:gameTime+dur};snd('ice',1);snd('chime',.8);
+  magicCircle(player.pos,8,lin(4,3,8),dur,{y:.3,spin:2,follow:player.pos});showBanner('魔法返し','受けた攻撃を、何十倍にも返す（'+dur+'秒）');}
+function nearestFoe(r){const p=player.pos;let best=null,bd=r*r;
+  for(const e of enemies){if(!hostileE(e))continue;const d=e.pos.distanceToSquared(p);if(d<bd){bd=d;best=e;}}
+  for(const t of TITANS){if(!t.alive)continue;const d=(t.pos.x-p.x)**2+(t.pos.z-p.z)**2;if(d<bd){bd=d;best=t;}}
+  if(!best)for(const u of CRW){if(!hostileU(u))continue;const d=(u.x-p.x)**2+(u.z-p.z)**2;if(d<bd){bd=d;best=u;}}return best;}
+// 被弾したときに呼ばれる。守りが効いていれば true を返し、傷を負わない
+function shieldHit(dmg){const c=player.pos.clone().setY(player.pos.y+2);
+  if(MIRROR&&gameTime<MIRROR.end){const f=nearestFoe(700);if(f){const tp=f.isTitan?f.pos.clone().setY(f.pos.y+80):f.isCrowd?V3(f.x,f.y+1.4,f.z):f.pos.clone().setY(f.pos.y+(f.h||2)*.5);
+      beamFx(c,tp,1.4,lin(5,3.5,9),.3);glowSphere(tp,1,8,lin(4,3,8),.3);const back=dmg*40*TD[TIER];
+      if(f.isTitan)titanHit(f,back);else if(f.isCrowd)crowdDamage(f,back,null,'p','pierce');else f.hit(back,null,'pierce');}
+    octFlash(c.clone().add(V3(rr(-1,1),rr(0,1.5),rr(-1,1))),camera.position.clone().sub(c),5,lin(3,2.4,6));snd('shatter',.5);return true;}
+  if(FIELD&&gameTime<FIELD.end){const d=camera.position.clone().sub(c).setY(0).normalize().negate();const f=nearestFoe(400);if(f){const fp=f.isTitan||!f.isCrowd?f.pos:V3(f.x,f.y,f.z);d.set(fp.x-c.x,0,fp.z-c.z).normalize();}
+    octFlash(c.clone().addScaledVector(d,9),d,8,lin(2.6,1,.2));snd('null',.7);return true;}
+  return false;}
+function updShields(dt){if(FIELD&&gameTime>=FIELD.end)FIELD=null;if(MIRROR&&gameTime>=MIRROR.end)MIRROR=null;
+  if(FIELD){FIELD.t-=dt;const p=player.pos;for(const e of enemies){if(!e.alive||e.kind==='citizen'||e.big||e.kind==='mage'||e.kind==='brute')continue;const dx=e.pos.x-p.x,dz=e.pos.z-p.z,d=Math.hypot(dx,dz);if(d<11&&d>.1){e.vel.x+=dx/d*40;e.vel.z+=dz/d*40;e.vel.y=12;e.air=true;}}
+    if(FIELD.t<=0){FIELD.t=.9;const a=Math.random()*6.28;octFlash(p.clone().add(V3(Math.sin(a)*9,rr(1,4),Math.cos(a)*9)),V3(Math.sin(a),0,Math.cos(a)),7,lin(2.4,1,.2));}}
+  if(MIRROR&&Math.random()<dt*20){const a=Math.random()*6.28;glow.emit(player.pos.x+Math.cos(a)*3,player.pos.y+rr(0,4),player.pos.z+Math.sin(a)*3,0,rr(1,3),0,.8,.8,.1,PC.violetA,PC.white,.8,.3,0);}}
+Object.assign(SP,{atf(P,s,K){atField(K);},mirror(P,s,K){mirrorForm(K);}});
+// ================= 古代魔法 =================
+// 大陸（本来の世界の範囲）そのものを変える禁呪。処理は数フレームに分けて行い、画面が止まらないようにする
+const inMain=(x,z)=>Math.abs(x)<HALF&&Math.abs(z)<HALF;
+function stagger(list,per,fn,done){let i=0;addFx({update(){const n=Math.min(list.length,i+per);for(;i<n;i++)fn(list[i],i);if(i>=list.length){if(done)done();return false;}return true;}});}
+function quickRuin(b){if(b.destroyed&&!b.gold)return;if(b.gold)return;b.destroyed=true;b.hp=0;b.collapse=2;b.burn=0;b.smokeT=0;destroyedHp+=b.maxHp;const C=COUNTRIES[b.country];C.dest+=b.maxHp;C.angered=true;if(C.start<0)C.start=gameTime;
+  scene.remove(b.mesh);if(b.orn)scene.remove(b.orn);makeRubble(b);for(const a of b.archers)if(a.alive){a.alive=false;a.dead=true;scene.remove(a.g);}}
+function ancRuin(list,type,erase){let fx=0;const v=V3(VIEW.x,0,VIEW.z);list.sort((a,b)=>Math.hypot(a.x-v.x,a.z-v.z)-Math.hypot(b.x-v.x,b.z-v.z));
+  stagger(list,IS_MOBILE?30:60,b=>{if(b.destroyed&&!b.gold)return;if(!erase&&fx<40&&Math.hypot(b.x-v.x,b.z-v.z)<600){fx++;destroyBuilding(b);}else quickRuin(b);if(erase&&b.rub){scene.remove(b.rub);}});}
+function mainBuildings(f){return buildings.filter(b=>!b.destroyed&&inMain(b.x,b.z)&&(!f||f(b)));}
+function breakBarriers(f){for(const B of BARRIERS)if(B.hp>0&&inMain(B.x,B.z)&&(!f||f(B)))hitBarrier(B,{x:B.x,y:B.y,z:B.z,height:0},1e15);}
+function ancKill(type,f){const E=enemies.filter(e=>e.alive&&!e.statue&&inMain(e.pos.x,e.pos.z)&&(!f||f(e.pos.x,e.pos.z,e)));
+  stagger(E,40,e=>{if(e.alive)e.hit(1e12,type==='water'||type==='earth'?V3(rr(-10,10),16,rr(-10,10)):null,type);});
+  for(const u of CRW)if(u.st===1&&inMain(u.x,u.z)&&(!f||f(u.x,u.z,u)))crowdDamage(u,1e12,type==='water'?V3(rr(-10,10),10,rr(-10,10)):null,'p',type);
+  for(const t of TITANS)if(t.alive&&inMain(t.pos.x,t.pos.z)&&(!f||f(t.pos.x,t.pos.z,t))){t.hp=1;titanHit(t,1e9);}}
+function worldTint(col,k,f){for(let i=0;i<NV*NV;i++){const x=tPos[i*3],z=tPos[i*3+2],h=hgrid[i];const w=f?f(x,z,h):1;if(w<=0)continue;const kk=k*w;
+    tCol[i*3]=lerp(tCol[i*3],col[0],kk);tCol[i*3+1]=lerp(tCol[i*3+1],col[1],kk);tCol[i*3+2]=lerp(tCol[i*3+2],col[2],kk);}tGeo.attributes.color.needsUpdate=true;}
+function terrainEdit(cx,cz,R,fn){const i0=Math.max(0,Math.floor((cx-R+HALF)/STEP)),i1=Math.min(SEG,Math.ceil((cx+R+HALF)/STEP)),j0=Math.max(0,Math.floor((cz-R+HALF)/STEP)),j1=Math.min(SEG,Math.ceil((cz+R+HALF)/STEP));
+  for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){const id=j*NV+i,x=-HALF+i*STEP,z=-HALF+j*STEP,d=Math.hypot(x-cx,z-cz);if(d>R)continue;const h=fn(hgrid[id],d/R,x,z,id);if(h!==undefined){hgrid[id]=h;tPos[id*3+1]=h;}}
+  for(let j=Math.max(0,j0-1);j<=Math.min(SEG,j1+1);j++)for(let i=Math.max(0,i0-1);i<=Math.min(SEG,i1+1);i++)updNormal(i,j);
+  tGeo.attributes.position.needsUpdate=tGeo.attributes.normal.needsUpdate=tGeo.attributes.color.needsUpdate=true;}
+function allTrees(fn){for(const t of trees)fn(t);conifers.instanceColor.needsUpdate=broads.instanceColor.needsUpdate=trunks.instanceColor.needsUpdate=true;trunks.instanceMatrix.needsUpdate=conifers.instanceMatrix.needsUpdate=broads.instanceMatrix.needsUpdate=true;}
+function skySphere(pos,r,mat){const m=new THREE.Mesh(new THREE.SphereGeometry(1,48,32),mat);m.position.copy(pos);m.scale.setScalar(.01);m.renderOrder=-1;scene.add(m);return m;}
+function ancFwd(){return V3(Math.sin(camYaw),0,Math.cos(camYaw));}
+// 太陽：空に第二の太陽が現れ、大陸を焼き払う
+function aSun(){const pos=player.pos.clone().addScaledVector(ancFwd(),2600);pos.y=player.pos.y+1700;
+  const core=skySphere(pos,1,new THREE.MeshBasicMaterial({color:lin(14,9,4),fog:false})),halo=skySphere(pos,1,new THREE.MeshBasicMaterial({color:lin(3,1.2,.3),transparent:true,opacity:.5,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}));
+  showBanner('古代魔法・太陽','天に、もうひとつの太陽が昇る');snd('chime',1);later(1,()=>snd('bigboom',.8));tintTarget=1;let t=0,fired=false;
+  addFx({update(dt){t+=dt;const k=Math.min(1,t/4);core.scale.setScalar(20+620*k*k);halo.scale.setScalar(40+1300*k);post.flash=Math.max(post.flash,k*.35);shake(.2+k*.6);
+    if(!fired&&t>4.2){fired=true;screenFlash(lin(2,1.6,1),2.2);post.aberr=.04;shake(3);snd('bigboom',1.6);later(.2,()=>snd('bigboom',1.3));
+      worldTint([.06,.03,.02],.9,(x,z,h)=>h>.3?1:0);allTrees(t2=>{if(t2.state!==0)return;t2.state=1;(t2.type===0?conifers:broads).setColorAt(t2.idx,tmpC.setRGB(.035,.03,.028));trunks.setColorAt(t2.ti,tmpC.setRGB(.15,.12,.1));});
+      breakBarriers();ancRuin(mainBuildings(),'fire');ancKill('fire');
+      for(let i=0;i<(IS_MOBILE?40:90);i++){const a=Math.random()*6.28,r=rr(40,900),p=player.pos.clone().add(V3(Math.cos(a)*r,0,Math.sin(a)*r));p.y=groundAt(p.x,p.z);later(rr(0,2),()=>{fireDome(p,rr(20,50));});}}
+    if(t>4.2){const f=Math.max(0,1-(t-4.2)/3);core.material.color.setRGB(14*f,9*f,4*f);halo.material.opacity=.5*f;}
+    if(t>7.5){tintTarget=0;scene.remove(core,halo);return false;}return true;}});}
+// 月光：青白い月が大陸を凍らせる（約2分で解ける）
+let MOON=null;const iceSheet=new THREE.Mesh(new THREE.PlaneGeometry(WORLD,WORLD).rotateX(-Math.PI/2),new THREE.MeshStandardMaterial({color:0xdaf0ff,roughness:.15,metalness:.1,transparent:true,opacity:.88,emissive:lin(.08,.14,.2)}));iceSheet.position.y=.6;iceSheet.visible=false;scene.add(iceSheet);
+function aMoon(){if(MOON)moonThaw();const pos=player.pos.clone().addScaledVector(ancFwd(),2600);pos.y=player.pos.y+1500;
+  const m=skySphere(pos,1,new THREE.MeshBasicMaterial({color:lin(1.6,2,2.8),fog:false}));showBanner('古代魔法・月光','蒼い月が、大地を眠らせる');snd('ice',1.2);let t=0,fired=false;
+  addFx({update(dt){t+=dt;const k=Math.min(1,t/3);m.scale.setScalar(20+520*k);post.flashCol.setRGB(.7,.9,1.4);
+    if(!fired&&t>3.2){fired=true;screenFlash(lin(1,1.3,1.8),1.6);snd('shatter',1.5);snd('ice',1.3);shake(1.5);
+      MOON={col:tCol.slice(),end:gameTime+120,bm:[]};worldTint([.86,.93,1],.82,(x,z,h)=>h>-2?1:0);iceSheet.visible=true;
+      allTrees(t2=>{if(t2.state===2)return;(t2.type===0?conifers:broads).setColorAt(t2.idx,tmpC.setRGB(.85,.93,1.1));});
+      for(const b of buildings)if(!b.destroyed&&inMain(b.x,b.z)&&!b.gold){b.iceM=b.mesh.material;b.mesh.material=Array.isArray(b.mesh.material)?b.mesh.material.map(()=>iceMtMat):iceMtMat;MOON.bm.push(b);}
+      ancKill('ice',(x,z,e)=>!(e&&(e.kind==='mage'||e.kind==='brute'||e.kind==='boss'||e.isTitan)));
+      for(const e of enemies)if(e.alive&&inMain(e.pos.x,e.pos.z)){e.frozen=Math.max(e.frozen,30);e.hit(e.maxHp*.35,null,'ice');}
+      for(const t2 of TITANS)if(t2.alive&&inMain(t2.pos.x,t2.pos.z)){t2.frz=30;titanHit(t2,t2.max*.3/P_MUL);}}
+    if(t>6){const f=Math.max(0,1-(t-6)/3);m.material.color.setRGB(1.6*f,2*f,2.8*f);}if(t>9){scene.remove(m);return false;}return true;}});}
+function moonThaw(){if(!MOON)return;tCol.set(MOON.col);tGeo.attributes.color.needsUpdate=true;iceSheet.visible=false;
+  for(const b of MOON.bm)if(b.iceM){b.mesh.material=b.iceM;b.iceM=null;}allTrees(t2=>{if(t2.state===0)(t2.type===0?conifers:broads).setColorAt(t2.idx,t2.col);});MOON=null;}
+// 木星：木星ほどの星が大陸に墜ちる
+const jupTex=canvasTex(256,256,(x,w,h)=>{const C=['#c89a6a','#e8c8a0','#a8704a','#f0dcc0','#b88058','#d8a878','#8a5a3a'];for(let y=0;y<h;y+=4){x.fillStyle=C[Math.floor((Math.sin(y*.09)+Math.sin(y*.031)*2+3)*1.1)%C.length];x.fillRect(0,y,w,4);}
+  x.fillStyle='#b0503a';x.beginPath();x.ellipse(w*.62,h*.62,26,14,0,0,7);x.fill();});
+function aJupiter(P){const G=P.clone();G.y=groundAt(G.x,G.z);const start=G.clone().add(V3(0,2300,0)).addScaledVector(ancFwd(),600);const R=900;
+  const m=skySphere(start,1,new THREE.MeshStandardMaterial({map:jupTex,emissive:lin(.35,.22,.12),emissiveMap:jupTex,roughness:.8,fog:false}));m.scale.setScalar(R);
+  showBanner('古代魔法・木星','天が、墜ちてくる');snd('growl',1.4);tintTarget=1;let t=0,hit=false;const DUR=8;
+  addFx({update(dt){t+=dt;const k=Math.min(1,t/DUR),e=k*k;m.position.copy(start).lerp(G.clone().setY(G.y+R*.35),e);m.rotation.y+=dt*.05;shake(.3+k*1.6);post.tint=Math.max(post.tint,.4+k*.4);
+    if(Math.random()<dt*40){const a=Math.random()*6.28;glow.emit(m.position.x+Math.cos(a)*R*1.02,m.position.y-R*.7,m.position.z+Math.sin(a)*R*1.02,rr(-20,20),rr(-60,-20),rr(-20,20),rr(1,2),rr(40,90),.5,PC.fireA,PC.fireB,1,.3,0);}
+    if(!hit&&k>=1){hit=true;screenFlash(lin(2,1.7,1.4),2.6);post.aberr=.05;shake(3.5);snd('bigboom',1.8);later(.3,()=>snd('bigboom',1.5));later(.6,()=>snd('quake',1.5));
+      shockwave(G,5000,lin(6,4,2),3,2);crater(G.x,G.z,1400,60,1);worldTint([.09,.06,.05],.7,(x,z,h)=>h>.3?1:0);
+      allTrees(t2=>{if(t2.state===2)return;removeTree(t2,false);});breakBarriers();ancRuin(mainBuildings(),'fire');ancKill('fire');
+      for(let i=0;i<(IS_MOBILE?40:80);i++)later(rr(0,2.5),()=>{const a=Math.random()*6.28,r=rr(200,2400),p=G.clone().add(V3(Math.cos(a)*r,0,Math.sin(a)*r));p.y=groundAt(p.x,p.z);fireDome(p,rr(40,110));});}
+    if(hit){const f=Math.max(0,1-(t-DUR)/4);m.scale.setScalar(R*Math.max(.01,f));m.position.y-=dt*200;}
+    if(t>DUR+4){tintTarget=0;scene.remove(m);return false;}return true;}});}
+// 海王：海が大陸を呑み込み、やがて潮が引く
+let SEA=null;
+function aNeptune(){if(SEA)return;SEA={t:0,H:260,rise:12,hold:40,fall:14,chk:0};showBanner('古代魔法・海王','海が、大陸を呑み込む');snd('whoosh',1.6);later(1,()=>snd('quake',1.2));}
+function updSea(dt){if(!SEA)return;const S=SEA;S.t+=dt;const T1=S.rise,T2=T1+S.hold,T3=T2+S.fall;
+  const lv=S.t<T1?S.H*smooth(0,T1,S.t):S.t<T2?S.H:S.t<T3?S.H*(1-smooth(T2,T3,S.t)):0;water.position.y=lv;S.lv=lv;
+  if(S.t<T2){shake(.25);if(Math.random()<dt*30){const a=Math.random()*6.28,r=rr(20,300);glow.emit(camera.position.x+Math.cos(a)*r,lv+1,camera.position.z+Math.sin(a)*r,rr(-6,6),rr(2,8),rr(-6,6),rr(.6,1.2),rr(2,4),.3,PC.waterA,PC.waterB,.7,1,10);}}
+  S.chk-=dt;if(S.chk<=0&&lv>1){S.chk=.5;const f=(x,z,o)=>o&&o.isTitan?false:true;
+    ancRuin(mainBuildings(b=>b.y+b.height*.6<lv),'water');ancKill('water',(x,z,e)=>{const y=e?(e.isCrowd?e.y:e.pos.y):0;return !(e&&(e.fly||e.isTitan))&&y+1<lv;});
+    treesIn(camera.position.x,camera.position.z,1400,t=>{if(t.y+t.s*2<lv)removeTree(t,false);});
+    if(player.pos.y<lv+1.5){if(!player.flying){player.flying=true;document.querySelector('[data-a="fly"]').classList.add('on');toast('水面に浮かび上がった（飛翔）');}player.pos.y=lv+2;}}
+  if(S.t>=T3){water.position.y=0;worldTint([.25,.22,.15],.45,(x,z,h)=>h<S.H&&h>.3?1:0);SEA=null;showBanner('潮が引いた','大地には、海の爪痕が残る');}}
+// 黒：黒い穴がすべてを吸い込む
+function aBlack(P){const G=P.clone();G.y=groundAt(G.x,G.z)+140;const R=1300,DUR=11;
+  const hole=new THREE.Mesh(geoSphere,new THREE.MeshBasicMaterial({color:0x000000,fog:false}));hole.position.copy(G);hole.scale.setScalar(1);scene.add(hole);
+  const mkR=(r0,r1,c,op)=>{const m=new THREE.Mesh(new THREE.RingGeometry(r0,r1,96),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:op,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,fog:false}));m.position.copy(G);m.rotation.x=-Math.PI/2+.35;scene.add(m);return m;};
+  const disk=mkR(1.25,3.2,lin(3,1.2,.4),.8),disk2=mkR(1.1,1.35,lin(6,5,8),.9),ring=new THREE.Mesh(new THREE.TorusGeometry(1.15,.04,8,96),new THREE.MeshBasicMaterial({color:lin(8,7,10),fog:false}));ring.position.copy(G);scene.add(ring);
+  showBanner('古代魔法・黒','すべては、無へと還る');snd('growl',1.5);let t=0,done=false;const bl=mainBuildings(b=>Math.hypot(b.x-G.x,b.z-G.z)<R).sort((a,b)=>Math.hypot(a.x-G.x,a.z-G.z)-Math.hypot(b.x-G.x,b.z-G.z));let bi=0;
+  addFx({update(dt){t+=dt;const k=Math.min(1,t/1.5),S=60*k*(t>DUR-1?Math.max(0,DUR-t):1);hole.scale.setScalar(Math.max(.01,S));disk.scale.setScalar(Math.max(.01,S));disk2.scale.setScalar(Math.max(.01,S));ring.scale.setScalar(Math.max(.01,S));
+    disk.rotation.z+=dt*1.6;disk2.rotation.z-=dt*2.4;ring.lookAt(camera.position);shake(.6);post.aberr=Math.max(post.aberr,.01);
+    const r=R*Math.min(1,t/(DUR-2));
+    for(let q=0;q<(IS_MOBILE?12:30);q++){const a=Math.random()*6.28,d=rr(80,r+60),p=V3(G.x+Math.cos(a)*d,0,G.z+Math.sin(a)*d);p.y=groundAt(p.x,p.z)+rr(0,60);const v=G.clone().sub(p);const L=v.length();v.normalize().multiplyScalar(rr(80,200));
+      const tang=V3(-v.z,0,v.x).multiplyScalar(.6);glow.emit(p.x,p.y,p.z,v.x+tang.x,v.y+tang.y,v.z+tang.z,Math.min(3,L/200),rr(2,5),.5,Math.random()<.5?PC.violetA:PC.fireA,PC.violetB,1,0,0);}
+    while(bi<bl.length&&Math.hypot(bl[bi].x-G.x,bl[bi].z-G.z)<r){const b=bl[bi++];if(b.destroyed)continue;quickRuin(b);if(b.rub)scene.remove(b.rub);for(let i=0;i<3;i++)spawnDebris(V3(b.x,b.y+b.height*.5,b.z),0x3a3040,rr(1,3),rr(20,40));}
+    for(const e of enemies){if(!e.alive||e.statue||e.kind==='boss')continue;const dx=G.x-e.pos.x,dz=G.z-e.pos.z,d=Math.hypot(dx,dz);if(d>r)continue;if(d<90)e.hit(1e12,null,'ultima');else{e.pos.x+=dx/d*dt*120;e.pos.z+=dz/d*dt*120;}}
+    for(const u of CRW){if(u.st!==1)continue;const dx=G.x-u.x,dz=G.z-u.z,d=Math.hypot(dx,dz);if(d>r)continue;if(d<90)crowdDamage(u,1e12,V3(dx/d*30,30,dz/d*30),'p','ultima');else{u.x+=dx/d*dt*140;u.z+=dz/d*dt*140;u.dirty=true;}}
+    for(const t2 of TITANS)if(t2.alive&&Math.hypot(t2.pos.x-G.x,t2.pos.z-G.z)<r){t2.hp=1;titanHit(t2,1e9);}
+    treesIn(G.x,G.z,r,t2=>removeTree(t2,false));breakBarriers(B=>Math.hypot(B.x-G.x,B.z-G.z)<r+B.r);
+    if(!done&&t>DUR-1){done=true;terrainEdit(G.x,G.z,R,(h,q)=>{const target=-150*Math.pow(1-q,1.3)+Math.min(h,40)*q;return lerp(h,target,Math.pow(1-q,.6));});
+      worldTint([.05,.03,.07],.85,(x,z)=>{const q=Math.hypot(x-G.x,z-G.z)/R;return q<1?1-q*q:0;});screenFlash(lin(.4,.2,.8),1);snd('bigboom',1.2);}
+    if(t>=DUR){scene.remove(hole,disk,disk2,ring);return false;}return true;}});}
+// 天墜：見えない圧力が天から降り、一帯をまったいらに押し潰す
+function aFall(P){const G=P.clone();G.y=groundAt(G.x,G.z);const R=1400,L=Math.max(2,G.y-6);
+  // 押し潰す範囲をかすかな円で示し、空気が歪むように輪が降りてくる
+  for(let k=0;k<6;k++)later(k*.18,()=>{const m=new THREE.Mesh(new THREE.RingGeometry(.985,1,160).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.18,depthWrite:false,fog:false}));
+    m.position.set(G.x,G.y+900-k*40,G.z);m.scale.setScalar(R*(1-k*.08));scene.add(m);let t=0;addFx({update(dt){t+=dt;m.position.y=lerp(G.y+900-k*40,G.y+2,Math.min(1,t/1.1));m.material.opacity=.18*(1-Math.max(0,t-1.1)/.4);if(t>1.5){scene.remove(m);return false;}return true;}});});
+  snd('whoosh',1.2);later(.5,()=>snd('growl',.8));
+  later(1.15,()=>{screenFlash(lin(1.2,1.2,1.3),.9);shake(3.2,G);snd('bigboom',1.8,G);later(.1,()=>snd('quake',1.6,G));post.aberr=.03;
+    terrainEdit(G.x,G.z,R*1.06,(h,q)=>q<1?Math.min(h,L):lerp(Math.min(h,L),h,(q-1)/.06));
+    worldTint([.28,.24,.2],.7,(x,z)=>Math.hypot(x-G.x,z-G.z)<R?1:0);
+    const bl=mainBuildings(b=>Math.hypot(b.x-G.x,b.z-G.z)<R);stagger(bl,80,b=>{quickRuin(b);if(b.rub){b.rub.scale.y=.12;b.rub.position.y=L;}});
+    breakBarriers(B=>Math.hypot(B.x-G.x,B.z-G.z)<R+B.r);ancKill('earth',(x,z)=>Math.hypot(x-G.x,z-G.z)<R);
+    for(let d=0;d<R;d+=60)treesIn(G.x,G.z,R,t2=>removeTree(t2,false));
+    shockwave(G.clone().setY(L),R*1.3,lin(3,2.8,2.4),1.2,2);for(let i=0;i<(IS_MOBILE?40:90);i++){const a=i/(IS_MOBILE?40:90)*6.28,p=V3(G.x+Math.cos(a)*R,0,G.z+Math.sin(a)*R);p.y=groundAt(p.x,p.z);burst(p,6,40,3,20,60,PC.dust,PC.dustB,.7,.6,-1,smoke,20,20);}
+    for(const p of[G])burst(p.clone().setY(L+5),IS_MOBILE?80:200,120,3,20,50,PC.dust,PC.dustB,.6,.5,-1,smoke,R*.7,10);});}
+// 神愛：大陸のあらゆる破壊を元に戻す
+function aLove(){const G=player.pos.clone();showBanner('古代魔法・神愛','この世界の、すべてを愛する');snd('chime',1.2);later(.4,()=>snd('chime',1));screenFlash(lin(1.4,1.2,1.3),.8);
+  if(MOON)moonThaw();if(SEA){SEA=null;water.position.y=0;}WEATHER=null;
+  const ring=new THREE.Mesh(new THREE.RingGeometry(.97,1,160).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:lin(6,5,4),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,fog:false}));ring.position.copy(G).y+=3;scene.add(ring);
+  let t=0;addFx({update(dt){t+=dt;const r=9000*Math.min(1,t/6);ring.scale.setScalar(Math.max(1,r));ring.material.opacity=1-t/6;
+    for(let q=0;q<(IS_MOBILE?20:50);q++){const a=Math.random()*6.28,x=G.x+Math.cos(a)*Math.min(r,1500),z=G.z+Math.sin(a)*Math.min(r,1500);glow.emit(x,groundAt(x,z)+rr(0,4),z,0,rr(4,14),0,rr(.6,1.2),rr(2,4),.2,PC.white,PC.gold,1,.4,-2);}
+    if(t>6){scene.remove(ring);return false;}return true;}});
+  hgrid.set(hOrig);for(let i=0;i<NV*NV;i++)tPos[i*3+1]=hOrig[i];tCol.set(cOrig);tBase.set(cOrig);
+  let row=0;addFx({update(){const n=Math.min(NV,row+40);for(;row<n;row++)for(let ix=0;ix<NV;ix++)updNormal(ix,row);if(row>=NV){tGeo.attributes.position.needsUpdate=tGeo.attributes.normal.needsUpdate=tGeo.attributes.color.needsUpdate=true;return false;}return true;}});
+  tGeo.attributes.position.needsUpdate=tGeo.attributes.color.needsUpdate=true;
+  allTrees(t2=>{if(t2.state!==0)restoreTree(t2);else (t2.type===0?conifers:broads).setColorAt(t2.idx,t2.col);});
+  const bl=buildings.filter(b=>inMain(b.x,b.z)&&(b.destroyed||b.gold||b.hp<b.maxHp||b.burn>0)).sort((a,b)=>Math.hypot(a.x-G.x,a.z-G.z)-Math.hypot(b.x-G.x,b.z-G.z));
+  stagger(bl,IS_MOBILE?40:80,b=>restoreBuilding(b),()=>{finishRestore(V3(0,0,0),20000);for(const B of BARRIERS){B.hp=B.max;B.down=0;}});
+  if(SKY.gold){SKY.gold=false;SKY.top.material=SKY.topM;}for(const e of enemies)if(e.statue)restoreEnemy(e);
+  lanternPos.forEach((p,i)=>{if(!p.alive){p.alive=true;dummy.position.copy(p);dummy.rotation.set(0,0,0);dummy.scale.set(1,1,1);dummy.updateMatrix();lanternPost.setMatrixAt(i,dummy.matrix);dummy.position.y+=4.3;dummy.updateMatrix();lanternLamp.setMatrixAt(i,dummy.matrix);}});
+  lanternPost.instanceMatrix.needsUpdate=lanternLamp.instanceMatrix.needsUpdate=true;
+  for(const C of COUNTRIES)if(C.eco&&!C.outer)C.eco.happyT=gameTime+240;pHP=PLAYER_MAX;}
+Object.assign(SP,{a_sun(P){aSun();},a_moon(P){aMoon();},a_jup(P){aJupiter(P);},a_nep(P){aNeptune();},a_black(P){aBlack(P);},a_fall(P){aFall(P);},a_love(P){aLove();}});
+function updAncient(dt){updSea(dt);if(MOON&&gameTime>MOON.end){moonThaw();toast('氷が解け、大地に色が戻った');}}
 // ================= 召喚魔法 =================
 // 精霊は大魔導士のそばに浮かび、敵対している相手だけを自動で攻撃する。神龍は一帯を無に帰す。
 const SPIRITS=[];
@@ -3406,12 +3592,12 @@ function rebuildBar(){barEl.innerHTML='';SPELLS.forEach(s=>s.el=null);
 function updBarSel(){SPELLS.forEach((s,i)=>{if(!s.el)return;s.el.classList.toggle('sel',i===selSpell);s.el.classList.toggle('lock',!spellOk(s));});}
 let bookOpen=false;
 function toggleBook(){bookOpen=!bookOpen;$('#book').classList.toggle('on',bookOpen);if(bookOpen){renderBook();if(document.pointerLockElement)document.exitPointerLock();}}
-function renderBook(){const g=$('#book .bg');if(!g)return;g.innerHTML='';
+function renderBook(){const g=$('#book .bg'),g2=$('#book .ancg');if(!g)return;g.innerHTML='';if(g2)g2.innerHTML='';
   SPELLS.forEach((s,i)=>{const k=SLOTS.indexOf(i);const c=document.createElement('button');c.type='button';c.className='bc'+(k>=0?' on':'');c.style.setProperty('--c',s.col);
     const lk=!spellOk(s);if(lk)c.classList.add('lock');
     c.innerHTML=`<span class="bk">${s.k}</span><span class="bt">${s.name}<small>${lk?'Lv'+SPELL_LV[s.id]+'で習得':s.read}</small><span class="dsc">${SPELL_DESC[s.id]||''}</span></span><span class="bn">${k>=0?(k+1)%10:'―'}</span>`;
     c.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();const j=SLOTS.indexOf(i);if(j>=0){if(SLOTS.length>1)SLOTS.splice(j,1);}else if(SLOTS.length<10)SLOTS.push(i);else{showBanner('枠は10個まで','外してから加えてください');return;}saveSlots();rebuildBar();});
-    g.appendChild(c);});
+    (s.anc&&g2?g2:g).appendChild(c);});
   renderComboBook();
   $('#book .cnt').textContent=`装備 ${SLOTS.length} / 10`;}
 rebuildBar();
@@ -3583,7 +3769,7 @@ function step(dt){
     if(!started&&e.kind!=='boss'&&!e.fly){e.animate(dt,false);continue;}e.update(dt);}
   for(let i=fx.length-1;i>=0;i--){if(!fx[i].update(dt))fx.splice(i,1);}
   cullT-=dt;if(cullT<=0){cullT=.3;cullWorld();}
-  updWorld(dt);updCrowd(dt);updSites(dt);updTitans(dt);updSpirits(dt);updIceMts(dt);updCrow(dt);updWeather(dt);updWaves(dt);updBarriers(dt);
+  updWorld(dt);updCrowd(dt);updSites(dt);updTitans(dt);updSpirits(dt);updIceMts(dt);updCrow(dt);updShields(dt);updWeather(dt);updAncient(dt);updWaves(dt);updBarriers(dt);
   updBuildings(dt);updDebris(dt);updHome(dt);updFlora(dt);updSkyCity(dt);updFarm(dt);
   for(let i=burningTrees.length-1;i>=0;i--){const b=burningTrees[i];b.life-=dt;const t=b.t;
     if(Math.random()<dt*25)glow.emit(t.x+rr(-1,1)*t.s*.4,t.y+t.s*rr(1,2.6),t.z+rr(-1,1)*t.s*.4,0,rr(4,8),0,rr(.5,1),rr(2,4),.4,PC.fireA,PC.fireB,1,.5,-2);
@@ -4623,7 +4809,7 @@ initCrowd();
 initEconomy();
 BN0=buildings.length;
 setDiff(loadSave());postLoad();saveReady=true;loadAch();renderSaveInfo();
-window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,LOCK,lockToggle,lockCycle,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,get sea(){return SEA;},get moon(){return MOON;},hgrid,LOCK,lockToggle,lockCycle,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
