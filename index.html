@@ -357,6 +357,7 @@ if (IS_MOBILE) document.body.classList.add('mobile');
 THREE.ColorManagement.legacyMode = false;
 
 // ================= utilities =================
+let REPLAY=false;// セーブから世界を建て直している間は画面効果を出さない
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const rand = mulberry32(20260923);
 const R = (a,b)=>a+(b-a)*rand();
@@ -775,8 +776,8 @@ function decal(pos,size,tex,color,dur){
   addFx({update(dt){t+=dt;const k=t/dur;m.material.opacity=k<.05?k/.05:Math.pow(1-k,1.5);if(k>=1){scene.remove(m);m.material.dispose();return false;}return true;}});
 }
 let shakeAmt=0;
-function shake(a,pos){if(pos){const d=pos.distanceTo(player.pos);a*=clamp(1.3-d/400,0,1);}shakeAmt=Math.max(shakeAmt,a*(REDUCED?.2:1));}
-function screenFlash(col,amt){post.flashCol.copy(col);post.flash=Math.max(post.flash,amt*(REDUCED?.3:1));}
+function shake(a,pos){if(REPLAY)return;if(pos){const d=pos.distanceTo(player.pos);a*=clamp(1.3-d/400,0,1);}shakeAmt=Math.max(shakeAmt,a*(REDUCED?.2:1));}
+function screenFlash(col,amt){if(REPLAY)return;post.flashCol.copy(col);post.flash=Math.max(post.flash,amt*(REDUCED?.3:1));}
 
 // ================= audio =================
 let ac=null,master=null,noiseBuf=null,muted=false,lastSnd={};
@@ -1400,15 +1401,15 @@ mkBarrier(4,EMX,EMZ,EMH,ER+28,lin(1.2,1.1,.6));mkBarrier(5,DMX,DMZ,DMH,DR+28,lin
 let cullT=0;
 function cullWorld(){const px=VIEW.x,pz=VIEW.z;
   for(const b of buildings){if(b.collapse>=2)continue;const d=Math.hypot(b.x-px,b.z-pz);const v=d<(b.height>45?3400:1800);if(b.mesh.visible!==v&&!b.hidden){b.mesh.visible=v;if(b.orn)b.orn.visible=v;}}}
+function makeRubble(b){const parts=[];const n=4+Math.floor(b.rad/2);
+  for(let i=0;i<n;i++){const s=R(.3,.6)*b.rad;parts.push(new THREE.DodecahedronGeometry(s*.6,0).scale(1,R(.35,.6),1).translate(R(-b.rad*.5,b.rad*.5),s*.12,R(-b.rad*.5,b.rad*.5)));}
+  const rub=new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(parts),rubbleMat);b.rub=rub;rub.position.set(b.x,b.y,b.z);rub.receiveShadow=true;rub.castShadow=true;scene.add(rub);}
 function updBuildings(dt){
   for(const b of buildings){
     if(b.collapse>=0&&b.collapse<2){
       b.collapse+=dt;const k=Math.min(b.collapse/1.6,1),e=k*k;
       b.mesh.position.y=b.y-b.height*e*.95;b.mesh.rotation.z=e*.18;b.mesh.rotation.x=e*.1;
-      if(k>=1){b.collapse=2;scene.remove(b.mesh);
-        const parts=[];const n=4+Math.floor(b.rad/2);
-        for(let i=0;i<n;i++){const s=R(.3,.6)*b.rad;parts.push(new THREE.DodecahedronGeometry(s*.6,0).scale(1,R(.35,.6),1).translate(R(-b.rad*.5,b.rad*.5),s*.12,R(-b.rad*.5,b.rad*.5)));}
-        const rub=new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(parts),rubbleMat);b.rub=rub;rub.position.set(b.x,b.y,b.z);rub.receiveShadow=true;rub.castShadow=true;scene.add(rub);}
+      if(k>=1){b.collapse=2;scene.remove(b.mesh);makeRubble(b);}
     }
     if(b.burn>0){
       b.burn-=dt;
@@ -2400,9 +2401,9 @@ const SP={
     let planted=0;for(let i=0;i<NT*4&&planted<NT;i++){const a=Math.random()*Math.PI*2,r=Math.sqrt(Math.random())*RM,x=G.x+Math.cos(a)*r,z=G.z+Math.sin(a)*r;
       if(nearTown(x,z)&&countryAt(x,z)>=0&&!townSpotOk(countryAt(x,z),x,z))continue;if(nearTown(x,z))continue;planted++;later(r/RM*DUR+rr(0,.3),()=>plantTree(x,z));}
     let built=0;for(let i=0;i<NB*12&&built<NB;i++){const a=Math.random()*Math.PI*2,r=Math.sqrt(Math.random())*RM,x=G.x+Math.cos(a)*r,z=G.z+Math.sin(a)*r;const ci=countryAt(x,z);
-      if(ci<0||!HOUSE_MK[ci]||!townSpotOk(ci,x,z))continue;built++;BUILT++;const b=HOUSE_MK[ci](x,z);b.maxHp=b.hp=b.baseHp*BHP[DIFF];COUNTRIES[ci].total+=b.maxHp;TOTAL_HP+=b.maxHp;
+      if(ci<0||!HOUSE_MK[ci]||!townSpotOk(ci,x,z))continue;built++;BUILT++;const b=mkHouse(ci,x,z);b.maxHp=b.hp=b.baseHp*BHP[DIFF];COUNTRIES[ci].total+=b.maxHp;TOTAL_HP+=b.maxHp;
       b.mesh.visible=false;later(r/RM*DUR,()=>{b.mesh.visible=true;growBuilding(b);});}
-    if(K.t>=2)later(.5,()=>worldTree(G,K.t===3?320:140));
+    if(K.t>=2){const H=K.t===3?320:140;logW({k:'wt',x:G.x,z:G.z,h:H});later(.5,()=>worldTree(G,H));}
   },
   people(P,s,K){
     const N=[3,10,25,60][K.t],RM=[15,30,60,100][K.t],G=P.clone();G.y=groundAt(P.x,P.z);
@@ -2419,25 +2420,22 @@ const SP={
   build(P,s,K){
     const N=[2,6,15,35][K.t],RM=[30,60,110,180][K.t],G=P.clone();G.y=groundAt(P.x,P.z);
     let ci=countryAt(G.x,G.z);
-    if(ci<0){if(G.y<1){showBanner('ここには建てられない','');return;}SETTLE_N++;ci=COUNTRIES.length;
-      COUNTRIES.push({label:SETTLE_N===1?'魔導王の新都':'魔導王の新都 其の'+['','一','二','三','四','五','六','七','八','九','十'][Math.min(SETTLE_N,10)],x:G.x,z:G.z,r:Math.max(40,RM),total:0,dest:0,start:-1,done:false,doneAt:0,settle:true});
-      HOUSE_MK[ci]=(x,z)=>HOUSE_MK[0](x,z,ci);}
+    if(ci<0){if(G.y<1){showBanner('ここには建てられない','');return;}ci=newSettlement('town',G.x,G.z,Math.max(40,RM));}
     const C=COUNTRIES[ci];if(C.settle)C.r=Math.max(C.r,Math.hypot(G.x-C.x,G.z-C.z)+RM*.8);
     magicCircle(G,Math.max(10,RM*.35),lin(7,5,2),2.5,{y:.5,spin:.5});snd('quake',.7,G);shake(.4,G);
     const add=b=>{b.maxHp=b.hp=b.baseHp*BHP[DIFF];C.total+=b.maxHp;TOTAL_HP+=b.maxHp;return b;};
     const grow=(b,d)=>{b.mesh.visible=false;if(b.orn)b.orn.visible=false;later(d,()=>{b.mesh.visible=true;if(b.orn)b.orn.visible=true;growBuilding(b);burst(V3(b.x,b.y+1,b.z),30,8,1.4,4,10,PC.dust,PC.dustB,.6,1,-1,smoke);});};
     let built=0;
     if(K.t>=2){const lm=[[G.x,G.z]];for(let t=0;t<30&&lm.length<(K.t===3?3:2);t++){const a=Math.random()*6.28,r=rr(RM*.2,RM*.6);lm.push([G.x+Math.cos(a)*r,G.z+Math.sin(a)*r]);}
-      lm.forEach(([x,z],k)=>{if(!townSpotOk(ci,x,z))return;for(const b of buildings)if(!b.wall&&Math.hypot(b.x-x,b.z-z)<b.rad+18)return;CUR_C=ci;
-        const b=k===0&&K.t===3?addBuilding(THREE.BufferGeometryUtils.mergeBufferGeometries([new THREE.BoxGeometry(22,20,22).translate(0,10,0),new THREE.ConeGeometry(1,1,4).rotateY(Math.PI/4).scale(17,16,17).translate(0,28,0)],true),[stoneMat,slateMat],x,z,groundAt(x,z),14,36,4200,'keep')
-          :addBuilding(towerGeo(5.5,30,7.5,13,10),[stoneMat,roofMats[1]],x,z,groundAt(x,z),6.5,43,2000,'tower');CUR_C=0;add(b);grow(b,.3+k*.4);built++;});}
+      lm.forEach(([x,z],k)=>{if(!townSpotOk(ci,x,z))return;for(const b of buildings)if(!b.wall&&Math.hypot(b.x-x,b.z-z)<b.rad+18)return;
+        const b=mkLandmark(ci,x,z,k===0&&K.t===3);add(b);grow(b,.3+k*.4);built++;});}
     for(let i=0;i<N*14&&built<N;i++){const a=Math.random()*Math.PI*2,r=Math.sqrt(Math.random())*RM,x=G.x+Math.cos(a)*r,z=G.z+Math.sin(a)*r;
-      const cj=countryAt(x,z);if(cj!==ci||!HOUSE_MK[ci]||!townSpotOk(ci,x,z))continue;built++;BUILT++;const b=add(HOUSE_MK[ci](x,z));grow(b,.3+r/RM*1.8);}
+      const cj=countryAt(x,z);if(cj!==ci||!HOUSE_MK[ci]||!townSpotOk(ci,x,z))continue;built++;BUILT++;const b=add(mkHouse(ci,x,z));grow(b,.3+r/RM*1.8);}
     if(C.settle)for(let i=0;i<Math.min(built*2,40);i++)later(1+i*.1,()=>{const a=Math.random()*6.28,r=Math.sqrt(Math.random())*C.r*.8;const x=C.x+Math.cos(a)*r,z=C.z+Math.sin(a)*r;if(groundAt(x,z)>1)new Enemy('citizen',x,z,{tc:{x:C.x,z:C.z,r:C.r-4},inTown:false});});
     if(built===0)showBanner('空き地が足りない','');
   },
   veg(P,s,K){
-    FARMS++;
+    FARMS++;logW({k:'f',sp:'veg',x:P.x,z:P.z,t:K.t,yaw:camYaw});
     const S=[20,42,80,140][K.t],G=P.clone();G.y=groundAt(P.x,P.z);const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));const FLD=addField(G.x,G.z,S*S*.8,'veg');
     const inside=(x,z)=>{const dx=x-G.x,dz=z-G.z;return Math.abs(dx*f.x+dz*f.z)<S/2&&Math.abs(dx*rt.x+dz*rt.z)<S/2;};
     magicCircle(G,S*.35,lin(4,7,2),2.5,{y:.5,spin:.4});snd('whoosh',.8);later(.3,()=>snd('chime',.8));
@@ -2452,7 +2450,7 @@ const SP={
     buildPort(site,K);
   },
   flowers(P,s,K){
-    FARMS++;
+    FARMS++;logW({k:'f',sp:'flowers',x:P.x,z:P.z,t:K.t,yaw:camYaw});
     const RM=[20,45,90,160][K.t];addField(P.x,P.z,RM*RM*3.1,'flowers');const N=Math.round([400,1400,3500,7000][K.t]*(IS_MOBILE?.45:1)),G=P.clone();G.y=groundAt(P.x,P.z);
     const PAL=[[1.7,.3,.55],[1.8,1.5,.2],[1.8,1.8,1.8],[.8,.35,1.7],[1.9,.6,.15],[.4,.7,1.9],[1.8,.15,.15]].map(a=>new THREE.Color(a[0],a[1],a[2]));
     magicCircle(G,Math.max(8,RM*.3),lin(8,3.5,6),2,{y:.5,spin:.5});snd('chime',1);burst(G,120,14*K.s,1.5,1.2,.3,PC.gold,PC.white,1,1,-3);
@@ -2465,7 +2463,7 @@ const SP={
       if(Math.random()<.02)glow.emit(it.x,y+1,it.z,0,rr(1,3),0,1,.8,.1,PC.white,PC.gold,.8,0,0);},RM);
   },
   wheat(P,s,K){
-    FARMS++;
+    FARMS++;logW({k:'f',sp:'wheat',x:P.x,z:P.z,t:K.t,yaw:camYaw});
     const S=[24,50,96,170][K.t],G=P.clone();G.y=groundAt(P.x,P.z);const FLD=addField(G.x,G.z,S*S*.8,'wheat');const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));
     const inside=(x,z)=>{const dx=x-G.x,dz=z-G.z;return Math.abs(dx*f.x+dz*f.z)<S/2&&Math.abs(dx*rt.x+dz*rt.z)<S/2;};
     magicCircle(G,S*.35,lin(8,6,1.5),2.5,{y:.5,spin:.4});snd('whoosh',.8);later(.3,()=>snd('chime',.8));
@@ -2479,7 +2477,7 @@ const SP={
     if(K.t>=2){const c=K.t===3?3:1;for(let k=0;k<c;k++){const u=k===0?0:rr(-.35,.35)*S,v=S/2+6;const x=G.x+f.x*u+rt.x*(k%2?-v:v),z=G.z+f.z*u+rt.z*(k%2?-v:v);if(fieldOk(x,z))later(1+k*.5,()=>windmill(x,z,yaw));}}
   },
   paddy(P,s,K){
-    FARMS++;
+    FARMS++;logW({k:'f',sp:'paddy',x:P.x,z:P.z,t:K.t,yaw:camYaw});
     const S=[20,40,80,140][K.t],PS=10,G=P.clone();G.y=groundAt(P.x,P.z);const FLD=addField(G.x,G.z,S*S*.8,'paddy');const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));
     magicCircle(G,S*.35,lin(2.5,6,5.5),2.5,{y:.5,spin:.4});snd('whoosh',.8);later(.4,()=>snd('chime',.8));
     const n=Math.max(2,Math.round(S/PS)),items=[];
@@ -3503,10 +3501,9 @@ function makeShip(){portMats();const g=new THREE.Group();const hull=new THREE.Me
   const sail=new THREE.Mesh(new THREE.PlaneGeometry(5.4,5.6,4,1),PM.sail);sail.position.set(0,6.6,.6);g.add(sail);
   const flag=new THREE.Mesh(new THREE.PlaneGeometry(1.4,.7),PM.flag);flag.position.set(.7,11.2,.4);g.add(flag);
   g.scale.setScalar(1.25);scene.add(g);return {g,sail};}
-function buildPort(site,K){portMats();const {x,z,dx,dz}=site;const y=groundAt(x,z),ry=Math.atan2(dx,dz);
+function buildPort(site,K){portMats();const {x,z,dx,dz}=site;logW({k:'p',x,z,dx,dz,t:K.t});const y=groundAt(x,z),ry=Math.atan2(dx,dz);
   let ci=countryAt(x,z);if(ci<0){const n=nearestCi(x,z),C=COUNTRIES[n];if(n>=0&&Math.hypot(C.x-x,C.z-z)-C.r<260&&!C.faction)ci=n;}
-  if(ci<0){SETTLE_N++;ci=COUNTRIES.length;COUNTRIES.push({label:'潮騒の港町'+(PORT_N?' 其の'+['','一','二','三','四','五','六','七','八','九','十'][Math.min(PORT_N+1,10)]:''),x,z,r:60,total:0,dest:0,start:-1,done:false,doneAt:0,settle:true});
-    HOUSE_MK[ci]=(hx,hz)=>HOUSE_MK[0](hx,hz,ci);ecoInitOne(ci);COUNTRIES[ci].eco.pop=40;}
+  if(ci<0){ci=newSettlement('port',x,z,60);ecoInitOne(ci);COUNTRIES[ci].eco.pop=40;}
   PORT_N++;const C=COUNTRIES[ci];
   magicCircle(V3(x,y,z),24,lin(1.5,4,8),2.5,{y:.5,spin:.5});snd('whoosh',1);later(.4,()=>snd('chime',.9));shake(.4,V3(x,y,z));
   // 桟橋
@@ -3523,7 +3520,7 @@ function buildPort(site,K){portMats();const {x,z,dx,dz}=site;const y=groundAt(x,
   const NS=[1,2,3,4][K.t];for(let i=0;i<NS&&SHIPS.length<(IS_MOBILE?10:18);i++){const sh=makeShip();const o={...sh,port,st:'dock',wait:2+i*4,pos:port.end.clone().add(V3(-dz*i*9,0,dx*i*9)),yaw:ry,tgt:null,spd:rr(13,17),cargo:0};
     o.g.position.copy(o.pos);o.g.rotation.y=ry;port.ships.push(o);SHIPS.push(o);}
   if(C.eco)C.eco.ports=(C.eco.ports||0)+1;addFavor(ci,10);
-  showBanner('潮騒の港',C.label+'に港が開かれた');}
+  if(!REPLAY)showBanner('潮騒の港',C.label+'に港が開かれた');}
 function seaLine(a,b){const d=a.distanceTo(b),n=Math.ceil(d/15);for(let i=1;i<=n;i++){const t=i/n;if(heightAt(lerp(a.x,b.x,t),lerp(a.z,b.z,t))>-2.5)return false;}return true;}
 function pickVoyage(o){const p=o.port;for(let k=0;k<16;k++){const a=Math.atan2(p.dx,p.dz)+rr(-1.2,1.2),d=rr(260,760);const t=V3(p.end.x+Math.sin(a)*d,0,p.end.z+Math.cos(a)*d);if(seaLine(p.end,t))return t;}
   return V3(p.end.x+p.dx*90,0,p.end.z+p.dz*90);}
@@ -3693,16 +3690,52 @@ $('#achBtn').addEventListener('click',e=>{e.stopPropagation();toggleAch();});
 $('#ach .x').addEventListener('click',e=>{e.stopPropagation();toggleAch();});
 $('#ach').addEventListener('pointerdown',e=>e.stopPropagation());
 $('#ach').addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('[data-ach]');if(!b||!b.dataset.ach)return;TITLE=TITLE===b.dataset.ach?null:b.dataset.ach;saveAch();applyTitle();renderAch();});
+// ================= 世界の記録（建てた物・壊した物） =================
+// 魔導王が建てた物は「作った順の記録」として残し、読み込み時に同じ順で建て直す。
+// 建物の壊れ具合・黄金化は、建物の並び順の範囲でまとめて保存する。
+let WLOG=[],BN0=0;
+function logW(e){if(REPLAY)return;WLOG.push(e);if(WLOG.length>800)WLOG.shift();}
+const NUMK=['','一','二','三','四','五','六','七','八','九','十'];
+function newSettlement(kind,x,z,r){SETTLE_N++;const ci=COUNTRIES.length;
+  const label=kind==='port'?'潮騒の港町'+(PORT_N?' 其の'+NUMK[Math.min(PORT_N+1,10)]:''):(SETTLE_N===1?'魔導王の新都':'魔導王の新都 其の'+NUMK[Math.min(SETTLE_N,10)]);
+  COUNTRIES.push({label,x,z,r,total:0,dest:0,start:-1,done:false,doneAt:0,settle:true});HOUSE_MK[ci]=(hx,hz)=>HOUSE_MK[0](hx,hz,ci);
+  if(kind!=='port')logW({k:'s',x,z,r});return ci;}
+function mkHouse(ci,x,z){const b=HOUSE_MK[ci](x,z);logW({k:'h',ci,x,z,ry:+b.mesh.rotation.y.toFixed(3)});return b;}
+function mkLandmark(ci,x,z,keep){CUR_C=ci;const b=keep?addBuilding(THREE.BufferGeometryUtils.mergeBufferGeometries([new THREE.BoxGeometry(22,20,22).translate(0,10,0),new THREE.ConeGeometry(1,1,4).rotateY(Math.PI/4).scale(17,16,17).translate(0,28,0)],true),[stoneMat,slateMat],x,z,groundAt(x,z),14,36,4200,'keep')
+  :addBuilding(towerGeo(5.5,30,7.5,13,10),[stoneMat,roofMats[1]],x,z,groundAt(x,z),6.5,43,2000,'tower');CUR_C=0;logW({k:'l',ci,x,z,keep:keep?1:0});return b;}
+function applyW(e){const n=v=>typeof v==='number'&&isFinite(v);if(!e||!n(e.x)||!n(e.z))return;
+  if(e.k==='s')newSettlement('town',e.x,e.z,n(e.r)?e.r:40);
+  else if(e.k==='h'){if(!HOUSE_MK[e.ci])return;const b=HOUSE_MK[e.ci](e.x,e.z);if(n(e.ry))b.mesh.rotation.y=e.ry;}
+  else if(e.k==='l'){if(!COUNTRIES[e.ci])return;mkLandmark(e.ci,e.x,e.z,!!e.keep);}
+  else if(e.k==='p'){if(!n(e.dx)||!n(e.dz))return;buildPort({x:e.x,z:e.z,dx:e.dx,dz:e.dz},TK[clamp(e.t|0,0,3)]);}
+  else if(e.k==='f'){if(!SP[e.sp]||!['wheat','paddy','veg','flowers'].includes(e.sp))return;const oy=camYaw;camYaw=n(e.yaw)?e.yaw:0;SP[e.sp](V3(e.x,0,e.z),SPELLS.find(q=>q.id===e.sp),TK[clamp(e.t|0,0,3)]);camYaw=oy;}
+  else if(e.k==='wt'){worldTree(V3(e.x,groundAt(e.x,e.z),e.z),n(e.h)?e.h:140);}}
+function bRanges(pred){const out=[];let st=-1;for(let i=0;i<=buildings.length;i++){const v=i<buildings.length&&pred(buildings[i]);if(v&&st<0)st=i;if(!v&&st>=0){out.push([st,i-st]);st=-1;}}return out;}
+function ruinQuiet(b){if(b.destroyed)return;b.destroyed=true;b.hp=0;b.collapse=2;b.burn=0;b.smokeT=0;scene.remove(b.mesh);if(b.orn)scene.remove(b.orn);makeRubble(b);
+  for(const a of b.archers)if(a.alive){a.alive=false;a.dead=true;scene.remove(a.g);}}
+function goldQuiet(b){if(b.gold)return;b.gold=true;b.origMat=b.mesh.material;if(b.orn&&!b.ornMats){b.ornMats=[];b.orn.traverse(o=>{if(o.isMesh)b.ornMats.push([o,o.material]);});}
+  b.mesh.material=Array.isArray(b.mesh.material)?b.mesh.material.map(()=>GOLDM):GOLDM;if(b.orn)b.orn.traverse(o=>{if(o.isMesh)o.material=GOLDM;});b.destroyed=true;b.hp=0;b.burn=0;
+  for(const a of b.archers)if(a.alive){a.alive=false;a.dead=true;scene.remove(a.g);}}
+function worldSave(){return {n0:BN0,mob:IS_MOBILE?1:0,log:WLOG,sr:COUNTRIES.map(C=>C.settle&&!C.village?Math.round(C.r):0),
+  d:bRanges(b=>b.destroyed&&!b.gold),g:bRanges(b=>b.gold)};}
+function worldLoad(w){if(!w||typeof w!=='object')return;
+  if(Array.isArray(w.log)){REPLAY=true;for(const e of w.log){try{applyW(e);}catch(err){}}REPLAY=false;WLOG=w.log.slice(-800);}
+  if(Array.isArray(w.sr))w.sr.forEach((r,i)=>{const C=COUNTRIES[i];if(C&&C.settle&&!C.village&&typeof r==='number'&&r>0)C.r=Math.max(C.r,r);});
+  if(w.n0!==BN0||w.mob!==(IS_MOBILE?1:0))return;// 端末や世界の生成が違えば壊れ具合は復元しない
+  const each=(L,fn)=>{if(Array.isArray(L))for(const a of L){if(!Array.isArray(a))continue;const s0=a[0]|0,n=a[1]|0;for(let i=s0;i<s0+n&&i<buildings.length;i++)if(i>=0)fn(buildings[i]);}};
+  each(w.d,ruinQuiet);each(w.g,goldQuiet);}
+function postLoad(){COUNTRIES.forEach(C=>{if(C.total&&C.dest>0){C.start=0;if(C.dest/C.total>=.95){C.done=true;C.doneAt=0;}}});}
 // ================= save =================
-// 進行状況（魔晶・工房の強化・勢力・難易度・撃破数）を保存する。街や建物の状態は保存せず、読み込み時は世界が元に戻る。
+// 進行状況（魔晶・工房の強化・勢力・難易度・撃破数）と、世界の記録（建てた物・壊した物）を保存する。
 const SAVE_KEY='hatenMadouou.save';const ECO_FIXED=7+VILL.length;let saveReady=false;
 function saveGame(){if(!saveReady||!started)return;
   try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,at:Date.now(),diff:DIFF,mana:MANA,upg:UPG,pwr:PWR_BIAS,kills,kb:KB,built:BUILT,farms:FARMS,
-    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
-    rule:COUNTRIES.slice(0,ECO_FIXED).map(C=>[C.rule==='vassal'?1:C.rule==='ally'?2:0,Math.round(C.favor||0)]),
-    eco:COUNTRIES.slice(0,ECO_FIXED).map(C=>C.eco?[Math.round(C.eco.pop),Math.round(C.eco.hap),Math.round(C.eco.food),Math.round(C.eco.wood),Math.round(C.eco.ore)]:null)}));}catch(e){}}
+    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,world:worldSave(),endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
+    rule:COUNTRIES.map(C=>[C.rule==='vassal'?1:C.rule==='ally'?2:0,Math.round(C.favor||0)]),
+    eco:COUNTRIES.map(C=>C.eco?[Math.round(C.eco.pop),Math.round(C.eco.hap),Math.round(C.eco.food),Math.round(C.eco.wood),Math.round(C.eco.ore)]:null)}));}catch(e){}}
 function readSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&typeof s==='object'?s:null;}catch(e){return null;}}
 function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v==='number'&&isFinite(v)?v:d;
+  try{worldLoad(s.world);}catch(e){REPLAY=false;}
   MANA=Math.max(0,Math.floor(num(s.mana,0)));
   for(const it of SHOP){const l=Math.max(0,Math.min(it.max,Math.floor(num(s.upg&&s.upg[it.k],0))));for(let i=0;i<l;i++)it.fx();UPG[it.k]=l;}
   pHP=PLAYER_MAX;
@@ -3717,8 +3750,8 @@ function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v=
   return [0,1,2].includes(s.diff)?s.diff:1;}
 function renderSaveInfo(){const el=$('#saveInfo');const s=readSave();if(!s){el.innerHTML='';return;}
   const d=new Date(s.at||0),lv=SHOP.reduce((a,it)=>a+(UPG[it.k]||0),0);
-  const ends=ENDINGS.filter(E=>END_SEEN.has(E.id)).map(E=>E.n).join('・');
-  el.innerHTML=`<b>前回の記録</b>（${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}）　魔晶 ${MANA}・強化 計Lv${lv}・撃破 ${kills}・実績 ${ACH.size}/${ACHS.length}<button type="button" id="saveDel">記録を消す</button>`+(ends?`<br><b>到達した結末</b> ${END_SEEN.size}/${ENDINGS.length}　${ends}`:'');
+  const ends=ENDINGS.filter(E=>END_SEEN.has(E.id)).map(E=>E.n).join('・');const wl=(s.world&&Array.isArray(s.world.log))?s.world.log:[];const nb=wl.filter(e=>e.k==='h'||e.k==='l').length,nf=wl.filter(e=>e.k==='f').length,np=wl.filter(e=>e.k==='p').length;
+  el.innerHTML=`<b>前回の記録</b>（${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}）　魔晶 ${MANA}・強化 計Lv${lv}・撃破 ${kills}・実績 ${ACH.size}/${ACHS.length}<button type="button" id="saveDel">記録を消す</button>`+(nb||nf||np?`<br><b>築いた物</b> 建物 ${nb}・田畑と花畑 ${nf}・港 ${np}`:'')+(ends?`<br><b>到達した結末</b> ${END_SEEN.size}/${ENDINGS.length}　${ends}`:'');
   $('#saveDel').addEventListener('click',e=>{e.stopPropagation();if(!confirm('保存された記録（魔晶・強化・勢力の信頼など）を消して、最初からやり直しますか？（実績と称号は残ります）'))return;
     saveReady=false;try{localStorage.removeItem(SAVE_KEY);}catch(e2){}location.reload();});}
 addEventListener('pagehide',saveGame);
@@ -3770,8 +3803,9 @@ function initVillages(){
 initVillages();
 initCrowd();
 initEconomy();
-setDiff(loadSave());saveReady=true;loadAch();renderSaveInfo();
-window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,ENDINGS,makePeace,destroyBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+BN0=buildings.length;
+setDiff(loadSave());postLoad();saveReady=true;loadAch();renderSaveInfo();
+window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
