@@ -364,7 +364,7 @@ body.mobile #guide .gpc{display:none}body:not(.mobile) #guide .gsp{display:none}
 <ul class="gsp"><li>画面の<b>左側をなぞって移動</b>、<b>右側をなぞって視点</b>を回す</li><li>下の紋章をタップで<b>魔法</b>（照準は画面中央）。左下の「弱・中・強・極」で<b>威力</b></li><li>右下の「飛」で飛翔、「昇」「降」で高度、「疾」で疾走、「転」で転移</li></ul>
 <h3>魔法</h3><p><b>魔法書</b>を開くと、すべての魔法の説明が読めます。押すとワンタッチ枠に加わり、キー1〜9・0（スマホは下の紋章）で唱えられます。</p>
 <ul><li><b>攻撃</b>：炎・雷・氷・水・風・地、終焉の極光、星墜とし、穿光</li><li><b>創造</b>：復元・豊穣・人・建物・花畑・麦畑・水田・野菜畑・港。壊すだけでなく、世界を豊かにできる</li><li><b>連鎖魔法</b>：属性の魔法を同じ場所に重ねると起こる。例：水をまいて雷で「雷水陣」</li><li><b>召喚と変化</b>：精霊3種は一定時間そばで戦い、神龍は一帯を無に帰す。「夜烏の変化」は体を烏の群れに変えて攻撃を受け付けない</li></ul>
-<h3>世界と勢力</h3><ul><li><b>依頼</b>（J）：帝国と魔王軍から依頼が届く。魔晶を稼いで工房で強化できる</li><li><b>国勢</b>（K）：国ごとの人口や食料。壊した国は属国に、豊かにした国は盟友になる</li><li><b>地図</b>（N）・<b>観戦</b>（V）：両軍の会戦を遠くから眺められる</li><li><b>物語</b>（G）・<b>実績</b>（L）：物語を進めると、封印された何かが目を覚ます……</li></ul>
+<h3>世界と勢力</h3><ul><li><b>依頼</b>（J）：帝国と魔王軍から依頼が届く。魔晶を稼いで工房で強化できる</li><li><b>国勢</b>（K）：国ごとの人口や食料。壊した国は属国に、豊かにした国は盟友になる</li><li><b>地図</b>（N）・<b>観戦</b>（V）：両軍の会戦を遠くから眺められる</li><li><b>物語</b>（G）・<b>実績</b>（L）：物語を進めると、封印された何かが目を覚ます……</li><li><b>外の世界</b>：この世界は小さな世界のひとつ。北の海の彼方の<b>巨神帝国</b>から、巨神兵が上陸してくることがある。光線を溜めている間に倒すか、避けよう</li></ul>
 <h3>困ったとき</h3><ul><li>倒れても拠点で起き上がるだけ。進行は自動でセーブされる</li><li>スマホが熱いときは、上の「画質」を<b>省電力</b>に</li><li>強すぎて退屈なら、タイトルで<b>魔法使い見習い</b>を選ぶと Lv1 から成長を楽しめる</li></ul>
 <div class="bf"><button type="button" class="x">はじめる</button></div></div>
   <div id="story"><div class="wt">物語</div><div class="sh"></div><div class="sb2"></div><div class="bf"><button type="button" class="x">閉じる</button></div></div>
@@ -612,8 +612,11 @@ function baseHeight0(x,z){
   h+=fbm(x*.02,z*.02,2)*2.4;
   const t=1-smooth(175,265,d);
   h=lerp(h,TOWN_H,t);
+  h=lerp(h,-32,smooth(-4380,-4760,z));
   return h;
 }
+// 外の世界：北の海の彼方にある巨神帝国の大陸（本来の世界の外側）
+const OCX=0,OCZ=-8600,OCS=3800,TI_R=560;
 const HX=-470,HZ=-500,HOME_H0=Math.max(baseHeight0(HX,HZ),30);
 const C2X=-600,C2Z=470,C2R=115,C2H=clamp(baseHeight0(C2X,C2Z),30,105);
 const C3X=700,C3Z=390,C3R=105,C3H=9;
@@ -633,7 +636,7 @@ C6H=clamp(baseHeight0(C6X,C6Z),30,105);for(const v of VILL)FLATS.push({x:v.x,z:v
 // 力の均衡：大魔導士は最強のまま、敵は「本気を出せば手応えがある」強さに。見習いは成長前提の従来値
 let DIFF=1;const DN=['イージー','ノーマル','ハード'],EHP=APP?[1,1.8,3.5]:[2,4,8],DMG=APP?[.3,.55,1.1]:[.25,.4,.8],BHP=[1,2.2,4.5],
   MAGE_HP=APP?[12000,30000,70000]:[30000,120000,280000],MAGE_SH=APP?[3000,8000,18000]:[9000,24000,54000],MAGE_RATE=[1.4,1,.72];
-const HOUSE_MK=[];let SETTLE_N=0;
+const HOUSE_MK=[];let SETTLE_N=0;const TI=7+VILL.length;
 const COUNTRIES=[
   {label:'王都ルーンヘイム',x:0,z:0,r:TOWN_R,total:0,dest:0,start:-1,done:false,doneAt:0},
   {label:'月詠国 神楽京',x:C2X,z:C2Z,r:C2R*1.25,total:0,dest:0,start:-1,done:false,doneAt:0},
@@ -643,6 +646,7 @@ const COUNTRIES=[
   {label:'魔都ネクロディア',x:DMX,z:DMZ,r:DR,total:0,dest:0,start:-1,done:false,doneAt:0,faction:'dem',big:true},
   {label:'東雲国 桜花京',x:C6X,z:C6Z,r:C6R*1.25,total:0,dest:0,start:-1,done:false,doneAt:0},
   ...VILL.map(v=>({label:v.n,x:v.x,z:v.z,r:75,total:0,dest:0,start:-1,done:false,doneAt:0,settle:true,village:true})),
+  {label:'巨神帝国 帝都ゴルディオン',x:OCX,z:OCZ,r:TI_R,total:0,dest:0,start:-1,done:false,doneAt:0,faction:'titan',big:true,outer:true},
 ];
 function nearTown(x,z){for(const c of COUNTRIES)if(Math.hypot(x-c.x,z-c.z)<c.r+40)return true;return false;}
 function countryAt(x,z){for(let i=0;i<COUNTRIES.length;i++){const c=COUNTRIES[i];if(Math.hypot(x-c.x,z-c.z)<c.r+40)return i;}return -1;}
@@ -655,12 +659,21 @@ const hgrid=new Float32Array(NV*NV);
 for(let iz=0;iz<NV;iz++)for(let ix=0;ix<NV;ix++)hgrid[iz*NV+ix]=baseHeight(-HALF+ix*STEP,-HALF+iz*STEP);
 function gh(ix,iz){ix=clamp(ix,0,SEG);iz=clamp(iz,0,SEG);return hgrid[iz*NV+ix];}
 function heightAt(x,z){
+  if(x<-HALF||x>HALF||z<-HALF||z>HALF)return outerH(x,z);
   const gx=clamp((x+HALF)/STEP,0,SEG-0.001), gz=clamp((z+HALF)/STEP,0,SEG-0.001);
   const ix=Math.floor(gx), iz=Math.floor(gz), fx=gx-ix, fz=gz-iz;
   const a=hgrid[iz*NV+ix], b=hgrid[iz*NV+ix+1], c=hgrid[(iz+1)*NV+ix], d=hgrid[(iz+1)*NV+ix+1];
   return lerp(lerp(a,b,fx),lerp(c,d,fx),fz);
 }
 function groundAt(x,z){if(Math.abs(x-HX)<32&&Math.abs(z-HZ)<32)return HX0F;if((x-C4X)*(x-C4X)+(z-C4Z)*(z-C4Z)<C4R*C4R)return C4Y;const g=Math.max(heightAt(x,z),0.15);return WALKS.length?walkTop(x,z,g):g;}
+// 外の世界の大陸：独自の高さ格子（本来の世界の外側なので別に持つ）
+const OUTN=IS_MOBILE?90:150,OSTEP=OCS/OUTN,OUTH=new Float32Array((OUTN+1)*(OUTN+1));
+for(let j=0;j<=OUTN;j++)for(let i=0;i<=OUTN;i++){const x=OCX-OCS/2+i*OSTEP,z=OCZ-OCS/2+j*OSTEP;const dx=(x-OCX)/(OCS/2),dz=(z-OCZ)/(OCS/2);
+  const e=Math.max(Math.abs(dx),Math.abs(dz))*.55+Math.hypot(dx,dz)*.45+fbm(x*.0012+7,z*.0012-3,3)*.18;
+  let h=lerp(-32,0,1-smooth(.78,.98,e));if(e<.9){const m=ridge(x*.003+4,z*.003+9,4);h+=smooth(.95,.55,e)*(fbm(x*.004,z*.004,4)*22+18+m*m*120*smooth(.35,.75,Math.hypot(x-OCX,z-OCZ)/(OCS/2)));}
+  const dc=Math.hypot(x-OCX,z-OCZ);h=lerp(h,34,1-smooth(TI_R+40,TI_R+320,dc));OUTH[j*(OUTN+1)+i]=h;}
+function outerH(x,z){const gx=(x-(OCX-OCS/2))/OSTEP,gz=(z-(OCZ-OCS/2))/OSTEP;if(gx<0||gz<0||gx>=OUTN||gz>=OUTN)return -32;
+  const ix=Math.floor(gx),iz=Math.floor(gz),fx=gx-ix,fz=gz-iz,N=OUTN+1;return lerp(lerp(OUTH[iz*N+ix],OUTH[iz*N+ix+1],fx),lerp(OUTH[(iz+1)*N+ix],OUTH[(iz+1)*N+ix+1],fx),fz);}
 // 凍った大津波など、上を歩ける面
 const WALKS=[];
 function walkTop(x,z,g){for(const w of WALKS){const rx=x-w.x,rz=z-w.z,d=rx*w.dx+rz*w.dz,l=rx*w.dz-rz*w.dx;if(d<0||d>w.T||Math.abs(l)>w.W/2)continue;
@@ -759,7 +772,7 @@ sky.frustumCulled=false;sky.renderOrder=-1;scene.add(sky);
 
 // ================= water =================
 const waterUni={time:{value:0},sunDir:{value:SUN_DIR},fogCol:{value:FOG_COL},fogD:{value:0.0011}};
-const water=new THREE.Mesh(new THREE.PlaneGeometry(20000,20000,1,1).rotateX(-Math.PI/2),new THREE.ShaderMaterial({
+const water=new THREE.Mesh(new THREE.PlaneGeometry(34000,34000,1,1).rotateX(-Math.PI/2),new THREE.ShaderMaterial({
   uniforms:waterUni,transparent:true,depthWrite:true,
   vertexShader:'varying vec3 vW;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}',
   fragmentShader:`uniform float time,fogD;uniform vec3 sunDir,fogCol;varying vec3 vW;
@@ -1020,7 +1033,7 @@ const rubbleMat=new THREE.MeshStandardMaterial({color:0x3a3430,roughness:1,flatS
 let CUR_C=0;
 function addBuilding(geo,mats,x,z,y,rad,height,hp,kind){
   const m=new THREE.Mesh(geo,mats);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;scene.add(m);
-  const b={country:CUR_C,mesh:m,x,z,y,rad,height,hp,maxHp:hp,baseHp:hp*(CUR_C===4||CUR_C===5?(APP?5:15):1),burn:0,destroyed:false,collapse:-1,kind,children:[],smokeT:0,archers:[]};buildings.push(b);return b;
+  const b={country:CUR_C,mesh:m,x,z,y,rad,height,hp,maxHp:hp,baseHp:hp*(CUR_C===4||CUR_C===5||CUR_C===TI?(APP?5:15):1),burn:0,destroyed:false,collapse:-1,kind,children:[],smokeT:0,archers:[]};buildings.push(b);return b;
 }
 function houseGeo(w,h,d,rh){
   const body=new THREE.BoxGeometry(w,h,d).translate(0,h/2,0);
@@ -2145,7 +2158,7 @@ function updHome(dt){
   if(Math.random()<dt*6)glow.emit(HX+rr(-.8,.8),F+4+rr(-.8,.8),HZ+8+rr(-.8,.8),0,rr(.3,1),0,rr(.6,1.2),.35,.1,PC.violetB,PC.gold,.8,0,0);
 }
 function homeSpawn(){if(APP){appHome();return;}player.pos.set(HX,F,HZ+2);player.vel.set(0,0,0);player.flying=false;document.querySelector('[data-a="fly"]').classList.remove('on');player.face=Math.PI;camYaw=Math.PI;camPitch=.3;}
-const WARPS=[{n:'天穹楼',d:'大魔導士の居城'},{n:'王都ルーンヘイム',d:'西洋の王都'},{n:'月詠国 神楽京',d:'東方の城下町'},{n:'蒼海の国 アズラーン',d:'白亜と碧の海上都市'},{n:'天空要塞都市 エーテリア',d:'雲上に浮かぶ要塞'},{n:'神聖ヴァルガルド帝国 帝都',d:'人類最大の帝国（西の果て）'},{n:'魔都ネクロディア',d:'魔王の座す都（東の大陸）'},{n:'東雲国 桜花京',d:'桜と黒漆の城下町'},{n:'古の遺跡',d:'西の果てに眠る太古の都の跡'},{n:'封印の地',d:'北東の果て、虚ろの祭壇'}];
+const WARPS=[{n:'天穹楼',d:'大魔導士の居城'},{n:'王都ルーンヘイム',d:'西洋の王都'},{n:'月詠国 神楽京',d:'東方の城下町'},{n:'蒼海の国 アズラーン',d:'白亜と碧の海上都市'},{n:'天空要塞都市 エーテリア',d:'雲上に浮かぶ要塞'},{n:'神聖ヴァルガルド帝国 帝都',d:'人類最大の帝国（西の果て）'},{n:'魔都ネクロディア',d:'魔王の座す都（東の大陸）'},{n:'東雲国 桜花京',d:'桜と黒漆の城下町'},{n:'古の遺跡',d:'西の果てに眠る太古の都の跡'},{n:'封印の地',d:'北東の果て、虚ろの祭壇'},{n:'巨神帝国',d:'北の海の彼方、外の世界'}];
 let warpOpen=false;
 function toggleWarp(){warpOpen=!warpOpen;$('#warp').classList.toggle('on',warpOpen);if(warpOpen&&document.pointerLockElement)document.exitPointerLock();}
 function travelTo(i){
@@ -2160,6 +2173,7 @@ function travelTo(i){
   else if(i===6){const x=DMX-DR-45,z=DMZ;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   else if(i===4){const x=C4X-C4R+12,z=C4Z;player.pos.set(x,C4Y,z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   else if(i===8){const x=RUINS.x+150,z=RUINS.z;player.pos.set(x,groundAt(x,z),z);player.face=-Math.PI/2;camYaw=-Math.PI/2;camPitch=.2;}
+  else if(i===10){const x=OCX,z=OCZ+TI_R+380;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI;camYaw=Math.PI;camPitch=.15;}
   else if(i===9){const x=SEAL.x-170,z=SEAL.z+60;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   else{const x=C3X-C3R-22,z=C3Z;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   showBanner(WARPS[i].n,i===0?WARPS[0].d:'転移完了');
@@ -2195,6 +2209,7 @@ function damageArea(pos,r,dmg,knock,type,opts={}){
   }
   breakLanterns(pos.x,pos.z,r*.8);
   crowdArea(pos,r,dmg,knock,up,type);
+  titanArea(pos,r,dmg);
 }
 // damage numbers
 const dmgEls=[];let dmgI=0;
@@ -2226,7 +2241,7 @@ function hurtPlayer(dmg){
   if(pHP<=0){pHP=0;pDead=true;showBanner('大魔導士、膝をつく','天穹楼にて再起する');snd('bigboom',.6);
     later(2.6,()=>{travelTo(0);pHP=PLAYER_MAX;pDead=false;});}
 }
-function updBossBar(){let best=null,bd=520;for(const m of MAGES){if(!m.alive||!m.active)continue;const d=m.pos.distanceTo(player.pos);if(d<bd){bd=d;best=m;}}
+function updBossBar(){if(titanBar())return;let best=null,bd=520;for(const m of MAGES){if(!m.alive||!m.active)continue;const d=m.pos.distanceTo(player.pos);if(d<bd){bd=d;best=m;}}
   const el=$('#bossbar');el.classList.toggle('on',!!best);if(!best)return;
   el.querySelector('.bn').textContent=best.nm+(best.hp<best.maxHp*.5?' ─ 本気':'');el.querySelector('.bh i').style.width=(best.hp/best.maxHp*100).toFixed(1)+'%';
   el.querySelector('.bs i').style.width=(best.shield/best.shMax*100).toFixed(1)+'%';}
@@ -2469,7 +2484,7 @@ const SP={
       beamCircle(o,dir,.9*Math.pow(W,.6)+.6,s.c3.clone().multiplyScalar(NB>3?.22:.45),.5);beamFx(o,b,W,s.c3.clone().multiplyScalar(.5),.35+W*.05);
       snd('crack',.45+W*.1);if(K.t>=2)shake(.15*W);
       for(const e of enemies){if(!e.alive)continue;const c=e.pos.clone();c.y+=e.h*.5;if(distSeg(c,o,b)<e.radius+W*1.3)e.hit(DMG0*TD[TIER],dir.clone().multiplyScalar(14),'pierce');}
-      crowdSeg(o,b,W*1.3,DMG0*TD[TIER],dir);
+      crowdSeg(o,b,W*1.3,DMG0*TD[TIER],dir);titanSeg(o,b,W*1.3,DMG0*TD[TIER]);
       const hitB=new Set();for(let d=0;d<L;d+=3){const x=o.x+dir.x*d,y=o.y+dir.y*d,z=o.z+dir.z*d;if(!nearTown(x,z))continue;
         for(const bd of buildings){if(bd.destroyed||hitB.has(bd))continue;if(Math.hypot(bd.x-x,bd.z-z)<bd.rad+W&&y<bd.y+bd.height&&y>bd.y-2){hitB.add(bd);damageBuilding(bd,DMG0*1.2*TD[TIER]*W,.15);
           burst(V3(x,y,z),10,10*W,.6,1.5*W,.3,PC.white,PC.violetB,1,1.5,0);}}}
@@ -2826,6 +2841,103 @@ function playerProton(P,K){const len=[300,700,1400,2600][K.t],W=[10,16,24,36][K.
       glow.emit(tp.x+Math.sin(b)*Math.cos(a)*r,tp.y+Math.cos(b)*r,tp.z+Math.sin(b)*Math.sin(a)*r,-Math.sin(b)*Math.cos(a)*r*2.5,-Math.cos(b)*r*2.5,-Math.sin(b)*Math.sin(a)*r*2.5,.4,1.6,.3,PC.fireA,PC.white,1,0,0);}return t<1.2;}});
   later(1.2,()=>protonBeam(staffTip(),P,len,W,'player',6000));}
 Object.assign(SP,{proton(P,s,K){playerProton(P,K);}});
+// ================= 外の世界：巨神帝国と巨神兵 =================
+// この世界は、ほんの小さな世界のひとつにすぎない。北の海の彼方には巨神帝国ゴルディオンがあり、巨神兵5体を擁する
+const TITANS=[];let TITAN_T=IS_MOBILE?540:480,TITAN_SEEN=false;
+const TITAN_N=[['壱号','ゴルディアス'],['弐号','ヘリオン'],['参号','イグニス'],['肆号','テラノス'],['伍号','オメガ']];
+const titanMat=new THREE.MeshStandardMaterial({color:0x3a3430,roughness:.55,metalness:.55,emissive:lin(.05,.02,.01)});
+const titanGlow=new THREE.MeshBasicMaterial({color:lin(8,3.2,.8)});
+function initOuter(){const N=OUTN+1,g=new THREE.PlaneGeometry(OCS,OCS,OUTN,OUTN).rotateX(-Math.PI/2);const pa=g.attributes.position,col=new Float32Array(pa.count*3);
+  for(let i=0;i<pa.count;i++){const x=pa.getX(i)+OCX,z=pa.getZ(i)+OCZ;const h=outerH(x,z);pa.setX(i,x);pa.setZ(i,z);pa.setY(i,h);
+    const n=fbm(x*.01,z*.01,2)*.5+.5,sand=h<2?1:0,c=sand?[.42,.38,.3]:h>70?[.36,.33,.32]:[.2+n*.08,.17+n*.05,.14];col[i*3]=c[0];col[i*3+1]=c[1];col[i*3+2]=c[2];}
+  g.setAttribute('color',new THREE.BufferAttribute(col,3));g.computeVertexNormals();
+  const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.95,flatShading:true}));m.receiveShadow=true;scene.add(m);
+  // 帝都ゴルディオン：黒鉄の城壁と塔、中央の巨大な格納殿
+  const M3=THREE.BufferGeometryUtils.mergeBufferGeometries,iron=new THREE.MeshStandardMaterial({color:0x2c2a2e,roughness:.45,metalness:.7,emissive:lin(.04,.02,.02)}),
+    rust=new THREE.MeshStandardMaterial({color:0x5a3424,roughness:.7,metalness:.4}),lamp=new THREE.MeshStandardMaterial({color:0x1a1210,emissive:lin(3,1.2,.3),roughness:.6});
+  CUR_C=TI;const Y=outerH(OCX,OCZ);
+  const core=addBuilding(M3([new THREE.CylinderGeometry(70,110,60,8).translate(0,30,0),new THREE.CylinderGeometry(46,70,70,8).translate(0,95,0),new THREE.ConeGeometry(46,90,8).translate(0,175,0)]),iron,OCX,OCZ,Y,90,220,9000,'keep');
+  const segN=40;for(let i=0;i<segN;i++){const a=i/segN*6.28,a2=(i+1)/segN*6.28,x=OCX+Math.cos((a+a2)/2)*TI_R,z=OCZ+Math.sin((a+a2)/2)*TI_R;const len=2*TI_R*Math.sin(Math.PI/segN)+2;
+    if(i%10===5)continue;const b=addBuilding(new THREE.BoxGeometry(len,34,10).translate(0,17,0),iron,x,z,outerH(x,z),len*.5,34,1400,'wall');b.mesh.rotation.y=-(a+a2)/2+Math.PI/2;b.wall=true;
+    if(i%4===0){addBuilding(M3([new THREE.CylinderGeometry(11,13,70,8).translate(0,35,0),new THREE.ConeGeometry(14,24,8).translate(0,82,0)]),[iron,rust],x,z,outerH(x,z),12,94,2600,'tower');}}
+  for(let i=0;i<(IS_MOBILE?50:90);i++){const a=R(0,6.28),r=R(150,TI_R-50),x=OCX+Math.cos(a)*r,z=OCZ+Math.sin(a)*r;const w=R(18,34),h=R(20,60);
+    if(buildings.some(b=>b.country===TI&&Math.hypot(b.x-x,b.z-z)<b.rad+w*.6))continue;
+    const b=addBuilding(M3([new THREE.BoxGeometry(w,h,w*R(.7,1.2)).translate(0,h/2,0),new THREE.BoxGeometry(w*.3,h*.25,w*.3).translate(0,h+h*.12,0)]),[iron,lamp],x,z,outerH(x,z),w*.6,h*1.25,R(900,1600),'house');b.mesh.rotation.y=R(0,3);}
+  CUR_C=0;
+  for(let k=0;k<5;k++){const a=Math.PI/2+(k-2)*.28,x=OCX+Math.cos(a)*(TI_R+140),z=OCZ+Math.sin(a)*(TI_R+140);TITANS.push(makeTitan(k,x,z));}}
+function makeTitan(k,x,z){const g=new THREE.Group(),M=titanMat,S=1;const part=(geo,px,py,pz,par)=>{const m=new THREE.Mesh(geo,M);m.position.set(px,py,pz);m.castShadow=true;(par||g).add(m);return m;};
+  const legs=[],arms=[];for(const sx of[-1,1]){const hip=new THREE.Group();hip.position.set(sx*9,52,0);g.add(hip);part(new THREE.CylinderGeometry(4.5,5.5,50,7).translate(0,-25,0),0,0,0,hip);
+    part(new THREE.BoxGeometry(10,6,16).translate(0,-50,3),0,0,0,hip);legs.push(hip);}
+  const tor=part(new THREE.CylinderGeometry(16,10,46,8),0,76,2);tor.rotation.x=.25;part(new THREE.SphereGeometry(19,10,8).scale(1.1,.75,1),0,99,4);
+  for(const sx of[-1,1]){const pad=part(new THREE.SphereGeometry(9,8,6).scale(1,.6,1.1),sx*21,103,2);pad.rotation.z=-sx*.4;}
+  for(let i=0;i<6;i++){const rb=part(new THREE.TorusGeometry(12-i*.6,1.2,5,12,Math.PI),0,92-i*6,8);rb.rotation.y=Math.PI;rb.rotation.x=.15;}
+  const neck=new THREE.Group();neck.position.set(0,106,4);g.add(neck);const head=part(new THREE.SphereGeometry(8,10,8).scale(1,1.15,1.3),0,6,6,neck);
+  const mouth=new THREE.Mesh(new THREE.SphereGeometry(3,8,6),titanGlow);mouth.position.set(0,2,16);neck.add(mouth);
+  for(const sx of[-1,1]){const e=new THREE.Mesh(new THREE.SphereGeometry(1.6,8,6),titanGlow);e.position.set(sx*3.6,9,13);neck.add(e);}
+  for(const sx of[-1,1]){const sh=new THREE.Group();sh.position.set(sx*20,98,0);g.add(sh);part(new THREE.CylinderGeometry(3.5,3,62,7).translate(0,-31,0),0,0,0,sh);
+    for(let f=0;f<3;f++)part(new THREE.ConeGeometry(1.2,10,5).translate(0,-5,0),(f-1)*2.2,-62,2,sh);sh.rotation.z=sx*.12;arms.push(sh);}
+  const back=[];for(let i=0;i<5;i++){back.push(part(new THREE.ConeGeometry(2.2,14,5),rr(-10,10),rr(80,104),-14));}
+  g.position.set(x,outerH(x,z),z);g.rotation.y=Math.PI;g.scale.setScalar(1.25);scene.add(g);
+  const n=TITAN_N[k];return {k,g,legs,arms,neck,mouth,pos:V3(x,outerH(x,z),z),home:V3(x,0,z),face:Math.PI,alive:true,hp:0,max:0,st:'home',tgt:null,beamT:rr(6,10),charge:0,shots:0,anger:0,walk:0,
+    nm:'巨神兵 '+n[0]+'「'+n[1]+'」',isTitan:true,flash:0,dying:-1};}
+function titanHpMax(){return MAGE_HP[DIFF]*96;}
+function titanAlive(){return TITANS.filter(t=>t.alive);}
+function titanHit(t,dmg){if(!t.alive||!(dmg>0))return;const d=dmg*P_MUL;t.hp-=d;t.flash=.12;t.anger=60;COUNTRIES[TI].angered=true;
+  if(Math.random()<.35)dmgText(t.pos.clone().setY(t.pos.y+120),Math.round(d));if(t.hp<=0)titanDie(t);}
+function titanArea(p,r,dmg){if(!TITANS.length)return;for(const t of TITANS){if(!t.alive)continue;if(Math.hypot(t.pos.x-p.x,t.pos.z-p.z)<r+28&&p.y<t.pos.y+160)titanHit(t,dmg);}}
+function titanSeg(a,b,w,dmg){for(const t of TITANS){if(!t.alive)continue;const c=t.pos.clone();for(const h of[40,90,130]){c.y=t.pos.y+h;if(distSeg(c,a,b)<w+26){titanHit(t,dmg);break;}}}}
+function titanDie(t){t.alive=false;t.dying=0;t.hp=0;kills++;KB.titan=(KB.titan||0)+1;gainExp(20000);MANA+=rw(3000);
+  showBanner(t.nm+'、崩れ落ちる',titanAlive().length?`残る巨神兵 ${titanAlive().length}体`:'巨神帝国の巨神兵は、すべて沈黙した');snd('bigboom',1.4,t.pos);saveGame();}
+// 上陸：北の海から巨神兵が現れ、近くの国を焼きに来る
+function titanInvade(n){const home=TITANS.filter(t=>t.alive&&t.st==='home');if(!home.length)return;n=Math.min(n,home.length);
+  const cand=COUNTRIES.map((C,ci)=>ci).filter(ci=>{const C=COUNTRIES[ci];return ci!==TI&&!C.outer&&C.total>0&&C.dest/C.total<.7;});if(!cand.length)return;
+  for(let i=0;i<n;i++){const t=home[Math.random()*home.length|0];home.splice(home.indexOf(t),1);const ci=cand[Math.random()*cand.length|0],C=COUNTRIES[ci];
+    // 北の海から目当ての国の北へ上陸する（地の底から這い出るように現れる）
+    let x=clamp(C.x+rr(-300,300),-HALF+200,HALF-200),z=Math.max(-HALF+300,C.z-1250);
+    t.pos.set(x,groundAt(x,z),z);t.face=Math.atan2(C.x-x,C.z-z);t.st='march';t.shots=0;t.beamT=rr(8,12);t.tgtCi=ci;t.rise=4;
+    const p=t.pos.clone();later(.1,()=>{shake(1.4,p);snd('quake',1.2,p);shockwave(p,260,lin(4,2,.6),1.4,1.4);burst(p,IS_MOBILE?80:160,50,4,12,40,PC.dust,PC.dustB,.8,.7,-2,smoke,30,50);});}
+  const first=!TITAN_SEEN;TITAN_SEEN=true;
+  showBanner(first?'北の海の彼方より':'巨神兵、上陸',first?'この世界は、ほんの小さな世界のひとつにすぎなかった':`${n}体の巨神兵が国を焼きに来る`);
+  toast(`⚠ 巨神帝国ゴルディオンの巨神兵が北の海岸に上陸した（N で地図・V で観戦）`);snd('growl',1.4);later(.6,()=>snd('bigboom',.8));saveGame();}
+function titanFire(t,tp){t.charge=2.4;t.fireAt=tp.clone();snd('chime',.6,t.pos);}
+function updTitans(dt){if(!TITANS.length)return;
+  if(started&&!SPEC){TITAN_T-=dt;if(TITAN_T<=0){TITAN_T=rr(540,800)*(APP?1.4:1);if(titanAlive().some(t=>t.st==='home'))titanInvade(Math.random()<.35?2:1);}}
+  for(const t of TITANS){const g=t.g;
+    if(t.dying>=0){t.dying+=dt;const k=Math.min(1,t.dying/3);g.rotation.x=-k*k*1.35;g.position.y=t.pos.y-k*8;
+      if(t.dying<3&&Math.random()<dt*10){const p=t.pos.clone().add(V3(rr(-20,20),rr(20,120),rr(-20,20)));glowSphere(p,2,rr(10,22),lin(8,3,.8),.5);snd('boom',.5,p);}
+      if(t.dying>3&&!t.fell){t.fell=true;shake(2,t.pos);shockwave(t.pos,200,lin(4,2,.6),1.2,1.5);burst(t.pos,200,60,3,10,30,PC.dust,PC.dustB,.8,.8,-2,smoke,20,40);}continue;}
+    if(!t.alive){if(!t.fell){g.rotation.x=-1.35;}continue;}
+    t.flash-=dt;titanMat.emissive.setRGB(t.flash>0?.8:.05,t.flash>0?.3:.02,t.flash>0?.1:.01);
+    if(t.anger>0)t.anger-=dt;
+    const pd=Math.hypot(player.pos.x-t.pos.x,player.pos.z-t.pos.z);const chase=(t.anger>0||(t.st==='home'&&COUNTRIES[TI].angered))&&!pDead&&pd<2200;
+    let goal=null;
+    if(chase){goal=player.pos;}
+    else if(t.st==='march'){const C=COUNTRIES[t.tgtCi];if(!C||t.shots>=4){t.st='leave';}else goal=V3(C.x,0,C.z);}
+    else if(t.st==='leave'){goal=V3(t.pos.x,0,-HALF-400);if(t.pos.z<-HALF+60){t.st='home';t.pos.set(t.home.x,outerH(t.home.x,t.home.z),t.home.z);t.face=Math.PI;toast(`${t.nm}は北の海の彼方へ去った`);}}
+    else if(t.st==='home'){const dh=Math.hypot(t.home.x-t.pos.x,t.home.z-t.pos.z);if(dh>20)goal=t.home;}
+    let moving=false;if(goal){const dx=goal.x-t.pos.x,dz=goal.z-t.pos.z,d=Math.hypot(dx,dz);const keep=chase?380:t.st==='march'?650:0;
+      const want=Math.atan2(dx,dz);let dy=want-t.face;dy=Math.atan2(Math.sin(dy),Math.cos(dy));t.face+=clamp(dy,-dt*.5,dt*.5);
+      if(d>keep+10&&t.charge<=0&&!(t.rise>0)){const sp=t.st==='leave'?40:30;t.pos.x+=Math.sin(t.face)*sp*dt;t.pos.z+=Math.cos(t.face)*sp*dt;moving=true;}}
+    t.pos.y=groundAt(t.pos.x,t.pos.z);if(t.pos.z<-HALF&&t.st!=='home')t.pos.y=Math.max(t.pos.y,-20);
+    if(t.rise>0){t.rise-=dt;t.pos.y-=Math.max(0,t.rise)/4*150;moving=false;if(Math.random()<dt*20)burst(V3(t.pos.x+rr(-30,30),groundAt(t.pos.x,t.pos.z),t.pos.z+rr(-30,30)),6,20,2,6,18,PC.dust,PC.dustB,.6,1,-1,smoke,8,8);}
+    t.walk+=moving?dt*1.4:0;t.legs[0].rotation.x=Math.sin(t.walk)*.35;t.legs[1].rotation.x=-Math.sin(t.walk)*.35;t.arms[0].rotation.x=-Math.sin(t.walk)*.2;t.arms[1].rotation.x=Math.sin(t.walk)*.2;
+    g.position.set(t.pos.x,t.pos.y+(moving?Math.abs(Math.sin(t.walk))*1.5:0),t.pos.z);g.rotation.y=t.face;
+    if(moving&&Math.abs(Math.sin(t.walk))<.05&&(t.pos.x-VIEW.x)**2+(t.pos.z-VIEW.z)**2<1400*1400){shake(.35,t.pos);snd('quake',.35,t.pos);burst(t.pos,20,20,2,6,16,PC.dust,PC.dustB,.6,1,-1,smoke,10,10);}
+    if(pd<70&&!pDead&&Math.random()<dt*.8){shockwave(t.pos,90,lin(3,1.5,.5),.6);hurtPlayer(420);}
+    // 光線の溜め→発射
+    if(t.charge>0){t.charge-=dt;const mp=new THREE.Vector3();t.mouth.getWorldPosition(mp);t.mouth.scale.setScalar(1+(2.4-t.charge)*1.4);
+      for(let q=0;q<6;q++){const a=Math.random()*6.28,b=Math.random()*3.14,r=rr(12,30);glow.emit(mp.x+Math.sin(b)*Math.cos(a)*r,mp.y+Math.cos(b)*r,mp.z+Math.sin(b)*Math.sin(a)*r,-Math.sin(b)*Math.cos(a)*r*1.5,-Math.cos(b)*r*1.5,-Math.sin(b)*Math.sin(a)*r*1.5,.5,3,.5,PC.fireA,PC.white,1,0,0);}
+      if(t.charge<=0){t.mouth.scale.setScalar(1);t.shots++;const tp=t.fireAt;protonBeam(mp,tp,1900,26,'titan',6000);
+        if(started&&!pDead&&distSeg(player.pos.clone().setY(player.pos.y+1.4),mp,tp)<30)hurtPlayer(900);}continue;}
+    t.beamT-=dt;if(t.beamT<=0&&(t.st!=='home'||chase)){t.beamT=rr(16,24);
+      let tp=null;if(chase&&pd<1500)tp=player.pos.clone();else if(t.st==='march'){const C=COUNTRIES[t.tgtCi];if(C&&Math.hypot(C.x-t.pos.x,C.z-t.pos.z)<1500){const bs=buildings.filter(b=>b.country===t.tgtCi&&!b.destroyed);const b=bs[Math.random()*bs.length|0];tp=b?V3(b.x,b.y,b.z):V3(C.x,groundAt(C.x,C.z),C.z);}}
+      if(tp){const a=Math.atan2(tp.x-t.pos.x,tp.z-t.pos.z);t.face=a;titanFire(t,tp);}}}}
+function titanBar(){let best=null,bd=900;for(const t of TITANS){if(!t.alive)continue;const d=Math.hypot(t.pos.x-player.pos.x,t.pos.z-player.pos.z);if(d<bd&&(t.st!=='home'||t.anger>0||d<500)){bd=d;best=t;}}
+  if(!best)return false;const el=$('#bossbar');el.classList.add('on');el.querySelector('.bn').textContent=best.nm+(best.charge>0?' ─ 光線、発射寸前':'');
+  el.querySelector('.bh i').style.width=(best.hp/best.max*100).toFixed(1)+'%';el.querySelector('.bs i').style.width='0%';return true;}
+let TITAN_LOAD=null;
+function titansReset(){const m=titanHpMax();for(const t of TITANS){const k=t.max?t.hp/t.max:1;t.max=m;t.hp=k*m;}
+  if(TITAN_LOAD){TITAN_LOAD.forEach((a,i)=>{const t=TITANS[i];if(!t||!Array.isArray(a))return;if(a[0]===0){t.alive=false;t.hp=0;t.fell=true;t.dying=-1;t.g.rotation.x=-1.35;t.g.position.y=t.pos.y-8;}else t.hp=clamp(+a[1]||1,.01,1)*t.max;});TITAN_LOAD=null;}}
 // ================= 召喚魔法 =================
 // 精霊は大魔導士のそばに浮かび、敵対している相手だけを自動で攻撃する。神龍は一帯を無に帰す。
 const SPIRITS=[];
@@ -3385,7 +3497,7 @@ function updPlayer(dt){
       const rr_=b.wall?3:b.rad;if(b.wall){continue;}if(dl<rr_+.8&&dl>.01){player.pos.x=b.x+dx/dl*(rr_+.8);player.pos.z=b.z+dz/dl*(rr_+.8);}}
   }
   homeCollide(px0,pz0);
-  player.pos.x=clamp(player.pos.x,-HALF+30,HALF-30);player.pos.z=clamp(player.pos.z,-HALF+30,HALF-30);
+  player.pos.x=clamp(player.pos.x,-HALF+30,HALF-30);player.pos.z=clamp(player.pos.z,OCZ-OCS/2+40,HALF-30);
   if(player.lift>0){player.lift-=dt;}
   // visuals
   hero.position.copy(player.pos);if(player.lift>0)hero.position.y+=Math.sin(Math.min(1,(1.4-player.lift)/.5)*Math.PI*.5)*1.6;
@@ -3457,7 +3569,7 @@ function step(dt){
     if(!started&&e.kind!=='boss'&&!e.fly){e.animate(dt,false);continue;}e.update(dt);}
   for(let i=fx.length-1;i>=0;i--){if(!fx[i].update(dt))fx.splice(i,1);}
   cullT-=dt;if(cullT<=0){cullT=.3;cullWorld();}
-  updWorld(dt);updCrowd(dt);updSites(dt);updSpirits(dt);updIceMts(dt);updCrow(dt);updWeather(dt);updWaves(dt);updBarriers(dt);
+  updWorld(dt);updCrowd(dt);updSites(dt);updTitans(dt);updSpirits(dt);updIceMts(dt);updCrow(dt);updWeather(dt);updWaves(dt);updBarriers(dt);
   updBuildings(dt);updDebris(dt);updHome(dt);updFlora(dt);updSkyCity(dt);updFarm(dt);
   for(let i=burningTrees.length-1;i>=0;i--){const b=burningTrees[i];b.life-=dt;const t=b.t;
     if(Math.random()<dt*25)glow.emit(t.x+rr(-1,1)*t.s*.4,t.y+t.s*rr(1,2.6),t.z+rr(-1,1)*t.s*.4,0,rr(4,8),0,rr(.5,1),rr(2,4),.4,PC.fireA,PC.fireB,1,.5,-2);
@@ -3621,6 +3733,7 @@ const VIEW={x:0,z:-300};let SPEC=null;
 function specTargets(){const L=[];
   for(const bt of BATTLES)if(!bt.over)L.push({n:bt.f.n+'の戦い',x:bt.f.x,z:bt.f.z,bt,d:260});
   for(const r of RAIDS)if(r.units.some(u=>u.alive)||(r.n&&r.n[1]>0)){const C=COUNTRIES[r.ci];L.push({n:C.label+' ─ 魔王軍の侵攻',x:C.x,z:C.z,raid:r,d:220});}
+  for(const t of TITANS)if(t.alive&&t.st!=='home')L.push({n:t.nm,x:t.pos.x,z:t.pos.z,titan:t,d:520});
   for(const g of GARR)if(g.camps.length){const c=g.camps[Math.floor(g.camps.length/2)];L.push({n:g.ci===4?'帝国軍 城外陣営':'魔王軍 城外陣営',x:c.x,z:c.z,garr:g,d:230});}
   COUNTRIES.forEach((C,ci)=>L.push({n:C.label,x:C.x,z:C.z,ci,d:Math.max(160,C.r*1.6)}));
   for(const p of PORTS)if(!p.dead)L.push({n:COUNTRIES[p.ci].label+'の港',x:p.end.x,z:p.end.z,port:p,d:160});
@@ -3641,6 +3754,7 @@ function specInfo(){const T=SPEC.L[SPEC.i],el=$('#spec .ss'),bar=$('#spec .sb');
     txt=T.bt.over?(T.bt.win==='emp'?'帝国軍の勝利':T.bt.win==='dem'?'魔王軍の勝利':'両軍相討ち'):`帝国軍 ${e}　⚔　${d} 魔王軍　（${fmtTime(gameTime-T.bt.t0)}）`;}
   else if(T.raid){const C=COUNTRIES[T.raid.ci];const n=T.raid.units.filter(u=>u.alive).length+(T.raid.n?T.raid.n[1]:0);txt=`侵攻隊 残り ${n}　被害 ${((C.dest-T.raid.d0)/C.total*100).toFixed(0)}%`;}
   else if(T.garr){const g=T.garr;txt=`守備隊 ${g.n[g.ci===5?1:0]} / ${g.max}`+(COUNTRIES[g.ci].angered?'　臨戦態勢':'　平時');}
+  else if(T.titan){const t=T.titan;txt=t.alive?`体力 ${(t.hp/t.max*100).toFixed(0)}%　${t.charge>0?'光線を溜めている':t.st==='march'?'進軍中':t.st==='leave'?'帰還中':''}`:'沈黙';}
   else if(T.port){txt=`交易船 ${T.port.ships.length}隻　交易の上がり累計 ${TRADE}回`;}
   else if(T.ci!=null){const C=COUNTRIES[T.ci],E=C.eco;txt=E?`人口 ${fmtN(E.pop)}　幸福 ${Math.round(E.hap)}　戦力 ${fmtN(E.mil)}　壊滅率 ${(C.total?C.dest/C.total*100:0).toFixed(1)}%`:'';}
   el.textContent=txt;bar.style.display=k>=0?'block':'none';if(k>=0)bar.firstChild.style.width=(k*100).toFixed(1)+'%';}
@@ -3649,6 +3763,7 @@ function specCam(dt){const T=SPEC.L[SPEC.i];
     const pool=T.bt?CRW.filter(u=>u.st===1&&u.g===T.bt):T.raid?CRW.filter(u=>u.st===1&&u.g===T.raid):null;
     if(pool&&pool.length){let sx=0,sz=0;for(const u of pool){sx+=u.x;sz+=u.z;}tx=sx/pool.length;tz=sz/pool.length;}
     else if(T.port){const sh=T.port.ships.find(o=>o.st!=='dock');if(sh){tx=sh.pos.x;tz=sh.pos.z;}}
+    else if(T.titan){tx=T.titan.pos.x;tz=T.titan.pos.z;}
     SPEC.tx=tx;SPEC.tz=tz;specInfo();if(T.bt&&T.bt.over&&!T.bt.watched){T.bt.watched=true;WATCHED++;}}
   const a=Math.min(1,dt*1.5);SPEC.fx=lerp(SPEC.fx,SPEC.tx??T.x,a);SPEC.fz=lerp(SPEC.fz,SPEC.tz??T.z,a);SPEC.fy=lerp(SPEC.fy,Math.max(groundAt(SPEC.fx,SPEC.fz),0)+4,a);
   if(gameTime-SPEC.lastIn>4)camYaw+=dt*.07/SPEC.speed;
@@ -3705,7 +3820,7 @@ function updBattles(dt){for(const bt of BATTLES){if(bt.over){if(gameTime>bt.clea
     if(w){bt.over=true;bt.win=w;if(w==='emp'||w==='dem')QS.win[w]++;bt.clear=gameTime+60;for(const s2 of['emp','dem'])for(const u of bt.u[s2])u.war=null;
       if(w==='emp'){PWR_BIAS+=1.5;showBanner('帝国軍、'+bt.f.n+'にて勝利','人類の勢力が増した');}else if(w==='dem'){PWR_BIAS-=1.5;showBanner('魔王軍、'+bt.f.n+'にて勝利','魔王軍の勢力が増した');}}}}
 function countKill(e){gainExp(expFor(e));if(e.raid!=null&&COUNTRIES[e.raid])addFavor(e.raid,1.5);if(e.kind==='citizen'){const ci=countryAt(e.pos.x,e.pos.z);if(ci>=0&&COUNTRIES[ci].eco)COUNTRIES[ci].eco.pop=Math.max(0,COUNTRIES[ci].eco.pop-6);}if(e.war){const o=e.war==='emp'?'dem':'emp';FAC[e.war].rep-=1.2;FAC[o].rep+=.4;}const k=(e.fac||'x')+'_'+(e.rank||e.kind);KB[k]=(KB[k]||0)+1;KB[e.kind]=(KB[e.kind]||0)+1;}
-function worldPower(){let H=0,D=0;COUNTRIES.forEach((C,i)=>{if(!C.total)return;const k=1-C.dest/C.total;const w=i===4||i===5?10:C.settle?.5:1;if(C.faction==='dem')D+=w*k;else H+=w*k;});
+function worldPower(){let H=0,D=0;COUNTRIES.forEach((C,i)=>{if(!C.total||C.faction==='titan')return;const k=1-C.dest/C.total;const w=i===4||i===5?10:C.settle?.5:1;if(C.faction==='dem')D+=w*k;else H+=w*k;});
   for(const m of MAGES){if(!m.alive)continue;const w=m.rank==='king'?6:m.rank==='elite'?.5:m.rank==='soldier'?.08:.3;if(m.fac==='dem')D+=w;else H+=w;}
   {let ce=0,cd=0;for(const u of CRW)if(u.st===1){if(u.sd)cd++;else ce++;}H+=ce*.004;D+=cd*.004;}
   H+=Math.max(0,PWR_BIAS);D+=Math.max(0,-PWR_BIAS);return H/Math.max(.01,H+D);}
@@ -3783,9 +3898,11 @@ function drawWorldMap(){const cv=$('#wmap canvas'),x=cv.getContext('2d'),W=cv.wi
   for(const S of[RUINS,SEAL]){const [a,b]=P(S.x,S.z);x.fillStyle=S===SEAL?'#c070ff':'#d8c8a0';x.beginPath();x.arc(a,b,4,0,7);x.fill();x.fillText(S===SEAL?'封印の地':S.n,a,b-8);}
   for(const m of ACTIVE)if(m.tgt&&m.tgt.alive){const [a,b]=P(m.tgt.pos.x,m.tgt.pos.z);x.strokeStyle='#ff4040';x.lineWidth=2;x.beginPath();x.arc(a,b,7,0,7);x.stroke();}
   for(const bt of BATTLES)if(!bt.over){const [a,b]=P(bt.f.x,bt.f.z);x.font='16px serif';x.fillStyle='#ffb040';x.fillText('⚔',a,b+5);x.font='12px serif';x.fillText(bt.f.n,a,b+18);}
+  x.fillStyle='#ffb070';x.font='12px serif';x.fillText('▲ 北の海の彼方：巨神帝国',W/2,14);
+  for(const t of TITANS)if(t.alive&&t.pos.z>-HALF){const [a,b]=P(t.pos.x,t.pos.z);x.fillStyle='#ff6a2a';x.beginPath();x.arc(a,b,6,0,7);x.fill();x.fillText('巨神兵',a,b-9);}
   for(const r of RAIDS)if(r.units.some(u=>u.alive)){const C=COUNTRIES[r.ci];const [a,b]=P(C.x,C.z);x.fillStyle='#ff3030';x.fillText('⚔',a+12,b+4);}
   const [px,pz]=P(player.pos.x,player.pos.z);x.save();x.translate(px,pz);x.rotate(-camYaw+Math.PI);x.fillStyle='#ffd24a';x.beginPath();x.moveTo(0,-8);x.lineTo(5,6);x.lineTo(-5,6);x.closePath();x.fill();x.restore();}
-function setDiff(d){DIFF=d;for(const B of BARRIERS){const k=B.hp/B.max;B.max=BAR_MAX[d];B.hp=k*B.max;}
+function setDiff(d){DIFF=d;later(0,titansReset);for(const B of BARRIERS){const k=B.hp/B.max;B.max=BAR_MAX[d];B.hp=k*B.max;}
   for(const b of buildings){const nm=b.baseHp*BHP[d];b.hp=b.destroyed?0:b.hp/b.maxHp*nm;b.maxHp=nm;}
   for(const C of COUNTRIES){C.total=0;C.dest=0;}destroyedHp=0;TOTAL_HP=0;
   for(const b of buildings){const C=COUNTRIES[b.country];C.total+=b.maxHp;TOTAL_HP+=b.maxHp;if(b.destroyed){C.dest+=b.maxHp;destroyedHp+=b.maxHp;}}
@@ -4039,6 +4156,8 @@ const ACHS=[
   {id:'story',n:'それでも退屈',d:'本編「大魔導士の気持ち」を終える',t:'退屈を愛する者',col:'#fff0c4',c:()=>QDONE.has('m32')},
   {id:'grad',n:'見習い卒業',d:'見習い編を終える',t:'新たなる大魔導士',col:'#9fc4ff',c:()=>QDONE.has('a20')},
   {id:'q50',n:'依頼の達人',d:'物語と依頼を合わせて50個達成する',t:'よろず屋の魔法使い',col:'#b8f0c8',c:()=>QDONE.size>=50},
+  {id:'titan1',n:'巨神殺し',d:'巨神兵を1体倒す',t:'巨神殺し',col:'#ff9a4a',c:()=>(KB.titan||0)>=1},
+  {id:'titan5',n:'巨神帝国の悪夢',d:'巨神兵5体をすべて倒す',t:'外の世界の覇者',col:'#ff5a2a',c:()=>(KB.titan||0)>=5},
   {id:'ura',n:'真なる最強',d:'裏章を終え、虚ろの魔人を討つ',t:'最強を超えし者',col:'#b070ff',c:()=>QDONE.has('u10')},
 ];
 const ACH=new Set();let TITLE=null;
@@ -4069,8 +4188,8 @@ function mkLandmark(ci,x,z,keep){CUR_C=ci;const b=keep?addBuilding(THREE.BufferG
   :addBuilding(towerGeo(5.5,30,7.5,13,10),[stoneMat,roofMats[1]],x,z,groundAt(x,z),6.5,43,2000,'tower');CUR_C=0;logW({k:'l',ci,x,z,keep:keep?1:0});return b;}
 function applyW(e){const n=v=>typeof v==='number'&&isFinite(v);if(!e||!n(e.x)||!n(e.z))return;
   if(e.k==='s')newSettlement('town',e.x,e.z,n(e.r)?e.r:40);
-  else if(e.k==='h'){if(!HOUSE_MK[e.ci])return;const b=HOUSE_MK[e.ci](e.x,e.z);if(n(e.ry))b.mesh.rotation.y=e.ry;}
-  else if(e.k==='l'){if(!COUNTRIES[e.ci])return;mkLandmark(e.ci,e.x,e.z,!!e.keep);}
+  else if(e.k==='h'){const ci=CMAP(e.ci);if(!HOUSE_MK[ci])return;const b=HOUSE_MK[ci](e.x,e.z);if(n(e.ry))b.mesh.rotation.y=e.ry;}
+  else if(e.k==='l'){const ci=CMAP(e.ci);if(!COUNTRIES[ci])return;mkLandmark(ci,e.x,e.z,!!e.keep);}
   else if(e.k==='p'){if(!n(e.dx)||!n(e.dz))return;buildPort({x:e.x,z:e.z,dx:e.dx,dz:e.dz},TK[clamp(e.t|0,0,3)]);}
   else if(e.k==='f'){if(!SP[e.sp]||!['wheat','paddy','veg','flowers'].includes(e.sp))return;const oy=camYaw;camYaw=n(e.yaw)?e.yaw:0;SP[e.sp](V3(e.x,0,e.z),SPELLS.find(q=>q.id===e.sp),TK[clamp(e.t|0,0,3)]);camYaw=oy;}
   else if(e.k==='wt'){worldTree(V3(e.x,groundAt(e.x,e.z),e.z),n(e.h)?e.h:140);}}
@@ -4080,13 +4199,17 @@ function ruinQuiet(b){if(b.destroyed)return;b.destroyed=true;b.hp=0;b.collapse=2
 function goldQuiet(b){if(b.gold)return;b.gold=true;b.origMat=b.mesh.material;if(b.orn&&!b.ornMats){b.ornMats=[];b.orn.traverse(o=>{if(o.isMesh)b.ornMats.push([o,o.material]);});}
   b.mesh.material=Array.isArray(b.mesh.material)?b.mesh.material.map(()=>GOLDM):GOLDM;if(b.orn)b.orn.traverse(o=>{if(o.isMesh)o.material=GOLDM;});b.destroyed=true;b.hp=0;b.burn=0;
   for(const a of b.archers)if(a.alive){a.alive=false;a.dead=true;scene.remove(a.g);}}
-function worldSave(){return {n0:BN0,mob:IS_MOBILE?1:0,log:WLOG,sr:COUNTRIES.map(C=>C.settle&&!C.village?Math.round(C.r):0),
+function worldSave(){return {v:2,nFix:TI+1,n0:BN0,mob:IS_MOBILE?1:0,log:WLOG,sr:COUNTRIES.map(C=>C.settle&&!C.village?Math.round(C.r):0),
   d:bRanges(b=>b.destroyed&&!b.gold),g:bRanges(b=>b.gold)};}
+let CMAP=i=>i;
 function worldLoad(w){if(!w||typeof w!=='object')return;
+  // 外の世界の国と建物が加わったので、古い記録の番号を今の並びへ読み替える
+  {const cOld=typeof w.nFix==='number'?w.nFix:TI,cOff=TI+1-cOld;CMAP=i=>i>=cOld?i+cOff:i;}
   if(Array.isArray(w.log)){REPLAY=true;for(const e of w.log){try{applyW(e);}catch(err){}}REPLAY=false;WLOG=w.log.slice(-800);}
-  if(Array.isArray(w.sr))w.sr.forEach((r,i)=>{const C=COUNTRIES[i];if(C&&C.settle&&!C.village&&typeof r==='number'&&r>0)C.r=Math.max(C.r,r);});
-  if(w.n0!==BN0||w.mob!==(IS_MOBILE?1:0))return;// 端末や世界の生成が違えば壊れ具合は復元しない
-  const each=(L,fn)=>{if(Array.isArray(L))for(const a of L){if(!Array.isArray(a))continue;const s0=a[0]|0,n=a[1]|0;for(let i=s0;i<s0+n&&i<buildings.length;i++)if(i>=0)fn(buildings[i]);}};
+  if(Array.isArray(w.sr))w.sr.forEach((r,i)=>{const C=COUNTRIES[CMAP(i)];if(C&&C.settle&&!C.village&&typeof r==='number'&&r>0)C.r=Math.max(C.r,r);});
+  if(typeof w.n0!=='number'||w.n0>BN0||w.mob!==(IS_MOBILE?1:0))return;// 端末や世界の生成が違えば壊れ具合は復元しない
+  const bOff=BN0-w.n0,bi=i=>i<w.n0?i:i+bOff;
+  const each=(L,fn)=>{if(Array.isArray(L))for(const a of L){if(!Array.isArray(a))continue;const s0=a[0]|0,n=a[1]|0;for(let i=s0;i<s0+n;i++){const j=bi(i);if(j>=0&&j<buildings.length)fn(buildings[j]);}}};
   each(w.d,ruinQuiet);each(w.g,goldQuiet);}
 function postLoad(){COUNTRIES.forEach(C=>{if(C.total&&C.dest>0){C.start=0;if(C.dest/C.total>=.95){C.done=true;C.doneAt=0;}}});}
 // ================= 魔法使い見習い =================
@@ -4227,6 +4350,8 @@ Q('daily',[
  {id:'d35',t:'幸せの国',s:'誰もが笑って暮らせる国を、ひとつくらい。',g:'いずれかの国か村の幸福度を90以上にする',c:()=>[COUNTRIES.some(C=>C.eco&&C.eco.hap>=90)?1:0,1],r:[600,400],gm:'m18',ga:14},
  {id:'d36',t:'古竜の尾',s:'黒鋼の古竜が、また山で暴れている。',g:'黒鋼の古竜を倒す',c:b=>[dv(b,'kb:boss'),1],r:[800,600],gm:'m11',ga:20},
  {id:'d37',t:'魔法の総ざらい',s:'使える魔法を、ひとつずつ確かめておこう。',g:'すべての魔法を1回ずつ唱える',c:()=>[SPELLS.filter(s=>QS.cast[s.id]>0).length,SPELLS.length],r:[800,500],gm:'m12',ga:28},
+ {id:'d39',t:'北の海の彼方',s:'地図の端の、さらに向こう。この世界は、思っていたよりずっと小さいのかもしれない。',g:'巨神帝国を訪れる（H で転移）',c:()=>[qVis('c'+TI),1],r:[800,600],gm:'m13',ga:12},
+ {id:'d40',t:'巨神兵',s:'国ひとつを焼く光線を吐く巨神兵。……初めて、少しだけ本気になれそうな相手だ。',g:'巨神兵を1体倒す',c:b=>[dv(b,'kb:titan'),1],r:[3000,3000],gm:'m13',ga:24},
  {id:'d38',t:'手加減の達人',s:'最強の魔法とは、誰も傷つけない魔法のことかもしれない。',g:'「弱」の威力で魔法を100回唱える',c:b=>[dv(b,'weak'),100],r:[600,400],gm:'m24',ga:1},
 ]);
 const MASTER={emp:'魔導兵長 リーゼ',dem:'術士長 ノクス',none:'老魔女 ハンナ'}[MODE.fac];
@@ -4341,7 +4466,7 @@ if(window.__inapp){const el=$('#inapp');el.classList.add('on');
 const SAVE_KEY=APP?'hatenMadouou.save.app.'+MODE.fac:'hatenMadouou.save';const ECO_FIXED=7+VILL.length;let saveReady=false;
 function saveGame(){if(!saveReady||!started)return;
   try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,at:Date.now(),diff:DIFF,mana:MANA,upg:UPG,pwr:PWR_BIAS,kills,kb:KB,built:BUILT,farms:FARMS,
-    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,world:worldSave(),lv:LV,exp:EXP,quest:questSave(),endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
+    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,world:worldSave(),titans:TITANS.map(t=>[t.alive?1:0,+(t.hp/(t.max||1)).toFixed(3)]),titanSeen:TITAN_SEEN?1:0,lv:LV,exp:EXP,quest:questSave(),endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
     rule:COUNTRIES.map(C=>[C.rule==='vassal'?1:C.rule==='ally'?2:0,Math.round(C.favor||0)]),
     eco:COUNTRIES.map(C=>C.eco?[Math.round(C.eco.pop),Math.round(C.eco.hap),Math.round(C.eco.food),Math.round(C.eco.wood),Math.round(C.eco.ore)]:null)}));}catch(e){}}
 function readSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&typeof s==='object'?s:null;}catch(e){return null;}}
@@ -4352,11 +4477,12 @@ function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v=
   pHP=PLAYER_MAX;
   for(const k of['emp','dem']){const f=s.fac&&s.fac[k];if(!f)continue;FAC[k].rep=num(f.rep,0);FAC[k].hostile=!!f.hostile;}
   try{questLoad(s.quest);}catch(e){}
+  if(Array.isArray(s.titans))TITAN_LOAD=s.titans;TITAN_SEEN=!!s.titanSeen;
   LV=clamp(Math.floor(num(s.lv,1)),1,LV_MAX);EXP=Math.max(0,num(s.exp,0));
   PWR_BIAS=num(s.pwr,0);kills=Math.max(0,Math.floor(num(s.kills,0)));BUILT=Math.max(0,num(s.built,0));FARMS=Math.max(0,num(s.farms,0));
   if(s.kb&&typeof s.kb==='object')for(const k in s.kb){const v=num(s.kb[k],0);if(v>0)KB[k]=v;}
-  if(Array.isArray(s.eco))s.eco.forEach((a,i)=>{const C=COUNTRIES[i];if(!C||!C.eco||!Array.isArray(a))return;const [p,h,f,w,o]=a.map(v=>Math.max(0,num(v,0)));C.eco.pop=p;C.eco.hap=Math.min(100,h);C.eco.food=f;C.eco.wood=w;C.eco.ore=o;});
-  if(Array.isArray(s.rule))s.rule.forEach((a,i)=>{const C=COUNTRIES[i];if(!C||!Array.isArray(a))return;C.rule=a[0]===1?'vassal':a[0]===2?'ally':null;C.favor=clamp(num(a[1],0),-50,100);});
+  if(Array.isArray(s.eco))s.eco.forEach((a,i)=>{const ci=CMAP(i),C=COUNTRIES[ci];if(!C||!Array.isArray(a))return;if(!C.eco)ecoInitOne(ci);const [p,h,f,w,o]=a.map(v=>Math.max(0,num(v,0)));C.eco.pop=p;C.eco.hap=Math.min(100,h);C.eco.food=f;C.eco.wood=w;C.eco.ore=o;});
+  if(Array.isArray(s.rule))s.rule.forEach((a,i)=>{const C=COUNTRIES[CMAP(i)];if(!C||!Array.isArray(a))return;C.rule=a[0]===1?'vassal':a[0]===2?'ally':null;C.favor=clamp(num(a[1],0),-50,100);});
   if(Array.isArray(s.endings))for(const id of s.endings)if(ENDINGS.some(E=>E.id===id))END_SEEN.add(id);
   HARVEST=Math.max(0,num(s.harvest,0));TRADE=Math.max(0,num(s.trade,0));TRIBUTE=Math.max(0,num(s.tribute,0));PEACE=Math.max(0,num(s.peace,0));
   if(Array.isArray(s.combos))for(const id of s.combos)if(COMBOS.some(c=>c.id===id))COMBO_SEEN.add(id);COMBO_N=Math.max(0,Math.floor(num(s.comboN,0)));
@@ -4440,11 +4566,12 @@ function initVillages(){
 }
 initVillages();
 initSites();
+initOuter();
 initCrowd();
 initEconomy();
 BN0=buildings.length;
 setDiff(loadSave());postLoad();saveReady=true;loadAch();renderSaveInfo();
-window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
