@@ -3071,6 +3071,8 @@ function bolt(a,b,w=1){
 
 // ================= input =================
 const keys={};let started=false;
+// 見下ろせる角度の上限（約83°）。飛翔中に真下寄りを狙いやすく
+const PITCH_MAX=1.45;
 let camYaw=0,camPitch=.28,camDist=IS_MOBILE?17:15;
 let pointerLocked=false;
 addEventListener('keydown',e=>{
@@ -3101,9 +3103,9 @@ document.addEventListener('pointerlockchange',()=>{pointerLocked=document.pointe
 document.addEventListener('pointerlockerror',()=>{noLock=true;});
 addEventListener('mousemove',e=>{
   if(SPEC&&(pointerLocked||drag))SPEC.lastIn=gameTime;
-  if(pointerLocked){camYaw-=e.movementX*.0026;camPitch=clamp(camPitch+e.movementY*.0022,-.75,1.25);}
+  if(pointerLocked){camYaw-=e.movementX*.0026;camPitch=clamp(camPitch+e.movementY*.0022,-.75,PITCH_MAX);}
   else if(drag&&started){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.moved+=Math.abs(dx)+Math.abs(dy);drag.x=e.clientX;drag.y=e.clientY;
-    camYaw-=dx*.005;camPitch=clamp(camPitch+dy*.004,-.75,1.25);}
+    camYaw-=dx*.005;camPitch=clamp(camPitch+dy*.004,-.75,PITCH_MAX);}
 });
 addEventListener('wheel',e=>{if(SPEC){SPEC.dist=clamp(SPEC.dist+e.deltaY*.35,40,900);SPEC.lastIn=gameTime;return;}if(started)camDist=clamp(camDist+e.deltaY*.02,7,60);},{passive:true});
 addEventListener('contextmenu',e=>e.preventDefault());
@@ -3120,12 +3122,12 @@ tz.addEventListener('pointerdown',e=>{
   if(e.clientX<innerWidth*.45&&touch.stickId===null&&!SPEC){touch.stickId=e.pointerId;touch.sx=e.clientX;touch.sy=e.clientY;touch.mx=touch.my=0;
     stickEl.style.display='block';stickEl.style.left=e.clientX+'px';stickEl.style.top=e.clientY+'px';knob.style.transform='';}
   else if(touch.camId===null){touch.camId=e.pointerId;touch.cx=e.clientX;touch.cy=e.clientY;}
-  tz.setPointerCapture(e.pointerId);
+  try{tz.setPointerCapture(e.pointerId);}catch(err){}
 });
 tz.addEventListener('pointermove',e=>{
   if(e.pointerId===touch.stickId){let dx=e.clientX-touch.sx,dy=e.clientY-touch.sy;const L=Math.hypot(dx,dy),M=50;if(L>M){dx*=M/L;dy*=M/L;}
     touch.mx=dx/M;touch.my=dy/M;knob.style.transform=`translate(${dx}px,${dy}px)`;}
-  else if(e.pointerId===touch.camId){if(SPEC)SPEC.lastIn=gameTime;camYaw-=(e.clientX-touch.cx)*.006;camPitch=clamp(camPitch+(e.clientY-touch.cy)*.005,-.75,1.25);touch.cx=e.clientX;touch.cy=e.clientY;}
+  else if(e.pointerId===touch.camId){if(SPEC)SPEC.lastIn=gameTime;camYaw-=(e.clientX-touch.cx)*.006;camPitch=clamp(camPitch+(e.clientY-touch.cy)*.0075,-.75,PITCH_MAX);touch.cx=e.clientX;touch.cy=e.clientY;}
 });
 const endT=e=>{if(e.pointerId===touch.stickId){touch.stickId=null;touch.mx=touch.my=0;stickEl.style.display='none';}if(e.pointerId===touch.camId)touch.camId=null;};
 tz.addEventListener('pointerup',endT);tz.addEventListener('pointercancel',endT);
@@ -3362,7 +3364,7 @@ $('#start').addEventListener('click',()=>{
   shockwave(player.pos,30,lin(4,3,1.2),1);snd('chime',.8);
   setTimeout(()=>$('#title').style.display='none',1300);
 });
-window.__g={get time(){return gameTime;},advance(s){for(let t=0;t<s;t+=.05)step(.05);},cast,player,enemies,buildings,SPELLS,get aim(){return aimPoint;},setCam(y,p){camYaw=y;camPitch=p;},skip(n){for(let i=0;i<n;i++)step(.05);},stats:()=>({t:gameTime,pct:destroyedHp/TOTAL_HP,kills,enemies:enemies.length,fx:fx.length})};
+window.__g={get time(){return gameTime;},advance(s){for(let t=0;t<s;t+=.05)step(.05);},cast,player,enemies,buildings,SPELLS,get aim(){return aimPoint;},setCam(y,p){camYaw=y;camPitch=p;},get cam(){return [camYaw,camPitch];},skip(n){for(let i=0;i<n;i++)step(.05);},stats:()=>({t:gameTime,pct:destroyedHp/TOTAL_HP,kills,enemies:enemies.length,fx:fx.length})};
 // ================= 大軍勢（群衆兵） =================
 // 両軍の兵を InstancedMesh でまとめて描き、簡易な集団戦を行う。細かい兵・魔導士は軍の中核として従来どおり残る。
 const CROWD_MAX=IS_MOBILE?900:2600,CRW=[],CR_GRID=new Map(),CR_CELL=16;
