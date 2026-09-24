@@ -2056,6 +2056,7 @@ function damageArea(pos,r,dmg,knock,type,opts={}){
     treesIn(pos.x,pos.z,r,(t,d)=>{if(knock>18&&d<r*.75)removeTree(t,Math.random()<.5);else if(opts.ignite)burnTree(t);});
   }
   breakLanterns(pos.x,pos.z,r*.8);
+  crowdArea(pos,r,dmg,knock,up,type);
 }
 // damage numbers
 const dmgEls=[];let dmgI=0;
@@ -2217,6 +2218,7 @@ const SP={
         if(q<5)smoke.emit(p.x,gy+rr(0,H*hs),p.z,dir.x*14,rr(1,5),dir.z*14,rr(1,2),rr(5,8)*S,rr(10,16)*S,lin(.75,.85,.9),lin(.5,.6,.65),.45,1,2);}
       for(const e of enemies){if(!e.alive||hitSet.has(e))continue;const rel=e.pos.clone().sub(c);const along=rel.dot(dir),lat=rel.dot(side);
         if(Math.abs(along)<7*S&&Math.abs(lat)<W/2){hitSet.add(e);const imp=dir.clone().multiplyScalar(55);imp.y=18;e.hit(300,imp,'water');}}
+      for(const u of CRW){if(u.st!==1||hitSet.has(u))continue;const rx=u.x-c.x,rz=u.z-c.z,along=rx*dir.x+rz*dir.z,lat=rx*side.x+rz*side.z;if(Math.abs(along)<7*S&&Math.abs(lat)<W/2){hitSet.add(u);crowdDamage(u,300,V3(dir.x*40,16,dir.z*40),'p','water');}}
       for(const b of buildings){if(b.destroyed||hitSet.has(b))continue;const rel=V3(b.x-c.x,0,b.z-c.z);if(Math.abs(rel.dot(dir))<b.rad+4*S&&Math.abs(rel.dot(side))<W/2+b.rad){hitSet.add(b);damageBuilding(b,420,0);}}
       treesIn(c.x,c.z,W/2,(tr)=>{const rel=V3(tr.x-c.x,0,tr.z-c.z);if(Math.abs(rel.dot(dir))<6)removeTree(tr,Math.random()<.35);});
       breakLanterns(c.x,c.z,W/2);
@@ -2251,6 +2253,7 @@ const SP={
           if(d<48*K.s){const pull=rel.normalize().multiplyScalar(18*(1-d/(48*K.s))+6);const tang=V3(-rel.z,0,rel.x).multiplyScalar(20);
             const imp=pull.add(tang);imp.y=d<16*K.s?22:10;e.hit(d<16*K.s?140:45,imp,'wind');}}
         for(const b of buildings){if(!b.destroyed&&Math.hypot(b.x-pos.x,b.z-pos.z)<b.rad+16*K.s)damageBuilding(b,160,0);}
+        crowdArea(pos,20*K.s,140,20,24,'wind');
         treesIn(pos.x,pos.z,18*K.s,(tr)=>removeTree(tr,true));breakLanterns(pos.x,pos.z,18*K.s);
         if(Math.random()<.5)spawnDebris(pos.clone().add(V3(rr(-10,10),rr(5,40),rr(-10,10))),0x6a5a48,rr(.4,1.2),20);}
       if(t>=DUR){scene.remove(grp);layers.forEach(l=>{l.geometry.dispose();l.material.map.dispose();l.material.dispose();});return false;}return true;}});
@@ -2309,6 +2312,7 @@ const SP={
       beamCircle(o,dir,.9*Math.pow(W,.6)+.6,s.c3.clone().multiplyScalar(NB>3?.22:.45),.5);beamFx(o,b,W,s.c3.clone().multiplyScalar(.5),.35+W*.05);
       snd('crack',.45+W*.1);if(K.t>=2)shake(.15*W);
       for(const e of enemies){if(!e.alive)continue;const c=e.pos.clone();c.y+=e.h*.5;if(distSeg(c,o,b)<e.radius+W*1.3)e.hit(DMG0*TD[TIER],dir.clone().multiplyScalar(14),'pierce');}
+      crowdSeg(o,b,W*1.3,DMG0*TD[TIER],dir);
       const hitB=new Set();for(let d=0;d<L;d+=3){const x=o.x+dir.x*d,y=o.y+dir.y*d,z=o.z+dir.z*d;if(!nearTown(x,z))continue;
         for(const bd of buildings){if(bd.destroyed||hitB.has(bd))continue;if(Math.hypot(bd.x-x,bd.z-z)<bd.rad+W&&y<bd.y+bd.height&&y>bd.y-2){hitB.add(bd);damageBuilding(bd,DMG0*1.2*TD[TIER]*W,.15);
           burst(V3(x,y,z),10,10*W,.6,1.5*W,.3,PC.white,PC.violetB,1,1.5,0);}}}
@@ -2456,7 +2460,7 @@ const SP={
   },
   gold(P,s,K){
     const S=K.s,RMAX=[28,65,130,240][K.t],DUR=[1.2,2,2.8,3.8][K.t];
-    const G=P.clone();G.y=groundAt(P.x,P.z);
+    const G=P.clone();G.y=groundAt(P.x,P.z);later(DUR*.5,()=>crowdGold(G,RMAX));
     screenFlash(lin(1.4,1.1,.4),.25+K.t*.12);snd('chime',1);later(.25,()=>snd('chime',.8));if(K.t>=2)later(.5,()=>snd('bigboom',.5,G));
     magicCircle(G,Math.max(12,RMAX*.3),lin(7,4.8,1.2),DUR+1,{y:.5,spin:.5});
     magicCircle(G.clone().setY(G.y+30*Math.sqrt(S)),Math.max(10,RMAX*.22),lin(7,4.8,1.2),DUR+1,{y:0,spin:-.8});
@@ -3061,7 +3065,7 @@ function step(dt){
     if(!started&&e.kind!=='boss'&&!e.fly){e.animate(dt,false);continue;}e.update(dt);}
   for(let i=fx.length-1;i>=0;i--){if(!fx[i].update(dt))fx.splice(i,1);}
   cullT-=dt;if(cullT<=0){cullT=.3;cullWorld();}
-  updWorld(dt);updBarriers(dt);
+  updWorld(dt);updCrowd(dt);updBarriers(dt);
   updBuildings(dt);updDebris(dt);updHome(dt);updFlora(dt);updSkyCity(dt);updFarm(dt);
   for(let i=burningTrees.length-1;i>=0;i--){const b=burningTrees[i];b.life-=dt;const t=b.t;
     if(Math.random()<dt*25)glow.emit(t.x+rr(-1,1)*t.s*.4,t.y+t.s*rr(1,2.6),t.z+rr(-1,1)*t.s*.4,0,rr(4,8),0,rr(.5,1),rr(2,4),.4,PC.fireA,PC.fireB,1,.5,-2);
@@ -3097,6 +3101,125 @@ $('#start').addEventListener('click',()=>{
   setTimeout(()=>$('#title').style.display='none',1300);
 });
 window.__g={get time(){return gameTime;},advance(s){for(let t=0;t<s;t+=.05)step(.05);},cast,player,enemies,buildings,SPELLS,get aim(){return aimPoint;},setCam(y,p){camYaw=y;camPitch=p;},skip(n){for(let i=0;i<n;i++)step(.05);},stats:()=>({t:gameTime,pct:destroyedHp/TOTAL_HP,kills,enemies:enemies.length,fx:fx.length})};
+// ================= 大軍勢（群衆兵） =================
+// 両軍の兵を InstancedMesh でまとめて描き、簡易な集団戦を行う。細かい兵・魔導士は軍の中核として従来どおり残る。
+const CROWD_MAX=IS_MOBILE?900:2600,CRW=[],CR_GRID=new Map(),CR_CELL=16;
+const CR_SIDE=['emp','dem'];let crowdMesh=null,bannerMesh=null;const crFree=[[],[]],crTop=[0,0],bnFree=[[],[]],bnTop=[0,0];
+function colGeo(g,c){g=g.index?g.toNonIndexed():g;const n=g.attributes.position.count,a=new Float32Array(n*3);for(let i=0;i<n;i++){a[i*3]=c[0];a[i*3+1]=c[1];a[i*3+2]=c[2];}g.setAttribute('color',new THREE.BufferAttribute(a,3));if(g.attributes.uv)g.deleteAttribute('uv');return g;}
+function soldierGeo(side){const M=THREE.BufferGeometryUtils.mergeBufferGeometries,P=[];
+  if(side===0){P.push(colGeo(new THREE.BoxGeometry(.55,1.1,.35).translate(0,.55,0),[.22,.22,.28]),colGeo(new THREE.BoxGeometry(.8,1,.5).translate(0,1.6,0),[.86,.87,.92]),
+      colGeo(new THREE.BoxGeometry(.5,.8,.06).translate(0,1.5,.27),[.95,.72,.22]),colGeo(new THREE.SphereGeometry(.3,8,6).translate(0,2.35,0),[.72,.74,.8]),
+      colGeo(new THREE.ConeGeometry(.08,.5,5).translate(0,2.78,0),[.85,.1,.1]),colGeo(new THREE.CylinderGeometry(.04,.04,3.4,5).translate(.55,1.9,.2),[.45,.3,.15]),
+      colGeo(new THREE.ConeGeometry(.09,.35,4).translate(.55,3.75,.2),[.9,.9,.95]),colGeo(new THREE.BoxGeometry(.1,.95,.7).translate(-.5,1.5,.05),[.9,.82,.55]));}
+  else{P.push(colGeo(new THREE.BoxGeometry(.6,1.1,.38).translate(0,.55,0),[.1,.06,.08]),colGeo(new THREE.BoxGeometry(.85,1.05,.52).translate(0,1.62,0),[.38,.06,.09]),
+      colGeo(new THREE.BoxGeometry(.6,.7,.08).translate(0,1.7,.27),[.14,.13,.16]),colGeo(new THREE.SphereGeometry(.3,8,6).translate(0,2.38,0),[.2,.14,.17]),
+      colGeo(new THREE.ConeGeometry(.07,.55,5).rotateZ(.5).translate(-.25,2.72,0),[.92,.86,.7]),colGeo(new THREE.ConeGeometry(.07,.55,5).rotateZ(-.5).translate(.25,2.72,0),[.92,.86,.7]),
+      colGeo(new THREE.BoxGeometry(.08,1.7,.26).translate(.55,1.95,.25),[.62,.62,.68]),colGeo(new THREE.BoxGeometry(.9,.1,.1).translate(0,2.38,.28),[3,.3,.2]));}
+  return M(P);}
+function bannerGeo(side){const M=THREE.BufferGeometryUtils.mergeBufferGeometries;const c=side?[.75,.05,.1]:[.95,.85,.45];
+  return M([colGeo(new THREE.CylinderGeometry(.06,.06,6.2,5).translate(-.7,3.1,-.2),[.4,.28,.15]),colGeo(new THREE.BoxGeometry(1.7,1.2,.04).translate(.15,5.4,-.2),c)]);}
+function initCrowd(){crowdMesh=[0,1].map(sd=>{const m=new THREE.InstancedMesh(soldierGeo(sd),new THREE.MeshStandardMaterial({vertexColors:true,roughness:.6,metalness:sd?.2:.35}),CROWD_MAX/2|0);
+    m.frustumCulled=false;m.castShadow=!IS_MOBILE;for(let i=0;i<m.count;i++){m.setMatrixAt(i,zeroM);m.setColorAt(i,tmpC.setRGB(1,1,1));}m.count=0;scene.add(m);return m;});
+  bannerMesh=[0,1].map(sd=>{const m=new THREE.InstancedMesh(bannerGeo(sd),new THREE.MeshStandardMaterial({vertexColors:true,roughness:.8,side:THREE.DoubleSide}),IS_MOBILE?40:120);
+    m.frustumCulled=false;for(let i=0;i<m.count;i++)m.setMatrixAt(i,zeroM);m.count=0;scene.add(m);return m;});
+  initGarrisons();}
+function crSlot(sd){const cap=CROWD_MAX/2|0;if(crFree[sd].length)return crFree[sd].pop();if(crTop[sd]<cap){const i=crTop[sd]++;crowdMesh[sd].count=crTop[sd];return i;}return -1;}
+function bnSlot(sd){if(bnFree[sd].length)return bnFree[sd].pop();const cap=IS_MOBILE?40:120;if(bnTop[sd]<cap){const i=bnTop[sd]++;bannerMesh[sd].count=bnTop[sd];return i;}return -1;}
+function spawnCrowd(sd,x,z,o){const i=crSlot(sd);if(i<0)return null;const el=!!o.el;
+  const u={sd,i,x,z,y:groundAt(x,z),yaw:o.yaw||0,hp:120*EHP[DIFF]*(el?4:1),st:1,role:o.role||0,g:o.g,mode:o.mode,tgt:null,rt:rr(0,.8),cd:rr(.5,1.5),bob:Math.random()*6,t:0,
+    el,hx:x,hz:z,fr:0,sp:(sd?7:6.5)*(o.role?.85:1)*rr(.9,1.1),bn:-1,dirty:true,gold:false,vx:0,vy:0,vz:0,isCrowd:true};
+  if(o.banner){u.bn=bnSlot(sd);}
+  crowdMesh[sd].setColorAt(i,el?tmpC.setRGB(1.25,1.1,.7):o.role?tmpC.setRGB(.8,.95,.85):tmpC.setRGB(rr(.9,1.05),rr(.9,1.05),rr(.9,1.05)));crowdMesh[sd].instanceColor.needsUpdate=true;
+  CRW.push(u);if(o.g)o.g.n[sd]++;return u;}
+function crKey(x,z){return (Math.floor(x/CR_CELL)+2048)*4096+Math.floor(z/CR_CELL)+2048;}
+function crNear(x,z,sd,r,filter){let best=null,bd=r*r;const c0=Math.floor(x/CR_CELL),r0=Math.floor(z/CR_CELL),k=Math.ceil(r/CR_CELL);
+  for(let a=-k;a<=k;a++)for(let b=-k;b<=k;b++){const L=CR_GRID.get((c0+a+2048)*4096+r0+b+2048);if(!L)continue;for(const u of L){if(u.sd!==sd||u.st!==1||(filter&&!filter(u)))continue;const d=(u.x-x)**2+(u.z-z)**2;if(d<bd){bd=d;best=u;}}}
+  return best;}
+function crowdAlive(g,sd){return g?g.n[sd]:0;}
+function crowdDamage(u,dmg,imp,src,type){if(u.st!==1)return;if(src==='p')dmg*=P_MUL;u.hp-=dmg;
+  if(type==='ice')u.fr=Math.max(u.fr,5);else if(type==='thunder')u.fr=Math.max(u.fr,1.2);
+  if(u.hp>0)return;u.st=2;u.t=0;if(u.g)u.g.n[u.sd]--;
+  if(imp){u.vx=imp.x;u.vy=Math.max(imp.y,6);u.vz=imp.z;u.fling=true;}else{u.vx=u.vz=0;u.vy=0;u.fling=false;}
+  if(src==='p'){kills++;const side=CR_SIDE[u.sd];KB[side+'_crowd']=(KB[side+'_crowd']||0)+1;if(u.sd===1)KB.demon=(KB.demon||0)+1;
+    if(u.mode==='battle'){FAC[side].rep-=.15;FAC[CR_SIDE[1-u.sd]].rep+=.05;}else if(u.mode==='garrison'){COUNTRIES[u.sd?5:4].angered=true;}}}
+function crowdArea(pos,r,dmg,knock,up,type){for(const u of CRW){if(u.st!==1)continue;const dx=u.x-pos.x,dz=u.z-pos.z,d=Math.hypot(dx,dz);if(d>=r||Math.abs(u.y-pos.y)>r+10)continue;
+    const f=1-d/r*.5,L=d||1;crowdDamage(u,dmg*f*rr(.9,1.1),knock>0?V3(dx/L*knock*f,up*f,dz/L*knock*f):null,'p',type);}}
+function crowdSeg(a,b,w,dmg,dir){for(const u of CRW){if(u.st!==1)continue;if(distSeg(V3(u.x,u.y+1.4,u.z),a,b)<w+.6)crowdDamage(u,dmg,dir.clone().multiplyScalar(14),'p','pierce');}}
+function crowdGold(G,R){let ch=false;for(const u of CRW){if(u.st!==1||Math.hypot(u.x-G.x,u.z-G.z)>R)continue;u.st=3;u.gold=true;u.t=0;if(u.g)u.g.n[u.sd]--;kills++;crowdMesh[u.sd].setColorAt(u.i,tmpC.setRGB(2.2,1.5,.35));ch=true;u.dirty=true;}
+  if(ch)for(const m of crowdMesh)m.instanceColor.needsUpdate=true;}
+function crowdFree(u){u.st=0;crowdMesh[u.sd].setMatrixAt(u.i,zeroM);crFree[u.sd].push(u.i);if(u.bn>=0){bannerMesh[u.sd].setMatrixAt(u.bn,zeroM);bnFree[u.sd].push(u.bn);u.bn=-1;}}
+// 帝都・魔都の城外陣営に常駐する守備隊
+const GARR=[];
+function initGarrisons(){const per=IS_MOBILE?84:260;
+  for(const sd of[0,1]){const cx=sd?DMX:EMX,cz=sd?DMZ:EMZ,R=sd?DR:ER,dirX=sd?-1:1;const g={mode:'garrison',n:[0,0],max:0,ci:sd?5:4,camps:[]};
+    for(const oz of[-170,0,170]){const x=cx+dirX*(R+95),z=cz+oz;if(groundAt(x,z)<2)continue;g.camps.push({x,z});}
+    const per1=Math.floor(per/Math.max(1,g.camps.length));g.max=per1*g.camps.length;
+    for(const c of g.camps)for(let i=0;i<per1;i++)garrisonSpawn(g,sd,c,i,per1);
+    GARR.push(g);}}
+function garrisonSpawn(g,sd,c,i,per1){const W=14,row=Math.floor(i/W),col=i%W;const yaw=sd?-Math.PI/2:Math.PI/2;
+  const fx=Math.sin(yaw),fz=Math.cos(yaw);const lx=(col-(W-1)/2)*2.6,lz=-row*2.8;const x=c.x+fz*lx+fx*lz,z=c.z-fx*lx+fz*lz;
+  const u=spawnCrowd(sd,x,z,{mode:'garrison',g,yaw,role:row>=4&&row%2?1:0,banner:row===0&&col%7===3,el:row===0&&col===6});if(u){u.camp=c;u.ci=i;}return u;}
+function crowdMoveTo(u,x,z,sp,dt){const dx=x-u.x,dz=z-u.z,d=Math.hypot(dx,dz);if(d<.3)return d;const m=Math.min(d,sp*dt);u.x+=dx/d*m;u.z+=dz/d*m;u.yaw=Math.atan2(dx,dz);u.dirty=true;return d;}
+function crowdHitTarget(u,t){const dmgMul=(u.el?2.5:1)*EHP[DIFF];
+  if(t.isCrowd){crowdDamage(t,(u.role?16:22)*rr(.8,1.2)*(u.el?2.5:1),null,'npc');}
+  else if(t===player){hurtPlayer((u.sd?ATK.demon:ATK.knight)*.45*(u.el?2:1));}
+  else if(t.hit){t.hit((u.role?60:110)*dmgMul*rr(.8,1.2),null,'npc');}
+  else if(t.building){damageBuilding(t.building,55*dmgMul,.04,true);}}
+function crowdShoot(u,tx,ty,tz){const sx=u.x,sy=u.y+2.4,sz=u.z,dx=tx-sx,dy=ty-sy,dz=tz-sz,d=Math.hypot(dx,dz)||1,t=Math.max(.25,d/60),G=30;
+  if((sx-camera.position.x)**2+(sz-camera.position.z)**2<900*900)glow.emit(sx,sy,sz,dx/t,dy/t+.5*G*t,dz/t,t,.9,.6,u.sd?PC.fireA:PC.gold,u.sd?PC.ember:PC.white,1,0,G);}
+function updCrowd(dt){if(!crowdMesh||!CRW.length)return;
+  CR_GRID.clear();for(const u of CRW){if(u.st!==1)continue;const k=crKey(u.x,u.z);let L=CR_GRID.get(k);if(!L){L=[];CR_GRID.set(k,L);}L.push(u);}
+  const cx=camera.position.x,cz=camera.position.z;let chM=[false,false],chB=[false,false];
+  for(let n=CRW.length-1;n>=0;n--){const u=CRW[n];
+    if(u.st===0){CRW.splice(n,1);continue;}
+    if(u.st===2){u.t+=dt;if(u.fling){u.vy-=36*dt;u.x+=u.vx*dt;u.y+=u.vy*dt;u.z+=u.vz*dt;const g=groundAt(u.x,u.z);if(u.y<g){u.y=g;u.vx*=.3;u.vz*=.3;u.vy=0;u.fling=false;}}
+      if(u.t>3)u.y-=dt*1.2;if(u.t>4.5){crowdFree(u);chM[u.sd]=true;continue;}u.dirty=true;}
+    else if(u.st===3){if(u.g&&u.g.over&&gameTime>u.g.clear+30){crowdFree(u);chM[u.sd]=true;continue;}}
+    else{ // alive
+      if(u.fr>0){u.fr-=dt;}else crowdAI(u,dt);
+      if(u.g&&u.g.over&&gameTime>u.g.clear&&u.mode!=='garrison'){crowdFree(u);chM[u.sd]=true;continue;}}
+    const far=(u.x-cx)**2+(u.z-cz)**2>1800*1800;
+    if(!u.dirty&&(far||u.st!==1))continue;
+    const near=!far&&(u.x-cx)**2+(u.z-cz)**2<260*260;
+    if(!u.dirty&&!near)continue;
+    u.dirty=false;
+    const bob=u.st===1&&u.mv?Math.abs(Math.sin(gameTime*9+u.bob))*.25:0;const tilt=u.st===2?Math.min(1,u.t/.45)*1.45:0;
+    dummy.position.set(u.x,u.y+bob,u.z);dummy.rotation.set(tilt,u.yaw,0,'YXZ');const sc=u.el?1.35:u.sd?1.12:1;dummy.scale.set(sc,sc,sc);dummy.updateMatrix();crowdMesh[u.sd].setMatrixAt(u.i,dummy.matrix);chM[u.sd]=true;
+    if(u.bn>=0){bannerMesh[u.sd].setMatrixAt(u.bn,dummy.matrix);chB[u.sd]=true;}
+    u.mv=false;}
+  for(const sd of[0,1]){if(chM[sd])crowdMesh[sd].instanceMatrix.needsUpdate=true;if(chB[sd])bannerMesh[sd].instanceMatrix.needsUpdate=true;}
+  garrisonRegen(dt);}
+const ATK_R=[1.9,26];
+function crowdAI(u,dt){const reach=ATK_R[u.role];let tx=null,tz=null,tgt=null,ty=0;
+  if(u.mode==='garrison'){const C=COUNTRIES[u.g.ci];const pd=Math.hypot(player.pos.x-u.x,player.pos.z-u.z);
+    const chase=started&&(C.angered||FAC[CR_SIDE[u.sd]].hostile)&&pd<320&&player.pos.y-groundAt(player.pos.x,player.pos.z)<9&&!pDead;
+    if(chase){tgt=player;tx=player.pos.x;tz=player.pos.z;ty=player.pos.y+1.4;}
+    else{if(Math.hypot(u.hx-u.x,u.hz-u.z)>.5){crowdMoveTo(u,u.hx,u.hz,u.sp,dt);u.mv=true;}else{const yaw=u.sd?-Math.PI/2:Math.PI/2;if(u.yaw!==yaw){u.yaw=yaw;u.dirty=true;}}return;}}
+  else if(u.mode==='battle'){const g=u.g;if(g.over){return;}
+    u.rt-=dt;if(u.rt<=0||!u.tgt||(u.tgt.isCrowd?u.tgt.st!==1:!u.tgt.alive)){u.rt=rr(.5,.9);u.tgt=crNear(u.x,u.z,1-u.sd,u.role?50:70);
+      const foe=g.u&&g.u[CR_SIDE[1-u.sd]];if(foe){let bd=u.tgt?Math.hypot(u.tgt.x-u.x,u.tgt.z-u.z):40;for(const e of foe){if(!e.alive)continue;const d=Math.hypot(e.pos.x-u.x,e.pos.z-u.z);if(d<bd){bd=d;u.tgt=e;}}}}
+    tgt=u.tgt;if(!tgt){const s=u.sd?1:-1;crowdMoveTo(u,g.f.x+s*12,g.f.z+(u.hz-g.f.z)*.3,u.sp*.7,dt);u.mv=true;return;}}
+  else if(u.mode==='raid'){const g=u.g;u.rt-=dt;
+    if(u.rt<=0||!u.tgt||(u.tgt.building&&u.tgt.building.destroyed)){u.rt=rr(1.5,2.5);let bd=1e9,bb=null;for(const b of buildings){if(b.destroyed||b.country!==g.ci||b.wall)continue;const d=Math.hypot(b.x-u.x,b.z-u.z);if(d<bd){bd=d;bb=b;}}u.tgt=bb?{building:bb}:null;}
+    const pd=Math.hypot(player.pos.x-u.x,player.pos.z-u.z);if(pd<22&&!pDead&&player.pos.y-groundAt(player.pos.x,player.pos.z)<6)tgt=player;else tgt=u.tgt;
+    if(!tgt)return;}
+  if(tgt){if(tx===null){if(tgt.isCrowd){tx=tgt.x;tz=tgt.z;ty=tgt.y+1.4;}else if(tgt.building){tx=tgt.building.x;tz=tgt.building.z;ty=tgt.building.y+3;}else{tx=tgt.pos.x;tz=tgt.pos.z;ty=tgt.pos.y+(tgt.h||2)*.5;}}
+    const rad=tgt.building?tgt.building.rad+1:tgt.isCrowd?0:(tgt.radius||.6);const d=Math.hypot(tx-u.x,tz-u.z)-rad;
+    if(d>reach){crowdMoveTo(u,tx,tz,u.sp,dt);u.mv=true;}
+    else{const yw=Math.atan2(tx-u.x,tz-u.z);if(Math.abs(yw-u.yaw)>.05){u.yaw=yw;u.dirty=true;}u.cd-=dt;
+      if(u.cd<=0){u.cd=u.role?rr(1.6,2.4):rr(1,1.6);if(u.role)crowdShoot(u,tx,ty,tz);crowdHitTarget(u,tgt);
+        if(!u.role&&Math.random()<.3&&(u.x-camera.position.x)**2+(u.z-camera.position.z)**2<400*400)burst(V3(tx,ty,tz),5,6,.3,.8,.2,PC.spark,PC.ember,1,1,8);}}}
+  // 押し合い
+  const L=CR_GRID.get(crKey(u.x,u.z));if(L&&L.length>1)for(let k=0;k<Math.min(L.length,8);k++){const o=L[(Math.random()*L.length)|0];if(o===u)continue;const dx=u.x-o.x,dz=u.z-o.z,d2=dx*dx+dz*dz;if(d2<1.6&&d2>1e-4){const d=Math.sqrt(d2),m=(1.26-d)*.5;u.x+=dx/d*m;u.z+=dz/d*m;u.dirty=true;}}
+  u.y=groundAt(u.x,u.z);}
+let garT=0;
+function garrisonRegen(dt){garT-=dt;if(garT>0)return;garT=6;for(const g of GARR){const C=COUNTRIES[g.ci];if(!C.total||C.dest/C.total>.5||g.n[g.ci===5?1:0]>=g.max||C.angered)continue;
+  const sd=g.ci===5?1:0;const c=g.camps[Math.random()*g.camps.length|0];if(!c)continue;const u=spawnCrowd(sd,c.x+rr(-8,8),c.z+rr(-8,8),{mode:'garrison',g,yaw:sd?-Math.PI/2:Math.PI/2});if(u){u.hx=c.x+rr(-18,18);u.hz=c.z+rr(-18,18);}}}
+function spawnBattleCrowd(bt,sd,n){const f=bt.f,s=sd?1:-1,W=14,per=W*6;const blocks=Math.ceil(n/per);
+  for(let i=0;i<n;i++){const b=Math.floor(i/per),j=i%per,row=Math.floor(j/W),col=j%W;const bz=(b-(blocks-1)/2)*48;
+    const x=f.x+s*(118+row*3+rr(-.6,.6)),z=f.z+bz+(col-(W-1)/2)*3.2+rr(-.6,.6);
+    spawnCrowd(sd,x,z,{mode:'battle',g:bt,yaw:sd?-Math.PI/2:Math.PI/2,role:row>=3&&Math.random()<.7?1:0,banner:row===0&&(col===3||col===10),el:row===0&&col===6});}}
+function spawnRaidCrowd(raid,C,bx,bz,n){for(let i=0;i<n;i++)spawnCrowd(1,bx+rr(-14,14),bz+rr(-14,14),{mode:'raid',g:raid,yaw:Math.atan2(C.x-bx,C.z-bz),el:i===0});}
 // ================= world power / factions / missions =================
 const FAC={emp:{rep:0,hostile:false,name:'神聖ヴァルガルド帝国'},dem:{rep:0,hostile:false,name:'魔王軍'}};let MANA=0,PWR_BIAS=0,BUILT=0,FARMS=0,DEF_MUL=1;const KB={};const UPG={hp:0,pw:0,df:0};
 // ================= 帝国軍 vs 魔王軍 =================
@@ -3104,7 +3227,10 @@ const BATTLES=[];let warT=100;
 function warUnits(side){const out=[];for(const bt of BATTLES)if(!bt.over)for(const u of bt.u[side])if(u.alive)out.push(u);return out;}
 Enemy.prototype.warAI=function(dt){this.animate(dt,true);const bt=this.bt;
   this.wtT=(this.wtT||0)-dt;if(!this.wt||!this.wt.alive||this.wtT<=0){this.wtT=.8;let best=null,bd=1e9;const foe=this.war==='emp'?'dem':'emp';
-    for(const u of bt.u[foe]){if(!u.alive||u.kind==='mage')continue;const d=Math.hypot(u.pos.x-this.pos.x,u.pos.z-this.pos.z);if(d<bd){bd=d;best=u;}}this.wt=best;}
+    for(const u of bt.u[foe]){if(!u.alive||u.kind==='mage')continue;const d=Math.hypot(u.pos.x-this.pos.x,u.pos.z-this.pos.z);if(d<bd){bd=d;best=u;}}this.wt=best;
+    this.wc=bd>26?crNear(this.pos.x,this.pos.z,this.war==='emp'?1:0,26):null;}
+  if(this.wc&&this.wc.st===1){const c=this.wc,dc=Math.hypot(c.x-this.pos.x,c.z-this.pos.z);if(dc>this.radius+1.4)this.groundMove(dt,V3(c.x,0,c.z),this.speed*.85);
+    else{this.g.rotation.y=Math.atan2(c.x-this.pos.x,c.z-this.pos.z);this.atkCd-=dt;if(this.atkCd<=0){this.atkCd=rr(.9,1.5);this.lunge=.25;crowdDamage(c,(this.elite?160:70)*rr(.8,1.2),null,'npc');}}return;}
   const t=this.wt;if(!t){this.groundMove(dt,V3(bt.f.x,0,bt.f.z),this.speed*.6);return;}
   const d=Math.hypot(t.pos.x-this.pos.x,t.pos.z-this.pos.z);
   if(d>this.radius+t.radius+1.2)this.groundMove(dt,t.pos,this.speed*.85);
@@ -3128,17 +3254,20 @@ function startBattle(){if(BATTLES.some(b=>!b.over))return;const eH=1-COUNTRIES[4
     for(let i=0;i<nq;i++){const m=makeMage({ci:side==='emp'?4:5,x:f.x+sx*150,z:f.z+rr(-50,50),hy:groundAt(f.x,f.z)+32,nm:side==='emp'?'帝国魔導兵':'魔族術士',rank:'soldier',hpMul:.8,shMul:.5,range:42,
       robe:side==='emp'?0xe8e4f0:0x2a1a2a,trim:side==='emp'?0xd8b060:0x8a1020,orb:side==='emp'?lin(7,5,2):lin(8,1,2),c3:side==='emp'?lin(6,4.5,1.5):lin(6,.8,2),shot:side==='emp'?lin(7,5,1.5):lin(8,1,2.5),fac:side});
       m.war=side;m.bt=bt;m.raidGo=true;m.home.set(f.x,m.pos.y,f.z);m.engR=220;MAGES.push(m);bt.u[side].push(m);}}
+  bt.n=[0,0];const nc=(nm+nq)*9;spawnBattleCrowd(bt,0,nc);spawnBattleCrowd(bt,1,nc);
   toast(`⚔ 帝国軍と魔王軍が「${f.n}」で激突（N で地図）`);snd('growl',.8);
   for(const k of['emp','dem'])if(!FAC[k].hostile){const side=k,bt2=bt;offerMission({fac:k,title:`${f.n}の戦い`,desc:`${f.n}で${k==='emp'?'帝国軍':'魔王軍'}を勝利に導け（制限5分）`,mana:rw(550),rep:12,repO:-8,pwr:k==='emp'?2:-2,lim:300,
-    check(){if(!bt2.over)return[0,`帝国 ${bt2.u.emp.filter(u=>u.alive).length}　魔王 ${bt2.u.dem.filter(u=>u.alive).length}`];return bt2.win===side?[1]:[-1];}});}}
+    check(){if(!bt2.over)return[0,`帝国 ${btAlive(bt2,'emp')}　魔王 ${btAlive(bt2,'dem')}`];return bt2.win===side?[1]:[-1];}});}}
+function btAlive(bt,side){return bt.u[side].filter(u=>u.alive).length+(bt.n?bt.n[side==='emp'?0:1]:0);}
 function updBattles(dt){for(const bt of BATTLES){if(bt.over){if(gameTime>bt.clear){for(const s2 of['emp','dem'])for(const u of bt.u[s2])if(u.alive&&!u.aggro&&!u.active){scene.remove(u.g);u.alive=false;u.dead=true;}bt.clear=1e12;}continue;}
-    const ea=bt.u.emp.filter(u=>u.alive).length,da=bt.u.dem.filter(u=>u.alive).length;let w=null;
+    const ea=btAlive(bt,'emp'),da=btAlive(bt,'dem');let w=null;
     if(!ea&&!da)w='draw';else if(!da)w='emp';else if(!ea)w='dem';else if(gameTime-bt.t0>330)w=ea>=da?'emp':'dem';
     if(w){bt.over=true;bt.win=w;bt.clear=gameTime+60;for(const s2 of['emp','dem'])for(const u of bt.u[s2])u.war=null;
       if(w==='emp'){PWR_BIAS+=1.5;showBanner('帝国軍、'+bt.f.n+'にて勝利','人類の勢力が増した');}else if(w==='dem'){PWR_BIAS-=1.5;showBanner('魔王軍、'+bt.f.n+'にて勝利','魔王軍の勢力が増した');}}}}
 function countKill(e){if(e.kind==='citizen'){const ci=countryAt(e.pos.x,e.pos.z);if(ci>=0&&COUNTRIES[ci].eco)COUNTRIES[ci].eco.pop=Math.max(0,COUNTRIES[ci].eco.pop-6);}if(e.war){const o=e.war==='emp'?'dem':'emp';FAC[e.war].rep-=1.2;FAC[o].rep+=.4;}const k=(e.fac||'x')+'_'+(e.rank||e.kind);KB[k]=(KB[k]||0)+1;KB[e.kind]=(KB[e.kind]||0)+1;}
 function worldPower(){let H=0,D=0;COUNTRIES.forEach((C,i)=>{if(!C.total)return;const k=1-C.dest/C.total;const w=i===4||i===5?10:C.settle?.5:1;if(C.faction==='dem')D+=w*k;else H+=w*k;});
   for(const m of MAGES){if(!m.alive)continue;const w=m.rank==='king'?6:m.rank==='elite'?.5:m.rank==='soldier'?.08:.3;if(m.fac==='dem')D+=w;else H+=w;}
+  {let ce=0,cd=0;for(const u of CRW)if(u.st===1){if(u.sd)cd++;else ce++;}H+=ce*.004;D+=cd*.004;}
   H+=Math.max(0,PWR_BIAS);D+=Math.max(0,-PWR_BIAS);return H/Math.max(.01,H+D);}
 function toast(t){const el=$('#toast');el.textContent=t;el.classList.remove('on');void el.offsetWidth;el.classList.add('on');}
 const RAIDS=[];let raidT=170;
@@ -3149,7 +3278,7 @@ function launchRaid(){if(COUNTRIES[5].dest/COUNTRIES[5].total>.7)return;
   for(let k=0;k<(IS_MOBILE?5:8);k++){const e=new Enemy('demon',bx+rr(-8,8),bz+rr(-8,8),{raid:ci,raidGo:true,tc:{x:C.x,z:C.z,r:cr},aggroR:45,elite:k===0});units.push(e);}
   const m=makeMage({ci:5,x:C.x+Math.cos(a)*cr*.5,z:C.z+Math.sin(a)*cr*.5,hy:groundAt(C.x,C.z)+45,nm:'魔族術士（侵攻隊）',rank:'soldier',hpMul:.8,shMul:.5,range:42,robe:0x2a1a2a,trim:0x8a1020,orb:lin(8,1,2),c3:lin(6,.8,2),shot:lin(8,1,2.5),fac:'dem'});
   m.active=true;m.shield=m.shMax;m.engR=260;m.raidGo=true;MAGES.push(m);units.push(m);
-  RAIDS.push({ci,units,t0:gameTime,d0:C.dest});showBanner('魔王軍、'+C.label+'へ侵攻','建物が襲われている');snd('growl',1);
+  const raid={ci,units,t0:gameTime,d0:C.dest,n:[0,0],mode:'raid'};RAIDS.push(raid);spawnRaidCrowd(raid,C,bx,bz,IS_MOBILE?12:30);showBanner('魔王軍、'+C.label+'へ侵攻','建物が襲われている');snd('growl',1);
   if(!FAC.emp.hostile)offerMission(mkDefend(ci));}
 // ---- missions ----
 const OFFERS=[],ACTIVE=[];let offerT=45,MID=0;
@@ -3157,7 +3286,7 @@ const HUMAN_IDX=()=>COUNTRIES.map((C,i)=>i).filter(i=>!COUNTRIES[i].faction&&COU
 const pct=C=>C.total?C.dest/C.total*100:0;
 function rw(base){return Math.round(base*[.8,1,1.5][DIFF]);}
 function mkDefend(ci){const C=COUNTRIES[ci];const raid=RAIDS[RAIDS.length-1];return {fac:'emp',title:C.label+'防衛',desc:`魔王軍の侵攻隊を殲滅し、${C.label}を守れ（制限3分・被害25%未満）`,mana:rw(450),rep:12,pwr:2,t0:0,lim:180,
-  init(){this.raid=raid;},check(){const alive=this.raid.units.filter(u=>u.alive).length;const dmg=(C.dest-this.raid.d0)/C.total*100;if(dmg>=25)return[-1,`被害 ${dmg.toFixed(0)}%`];if(!alive)return[1];return[0,`残敵 ${alive}　被害 ${dmg.toFixed(0)}%`];}};}
+  init(){this.raid=raid;},check(){const alive=this.raid.units.filter(u=>u.alive).length+(this.raid.n?this.raid.n[1]:0);const dmg=(C.dest-this.raid.d0)/C.total*100;if(dmg>=25)return[-1,`被害 ${dmg.toFixed(0)}%`];if(!alive)return[1];return[0,`残敵 ${alive}　被害 ${dmg.toFixed(0)}%`];}};}
 function genMission(fac){const L=[];
   if(fac==='emp'){const D=COUNTRIES[5];
     L.push(()=>{const p=Math.min(100,Math.ceil(pct(D))+8);return{title:'魔都外郭攻撃',desc:`魔都ネクロディアの建物を${p}%まで破壊せよ`,mana:rw(500),rep:10,repO:-12,pwr:2.5,check(){const v=pct(D);return v>=p?[1]:[0,`${v.toFixed(1)} / ${p}%`];}};});
@@ -3350,6 +3479,7 @@ function ecoRecount(){
   for(const e of enemies){if(!e.alive||e.kind==='citizen'||e.war)continue;const ci=e.kind==='mage'||e.kind==='brute'?e.ci:countryAt(e.pos.x,e.pos.z);if(ci==null||ci<0||!COUNTRIES[ci])continue;
     const v=e.kind==='mage'||e.kind==='brute'?(e.rank==='king'?3000:e.rank==='elite'?500:e.rank==='soldier'?60:320):e.kind==='archer'?8:e.kind==='knight'||e.kind==='demon'?12:e.kind==='golem'?30:4;mil[ci]+=v*(e.elite?3:1);}
   for(const bt of BATTLES)if(!bt.over)for(const side of['emp','dem'])for(const u of bt.u[side])if(u.alive)mil[side==='emp'?4:5]+=u.kind==='mage'?60:12*(u.elite?3:1);
+  for(const u of CRW)if(u.st===1&&u.mode!=='raid')mil[u.sd?5:4]+=(u.el?30:10);
   COUNTRIES.forEach((C,ci)=>{if(C.eco)C.eco.milRaw=mil[ci];});}
 function updEconomy(dt){ecoT-=dt;if(ecoT>0)return;ecoT=1;const k=1/60;
   ecoSlow-=1;if(ecoSlow<=0){ecoSlow=4;ecoRecount();}
@@ -3456,9 +3586,10 @@ function initVillages(){
   for(let t=-C6R+16;t<C6R-16;t+=16)for(const s2 of[-7.5,7.5]){if(Math.abs(t)>12){plantTree(C6X+t,C6Z+s2*1.02+(s2>0?.5:-.5),true);}}
 }
 initVillages();
+initCrowd();
 initEconomy();
 setDiff(loadSave());saveReady=true;renderSaveInfo();
-window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
