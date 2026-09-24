@@ -52,6 +52,10 @@ button:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px;}
 #start:disabled{opacity:.5;cursor:wait;}
 #start:not(:disabled):hover{box-shadow:0 0 34px rgba(232,193,112,.5), inset 0 0 22px rgba(232,193,112,.3);}
 #loadmsg{margin-top:12px;font-size:12px;color:rgba(243,230,200,.6);min-height:1.2em;}
+#saveInfo{margin-top:6px;font-size:12px;line-height:1.7;color:rgba(243,230,200,.8);text-shadow:0 1px 4px #000;}
+#saveInfo:empty{display:none;}
+#saveInfo b{color:var(--gold);font-weight:700;}
+#saveInfo button{margin-left:10px;font-size:11px;padding:2px 10px;border-radius:12px;border:1px solid rgba(255,140,110,.55);background:rgba(40,12,20,.55);color:#ffc8b8;cursor:pointer;}
 
 /* ---------- HUD ---------- */
 #hud{position:fixed;inset:0;z-index:10;pointer-events:none;opacity:0;transition:opacity .8s ease;}
@@ -135,6 +139,7 @@ body.mobile #titleLeft{display:flex;flex-direction:column;align-items:flex-start
 body.mobile #titleLeft .lead{order:1;margin-bottom:14px;}
 body.mobile #start{order:2;}
 body.mobile #loadmsg{order:3;margin:8px 0 10px;}
+body.mobile #saveInfo{order:3;margin:0 0 10px;}
 body.mobile #controls{order:4;margin:0;}
 @media (max-width:560px){
   #title{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;align-content:end;padding:calc(var(--st) + 18px) 20px calc(var(--sb) + 22px);
@@ -262,6 +267,7 @@ body.mobile #controls{order:4;margin:0;}
     <div id="diffSel"><button type="button" class="diffb" data-d="0">イージー</button><button type="button" class="diffb on" data-d="1">ノーマル</button><button type="button" class="diffb" data-d="2">ハード</button></div>
     <button id="start" type="button" disabled>降臨する</button>
     <div id="loadmsg">世界を生成しています…</div>
+    <div id="saveInfo"></div>
   </div>
 </div>
 
@@ -3016,8 +3022,8 @@ function finishMission(m,ok){ACTIVE.splice(ACTIVE.indexOf(m),1);
   if(ok){MANA+=m.mana;FAC[m.fac].rep+=m.rep;const o=m.fac==='emp'?'dem':'emp';if(m.repO)FAC[o].rep+=m.repO;PWR_BIAS+=m.pwr;showBanner('依頼達成　'+m.title,`魔晶 +${m.mana}　${FAC[m.fac].name}の信頼 +${m.rep}`);snd('coin',1);}
   else{FAC[m.fac].rep-=5;showBanner('依頼失敗　'+m.title,'');}
   for(const k of['emp','dem'])if(FAC[k].rep<=-40&&!FAC[k].hostile){FAC[k].hostile=true;COUNTRIES[k==='emp'?4:5].angered=true;toast(`⚔ ${FAC[k].name}はあなたを敵と定めた`);}
-  renderQuest();}
-let wT=0;
+  renderQuest();saveGame();}
+let wT=0,saveT=20;
 function updWorld(dt){if(!started)return;
   raidT-=dt;if(raidT<=0){raidT=rr(200,320);launchRaid();}
   warT-=dt;if(warT<=0){warT=rr(160,250);startBattle();}updBattles(dt);
@@ -3025,6 +3031,7 @@ function updWorld(dt){if(!started)return;
   for(const k of['emp','dem']){const C=COUNTRIES[k==='emp'?4:5];if(C.angered&&!FAC[k].hostile){FAC[k].hostile=true;FAC[k].rep=Math.min(FAC[k].rep,-40);toast(`⚔ ${FAC[k].name}と交戦状態に入った`);}}
   offerT-=dt;if(offerT<=0){offerT=rr(70,120);const f=['emp','dem'].filter(k=>!FAC[k].hostile);if(f.length&&OFFERS.length<3)offerMission(genMission(f[Math.random()*f.length|0]));}
   for(let i=OFFERS.length-1;i>=0;i--)if(gameTime>OFFERS[i].exp)OFFERS.splice(i,1);
+  saveT-=dt;if(saveT<=0){saveT=20;saveGame();}
   wT-=dt;if(wT>0)return;wT=.5;
   for(const m of ACTIVE.slice()){const [st,txt]=m.check();m.prog=txt||'';if(m.lim&&gameTime-m.t0>m.lim&&st===0){finishMission(m,false);continue;}if(st===1)finishMission(m,true);else if(st===-1)finishMission(m,false);}
   const p=worldPower();$('#power .ph').style.width=(p*100).toFixed(1)+'%';$('#power .pl').textContent=`人類 ${(p*100).toFixed(0)}%`;$('#power .pr').textContent=`${(100-p*100).toFixed(0)}% 魔王軍`;
@@ -3053,7 +3060,7 @@ function setDiff(d){DIFF=d;for(const B of BARRIERS){const k=B.hp/B.max;B.max=BAR
   for(const C of COUNTRIES){C.total=0;C.dest=0;}destroyedHp=0;TOTAL_HP=0;
   for(const b of buildings){const C=COUNTRIES[b.country];C.total+=b.maxHp;TOTAL_HP+=b.maxHp;if(b.destroyed){C.dest+=b.maxHp;destroyedHp+=b.maxHp;}}
   for(const e of enemies){if(!e.alive)continue;const nm=e.baseHp*((e.kind==='mage'||e.kind==='brute')?MAGE_HP[d]:EHP[d]);e.hp=e.hp/e.maxHp*nm;e.maxHp=nm;if(e.kind==='mage'||e.kind==='brute'){e.shMax=MAGE_SH[d]*(e.shMul||1);e.shield=Math.min(e.shield,e.shMax);}}
-  document.querySelectorAll('.diffb').forEach(b=>b.classList.toggle('on',+b.dataset.d===d));$('#diffBtn').textContent='難易度 '+DN[d];}
+  document.querySelectorAll('.diffb').forEach(b=>b.classList.toggle('on',+b.dataset.d===d));$('#diffBtn').textContent='難易度 '+DN[d];saveGame();}
 document.querySelectorAll('.diffb').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setDiff(+b.dataset.d);}));
 $('#diffBtn').addEventListener('click',e=>{e.stopPropagation();setDiff((DIFF+1)%3);showBanner('難易度 '+DN[DIFF],'');});
 $('#bookBtn').addEventListener('click',e=>{e.stopPropagation();toggleBook();});
@@ -3064,7 +3071,29 @@ $('#questBtn').addEventListener('click',e=>{e.stopPropagation();toggleQuest();})
 $('#quest .qx').addEventListener('click',e=>{e.stopPropagation();toggleQuest();});$('#wmap .mx').addEventListener('click',e=>{e.stopPropagation();toggleMap();});
 for(const id of['#quest','#wmap'])$(id).addEventListener('pointerdown',e=>e.stopPropagation());
 $('#quest').addEventListener('click',e=>{e.stopPropagation();const t=e.target;if(t.dataset.acc)acceptMission(+t.dataset.acc);else if(t.dataset.dec){const i=OFFERS.findIndex(m=>m.id===+t.dataset.dec);if(i>=0)OFFERS.splice(i,1);renderQuest();}
-  else if(t.dataset.buy){const it=SHOP.find(x=>x.k===t.dataset.buy);const l=UPG[it.k];if(l<it.max&&MANA>=it.c(l)){MANA-=it.c(l);UPG[it.k]++;it.fx();snd('coin',1);renderQuest();}else toast('魔晶が足りない');}});
+  else if(t.dataset.buy){const it=SHOP.find(x=>x.k===t.dataset.buy);const l=UPG[it.k];if(l<it.max&&MANA>=it.c(l)){MANA-=it.c(l);UPG[it.k]++;it.fx();snd('coin',1);renderQuest();saveGame();}else toast('魔晶が足りない');}});
+// ================= save =================
+// 進行状況（魔晶・工房の強化・勢力・難易度・撃破数）を保存する。街や建物の状態は保存せず、読み込み時は世界が元に戻る。
+const SAVE_KEY='hatenMadouou.save';let saveReady=false;
+function saveGame(){if(!saveReady||!started)return;
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,at:Date.now(),diff:DIFF,mana:MANA,upg:UPG,pwr:PWR_BIAS,kills,kb:KB,built:BUILT,farms:FARMS,
+    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}}}));}catch(e){}}
+function readSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&typeof s==='object'?s:null;}catch(e){return null;}}
+function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v==='number'&&isFinite(v)?v:d;
+  MANA=Math.max(0,Math.floor(num(s.mana,0)));
+  for(const it of SHOP){const l=Math.max(0,Math.min(it.max,Math.floor(num(s.upg&&s.upg[it.k],0))));for(let i=0;i<l;i++)it.fx();UPG[it.k]=l;}
+  pHP=PLAYER_MAX;
+  for(const k of['emp','dem']){const f=s.fac&&s.fac[k];if(!f)continue;FAC[k].rep=num(f.rep,0);FAC[k].hostile=!!f.hostile;}
+  PWR_BIAS=num(s.pwr,0);kills=Math.max(0,Math.floor(num(s.kills,0)));BUILT=Math.max(0,num(s.built,0));FARMS=Math.max(0,num(s.farms,0));
+  if(s.kb&&typeof s.kb==='object')for(const k in s.kb){const v=num(s.kb[k],0);if(v>0)KB[k]=v;}
+  return [0,1,2].includes(s.diff)?s.diff:1;}
+function renderSaveInfo(){const el=$('#saveInfo');const s=readSave();if(!s){el.innerHTML='';return;}
+  const d=new Date(s.at||0),lv=SHOP.reduce((a,it)=>a+(UPG[it.k]||0),0);
+  el.innerHTML=`<b>前回の記録</b>（${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}）　魔晶 ${MANA}・強化 計Lv${lv}・撃破 ${kills}<button type="button" id="saveDel">記録を消す</button>`;
+  $('#saveDel').addEventListener('click',e=>{e.stopPropagation();if(!confirm('保存された記録（魔晶・強化・勢力の信頼など）を消して、最初からやり直しますか？'))return;
+    saveReady=false;try{localStorage.removeItem(SAVE_KEY);}catch(e2){}location.reload();});}
+addEventListener('pagehide',saveGame);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)saveGame();});
 // ================= 村々・道場 =================
 function tintEnemy(e,hx,k){const c=new THREE.Color(hx);e.g.traverse(o=>{if(o.isMesh&&o.material&&o.material.color&&!o.material.isMeshBasicMaterial){o.material.color.lerp(c,k);}});if(e.base)e.base=e.mats.map(m=>({c:m.color.clone(),e:m.emissive?m.emissive.clone():null}));}
 const VMAT={};
@@ -3110,7 +3139,7 @@ function initVillages(){
   for(let t=-C6R+16;t<C6R-16;t+=16)for(const s2 of[-7.5,7.5]){if(Math.abs(t)>12){plantTree(C6X+t,C6Z+s2*1.02+(s2>0?.5:-.5),true);}}
 }
 initVillages();
-setDiff(1);
+setDiff(loadSave());saveReady=true;renderSaveInfo();
 window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS};
 })();
 </script>
