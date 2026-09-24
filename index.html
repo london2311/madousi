@@ -178,7 +178,19 @@ body.mobile #controls{order:4;margin:0;}
 #toast{position:absolute;left:50%;top:calc(var(--st,0px) + 96px);transform:translateX(-50%);padding:8px 16px;border-radius:18px;background:rgba(14,10,28,.85);border:1px solid rgba(232,193,112,.6);color:#f3e6c8;font-family:var(--mincho),serif;font-size:14px;opacity:0;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
 #toast.on{animation:toastA 6s ease forwards}@keyframes toastA{0%{opacity:0;transform:translate(-50%,-8px)}6%{opacity:1;transform:translate(-50%,0)}85%{opacity:1}100%{opacity:0}}
 #quest,#wmap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:min(600px,94vw);max-height:86vh;overflow:auto;padding:16px 18px 12px;border-radius:14px;background:rgba(14,10,28,.93);border:1px solid rgba(232,193,112,.5);box-shadow:0 0 40px rgba(120,80,220,.35);pointer-events:auto;opacity:0;visibility:hidden;transition:.2s;z-index:22;font-family:var(--mincho),serif;color:#eee}
-#wmap{width:min(560px,94vw)}#wmap canvas{width:100%;height:auto;border-radius:8px;display:block;margin-top:8px}
+#wmap{width:min(560px,94vw)}
+#realm{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:min(760px,96vw);max-height:86vh;overflow:auto;padding:16px 16px 12px;border-radius:14px;background:rgba(14,10,28,.93);border:1px solid rgba(232,193,112,.5);box-shadow:0 0 40px rgba(120,80,220,.35);pointer-events:auto;opacity:0;visibility:hidden;transition:.2s;z-index:21;font-family:var(--mincho),serif}
+#realm.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+#realm .wt{color:var(--gold);letter-spacing:.2em;text-align:center;font-size:18px}
+#realm .rh{font-size:12px;color:#d8ccb0;opacity:.8;text-align:center;margin:4px 0 10px;font-family:var(--gothic)}
+#realm .tw{overflow-x:auto}
+#realm table{width:100%;border-collapse:collapse;font-size:12.5px;white-space:nowrap}
+#realm th{font-weight:600;color:var(--gold);text-align:right;padding:4px 6px;border-bottom:1px solid #fff3;position:sticky;top:0;background:rgba(14,10,28,.97)}
+#realm th:first-child,#realm td:first-child{text-align:left}
+#realm td{text-align:right;padding:4px 6px;border-bottom:1px solid #ffffff10;color:#eee;font-variant-numeric:tabular-nums}
+#realm tr.dem td:first-child{color:#ff8a8a}#realm tr.emp td:first-child{color:#ffe08a}#realm tr.sum td{color:var(--gold);border-top:1px solid #fff3}
+#realm .up{color:#8fe8a0}#realm .dn{color:#ff8a7a}#realm .hp0{color:#ff7a6a}#realm .hp1{color:#f0d890}#realm .hp2{color:#9fe8b0}
+#realm .bf{text-align:right}#realm button{font-family:var(--mincho),serif;font-size:13px;padding:5px 12px;border-radius:14px;border:1px solid rgba(232,193,112,.5);background:#ffffff10;color:#f3e6c8;cursor:pointer;margin:8px 0 0}#wmap canvas{width:100%;height:auto;border-radius:8px;display:block;margin-top:8px}
 #quest.on,#wmap.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
 #quest .wt,#wmap .wt{color:var(--gold);letter-spacing:.2em;text-align:center;font-size:18px}
 #quest .qs{margin-top:12px;padding-top:8px;border-top:1px solid #fff2}#quest .qt{color:var(--gold);font-size:14px;margin-bottom:6px}
@@ -235,12 +247,13 @@ body.mobile #controls{order:4;margin:0;}
     <div class="bar hp"><i></i><b>2400</b></div>
     <div class="bar mp"><i></i><b>∞</b></div>
   </div>
-  <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button></div>
+  <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button><button class="tb" id="realmBtn" type="button">国勢</button></div>
   <div id="stats">
     <div class="lbl">王都ルーンヘイム 壊滅率</div>
     <div class="pct" id="ruinPct">0%</div>
     <div id="ruin"><i></i></div>
     <div class="sub" id="ruinTime">経過 0:00</div>
+    <div class="sub" id="ecoLine"></div>
     <div class="sub" id="kills">撃破 0</div>
     <div class="sub" id="barr"></div>
   </div>
@@ -253,6 +266,7 @@ body.mobile #controls{order:4;margin:0;}
   <div id="power"><span class="pl">人類 50%</span><div class="pb"><i class="ph"></i></div><span class="pr">50% 魔王軍</span></div>
   <div id="toast"></div>
   <div id="quest"><div class="wt">依頼書 ─ 世界の勢力</div><div class="qb"></div><div class="bf"><button type="button" class="qx">閉じる</button></div></div>
+  <div id="realm"><div class="wt">国勢 ─ 各国の暮らし</div><div class="rh">人口・幸福度・戦力と、食料・木材・鉱石の蓄え（矢印は増減の向き）</div><div class="tw"><table><thead><tr><th>国・村</th><th>人口</th><th>幸福</th><th>戦力</th><th>食料</th><th>木材</th><th>鉱石</th></tr></thead><tbody></tbody></table></div><div class="bf"><button type="button" class="rx">閉じる</button></div></div>
   <div id="wmap"><div class="wt">世界地図</div><canvas width="520" height="520"></canvas><div class="bf"><button type="button" class="mx">閉じる</button></div></div>
   <div id="bossbar"><div class="bn"></div><div class="bh"><i></i></div><div class="bs"><i></i></div></div>
   <div id="warp"><div class="wt">転移先</div></div>
@@ -1807,7 +1821,7 @@ function finishRestore(G,RM){
       const mi=MAGES.findIndex(m=>m.ci===ci);const m=MAGES[mi];
       if(m&&m.alive){m.active=false;m.shield=m.shMax;m.hp=m.maxHp;}
       else if(MAGE_DEFS[ci]){const nm=makeMage(MAGE_DEFS[ci]);if(mi>=0)MAGES[mi]=nm;else MAGES.push(nm);}
-      showBanner(C.label,'復興');}}
+      if(C.eco)C.eco.happyT=gameTime+180;showBanner(C.label,'復興');}}
 }
 function spawnWild(kind,near){
   for(let i=0;i<40;i++){
@@ -2355,6 +2369,7 @@ const SP={
       if(!ok)continue;later(.2+i*(1.6/Math.max(1,n)),()=>{const y=groundAt(x,z);const col=V3(x,y,z);
         glowSphere(col.clone().setY(y+1.2),.3,2.2,lin(6,5,3),.5);burst(col.clone().setY(y+1),18,5,1,1,.2,PC.gold,PC.white,1,1.5,-3);
         const e=new Enemy('citizen',x,z,{tc,inTown:false});e.wanderT=rr(.5,3);});}
+    if(C&&C.eco){C.eco.pop+=n*6;C.eco.cap+=n*3;}
   },
   build(P,s,K){
     const N=[2,6,15,35][K.t],RM=[30,60,110,180][K.t],G=P.clone();G.y=groundAt(P.x,P.z);
@@ -2378,7 +2393,7 @@ const SP={
   },
   flowers(P,s,K){
     FARMS++;
-    const RM=[20,45,90,160][K.t],N=Math.round([400,1400,3500,7000][K.t]*(IS_MOBILE?.45:1)),G=P.clone();G.y=groundAt(P.x,P.z);
+    const RM=[20,45,90,160][K.t];addField(P.x,P.z,RM*RM*3.1,'flowers');const N=Math.round([400,1400,3500,7000][K.t]*(IS_MOBILE?.45:1)),G=P.clone();G.y=groundAt(P.x,P.z);
     const PAL=[[1.7,.3,.55],[1.8,1.5,.2],[1.8,1.8,1.8],[.8,.35,1.7],[1.9,.6,.15],[.4,.7,1.9],[1.8,.15,.15]].map(a=>new THREE.Color(a[0],a[1],a[2]));
     magicCircle(G,Math.max(8,RM*.3),lin(8,3.5,6),2,{y:.5,spin:.5});snd('chime',1);burst(G,120,14*K.s,1.5,1.2,.3,PC.gold,PC.white,1,1,-3);
     const items=[];for(let i=0;i<N;i++){const a=Math.random()*Math.PI*2,r=Math.sqrt(Math.random())*RM;items.push({x:G.x+Math.cos(a)*r,z:G.z+Math.sin(a)*r,d:r});}
@@ -2391,7 +2406,7 @@ const SP={
   },
   wheat(P,s,K){
     FARMS++;
-    const S=[24,50,96,170][K.t],G=P.clone();G.y=groundAt(P.x,P.z);const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));
+    const S=[24,50,96,170][K.t],G=P.clone();G.y=groundAt(P.x,P.z);addField(G.x,G.z,S*S*.8,'wheat');const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));
     const inside=(x,z)=>{const dx=x-G.x,dz=z-G.z;return Math.abs(dx*f.x+dz*f.z)<S/2&&Math.abs(dx*rt.x+dz*rt.z)<S/2;};
     magicCircle(G,S*.35,lin(8,6,1.5),2.5,{y:.5,spin:.4});snd('whoosh',.8);later(.3,()=>snd('chime',.8));
     treesIn(G.x,G.z,S*.72,(t)=>{if(inside(t.x,t.z)&&fieldOk(t.x,t.z))removeTree(t,false);});killFlowers(G.x,G.z,0);
@@ -2405,7 +2420,7 @@ const SP={
   },
   paddy(P,s,K){
     FARMS++;
-    const S=[20,40,80,140][K.t],PS=10,G=P.clone();G.y=groundAt(P.x,P.z);const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));
+    const S=[20,40,80,140][K.t],PS=10,G=P.clone();G.y=groundAt(P.x,P.z);addField(G.x,G.z,S*S*.8,'paddy');const yaw=camYaw,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));
     magicCircle(G,S*.35,lin(2.5,6,5.5),2.5,{y:.5,spin:.4});snd('whoosh',.8);later(.4,()=>snd('chime',.8));
     const n=Math.max(2,Math.round(S/PS)),items=[];
     for(let a=0;a<n;a++)for(let b=0;b<n;b++){const u=(a-(n-1)/2)*PS,v=(b-(n-1)/2)*PS;const x=G.x+f.x*u+rt.x*v,z=G.z+f.z*u+rt.z*v;
@@ -2786,7 +2801,7 @@ let pointerLocked=false;
 addEventListener('keydown',e=>{
   if(!started)return;
   keys[e.code]=true;
-  const n=e.code.startsWith('Digit')?+e.code.slice(5):parseInt(e.key,10);if(questOpen){if(e.code==='KeyJ'||e.code==='Escape')toggleQuest();return;}if(mapOpen){if(e.code==='KeyN'||e.code==='Escape')toggleMap();return;}if(e.code==='KeyJ'){toggleQuest();return;}if(e.code==='KeyN'){toggleMap();return;}if(bookOpen){if(e.code==='KeyB'||e.code==='Escape')toggleBook();return;}if(warpOpen){if(n>=1&&n<=WARPS.length)travelTo(n-1);if(e.code==='Escape'||e.code==='KeyH')toggleWarp();return;}if(e.code==='KeyB'){toggleBook();return;}if(n>=1&&n<=9){if(SLOTS[n-1]!=null)cast(SLOTS[n-1]);}else if(n===0&&e.code==='Digit0'){if(SLOTS[9]!=null)cast(SLOTS[9]);}
+  const n=e.code.startsWith('Digit')?+e.code.slice(5):parseInt(e.key,10);if(questOpen){if(e.code==='KeyJ'||e.code==='Escape')toggleQuest();return;}if(mapOpen){if(e.code==='KeyN'||e.code==='Escape')toggleMap();return;}if(realmOpen){if(e.code==='KeyK'||e.code==='Escape')toggleRealm();return;}if(e.code==='KeyK'){toggleRealm();return;}if(e.code==='KeyJ'){toggleQuest();return;}if(e.code==='KeyN'){toggleMap();return;}if(bookOpen){if(e.code==='KeyB'||e.code==='Escape')toggleBook();return;}if(warpOpen){if(n>=1&&n<=WARPS.length)travelTo(n-1);if(e.code==='Escape'||e.code==='KeyH')toggleWarp();return;}if(e.code==='KeyB'){toggleBook();return;}if(n>=1&&n<=9){if(SLOTS[n-1]!=null)cast(SLOTS[n-1]);}else if(n===0&&e.code==='Digit0'){if(SLOTS[9]!=null)cast(SLOTS[9]);}
   if(e.code==='KeyF')toggleFly();
   if(e.code==='KeyQ')setTier(TIER-1);
   if(e.code==='KeyH')travel();
@@ -2866,7 +2881,7 @@ function renderBook(){const g=$('#book .bg');if(!g)return;g.innerHTML='';
 rebuildBar();
 $('#controls').innerHTML=IS_MOBILE?
   '<dt>移動</dt><dd>画面の左側をなぞる</dd><dt>視点</dt><dd>画面の右側をなぞる</dd><dt>魔法</dt><dd>下の紋章をタップ（照準は画面中央）。「魔法書」で並びを編成</dd><dt>飛翔</dt><dd>「飛」で切替、「昇」「降」で高度</dd><dt>威力</dt><dd>「弱・中・強・極」をタップ</dd><dt>転移</dt><dd>「転」で転移先を選択</dd>':
-  '<dt>移動</dt><dd>WASD　疾走 Shift</dd><dt>視点</dt><dd>マウス（クリックで固定、Escで解除。固定できない時はドラッグ）</dd><dt>魔法</dt><dd>1〜9・0キー（B の魔法書で編成）、またはクリックで選択中の魔法</dd><dt>飛翔</dt><dd>F で切替　上昇 Space　下降 C</dd><dt>威力</dt><dd>Q／E で 弱・中・強・極 を切替</dd><dt>転移</dt><dd>H で転移先を選択（天穹楼・各国）</dd><dt>世界</dt><dd>J 依頼書（勢力・依頼・強化）　N 世界地図</dd><dt>音</dt><dd>M で切替</dd>';
+  '<dt>移動</dt><dd>WASD　疾走 Shift</dd><dt>視点</dt><dd>マウス（クリックで固定、Escで解除。固定できない時はドラッグ）</dd><dt>魔法</dt><dd>1〜9・0キー（B の魔法書で編成）、またはクリックで選択中の魔法</dd><dt>飛翔</dt><dd>F で切替　上昇 Space　下降 C</dd><dt>威力</dt><dd>Q／E で 弱・中・強・極 を切替</dd><dt>転移</dt><dd>H で転移先を選択（天穹楼・各国）</dd><dt>世界</dt><dd>J 依頼書（勢力・依頼・強化）　N 世界地図　K 国勢</dd><dt>音</dt><dd>M で切替</dd>';
 
 // ================= aim =================
 const aimPoint=V3();const camDir=V3();
@@ -2925,6 +2940,7 @@ function updHud(dt){
   $('#ruinPct').textContent=(pct>=99.95?'100':pct.toFixed(1))+'%';$('#ruin i').style.width=Math.min(100,pct)+'%';
   $('#ruinTime').textContent=CC.start<0?'まだ手付かず':('経過 '+fmtTime((CC.done?CC.doneAt:gameTime)-CC.start));
   $('#kills').textContent='撃破 '+kills;
+  {const E=CC.eco;$('#ecoLine').textContent=E?`人口 ${fmtN(E.pop)}${arrow(E.dPop)}　幸福 ${Math.round(E.hap)}　食料 ${fmtN(E.food)}${arrow(E.dFood)}`:'';}
   updMini();
 }
 let ruinEnd=-1;function ruinDoneAt(){if(ruinEnd<0)ruinEnd=gameTime;return ruinEnd;}
@@ -3098,7 +3114,7 @@ function updBattles(dt){for(const bt of BATTLES){if(bt.over){if(gameTime>bt.clea
     if(!ea&&!da)w='draw';else if(!da)w='emp';else if(!ea)w='dem';else if(gameTime-bt.t0>330)w=ea>=da?'emp':'dem';
     if(w){bt.over=true;bt.win=w;bt.clear=gameTime+60;for(const s2 of['emp','dem'])for(const u of bt.u[s2])u.war=null;
       if(w==='emp'){PWR_BIAS+=1.5;showBanner('帝国軍、'+bt.f.n+'にて勝利','人類の勢力が増した');}else if(w==='dem'){PWR_BIAS-=1.5;showBanner('魔王軍、'+bt.f.n+'にて勝利','魔王軍の勢力が増した');}}}}
-function countKill(e){if(e.war){const o=e.war==='emp'?'dem':'emp';FAC[e.war].rep-=1.2;FAC[o].rep+=.4;}const k=(e.fac||'x')+'_'+(e.rank||e.kind);KB[k]=(KB[k]||0)+1;KB[e.kind]=(KB[e.kind]||0)+1;}
+function countKill(e){if(e.kind==='citizen'){const ci=countryAt(e.pos.x,e.pos.z);if(ci>=0&&COUNTRIES[ci].eco)COUNTRIES[ci].eco.pop=Math.max(0,COUNTRIES[ci].eco.pop-6);}if(e.war){const o=e.war==='emp'?'dem':'emp';FAC[e.war].rep-=1.2;FAC[o].rep+=.4;}const k=(e.fac||'x')+'_'+(e.rank||e.kind);KB[k]=(KB[k]||0)+1;KB[e.kind]=(KB[e.kind]||0)+1;}
 function worldPower(){let H=0,D=0;COUNTRIES.forEach((C,i)=>{if(!C.total)return;const k=1-C.dest/C.total;const w=i===4||i===5?10:C.settle?.5:1;if(C.faction==='dem')D+=w*k;else H+=w*k;});
   for(const m of MAGES){if(!m.alive)continue;const w=m.rank==='king'?6:m.rank==='elite'?.5:m.rank==='soldier'?.08:.3;if(m.fac==='dem')D+=w;else H+=w;}
   H+=Math.max(0,PWR_BIAS);D+=Math.max(0,-PWR_BIAS);return H/Math.max(.01,H+D);}
@@ -3152,6 +3168,7 @@ function updWorld(dt){if(!started)return;
   offerT-=dt;if(offerT<=0){offerT=rr(70,120);const f=['emp','dem'].filter(k=>!FAC[k].hostile);if(f.length&&OFFERS.length<3)offerMission(genMission(f[Math.random()*f.length|0]));}
   for(let i=OFFERS.length-1;i>=0;i--)if(gameTime>OFFERS[i].exp)OFFERS.splice(i,1);
   saveT-=dt;if(saveT<=0){saveT=20;saveGame();}
+  updEconomy(dt);
   wT-=dt;if(wT>0)return;wT=.5;
   for(const m of ACTIVE.slice()){const [st,txt]=m.check();m.prog=txt||'';if(m.lim&&gameTime-m.t0>m.lim&&st===0){finishMission(m,false);continue;}if(st===1)finishMission(m,true);else if(st===-1)finishMission(m,false);}
   const p=worldPower();$('#power .ph').style.width=(p*100).toFixed(1)+'%';$('#power .pl').textContent=`人類 ${(p*100).toFixed(0)}%`;$('#power .pr').textContent=`${(100-p*100).toFixed(0)}% 魔王軍`;
@@ -3188,16 +3205,79 @@ $('#book .bx').addEventListener('click',e=>{e.stopPropagation();toggleBook();});
 $('#book .bd').addEventListener('click',e=>{e.stopPropagation();SLOTS=SLOT_DEF.map(id=>SPELLS.findIndex(s=>s.id===id));saveSlots();rebuildBar();});
 $('#book').addEventListener('pointerdown',e=>e.stopPropagation());
 $('#questBtn').addEventListener('click',e=>{e.stopPropagation();toggleQuest();});$('#mapBtn').addEventListener('click',e=>{e.stopPropagation();toggleMap();});
-$('#quest .qx').addEventListener('click',e=>{e.stopPropagation();toggleQuest();});$('#wmap .mx').addEventListener('click',e=>{e.stopPropagation();toggleMap();});
+$('#quest .qx').addEventListener('click',e=>{e.stopPropagation();toggleQuest();});$('#realmBtn').addEventListener('click',e=>{e.stopPropagation();toggleRealm();});$('#realm .rx').addEventListener('click',e=>{e.stopPropagation();toggleRealm();});$('#realm').addEventListener('pointerdown',e=>e.stopPropagation());$('#wmap .mx').addEventListener('click',e=>{e.stopPropagation();toggleMap();});
 for(const id of['#quest','#wmap'])$(id).addEventListener('pointerdown',e=>e.stopPropagation());
 $('#quest').addEventListener('click',e=>{e.stopPropagation();const t=e.target;if(t.dataset.acc)acceptMission(+t.dataset.acc);else if(t.dataset.dec){const i=OFFERS.findIndex(m=>m.id===+t.dataset.dec);if(i>=0)OFFERS.splice(i,1);renderQuest();}
   else if(t.dataset.buy){const it=SHOP.find(x=>x.k===t.dataset.buy);const l=UPG[it.k];if(l<it.max&&MANA>=it.c(l)){MANA-=it.c(l);UPG[it.k]++;it.fx();snd('coin',1);renderQuest();saveGame();}else toast('魔晶が足りない');}});
+// ================= 国勢（経済） =================
+// 国ごとの人口・幸福度・戦力と、食料・木材・鉱石の蓄えを1秒ごとに動かす。数値は「1分あたり」で考える。
+const FIELDS=[];
+const FIELD_Y={wheat:1,paddy:1.3,flowers:0};
+function addField(x,z,area,type){FIELDS.push({x,z,area,type,ci:-1});}
+const ORE_BASE=[26,34,12,60,160,160,28];// 王都・神楽京・アズラーン・エーテリア・帝都・魔都・桜花京（村は少し）
+let ecoT=0,ecoSlow=0,realmOpen=false;
+const fmtN=v=>Math.round(v).toLocaleString();
+const arrow=d=>d>.5?'↑':d<-.5?'↓':'';
+function popCapOf(ci){let c=0;for(const b of buildings){if(b.country!==ci||b.destroyed)continue;c+=b.kind==='house'?14:b.wall?0:6;}const C=COUNTRIES[ci];return c*(C.big?3:1);}
+function nearestCi(x,z){let bi=-1,bd=1e9;COUNTRIES.forEach((C,i)=>{const d=Math.hypot(C.x-x,C.z-z)-C.r;if(d<bd){bd=d;bi=i;}});return bi;}
+function ecoInitOne(ci){const C=COUNTRIES[ci];const cap=popCapOf(ci);
+  C.eco={cap,pop:cap*.85,hap:65,food:cap*3,wood:C.village?120:cap*.8,ore:(ORE_BASE[ci]||(C.village?4:6))*20,mil:0,dPop:0,dFood:0,dWood:0,dOre:0,wood0:0,fieldY:0,flowerA:0,happyT:0};}
+function initEconomy(){COUNTRIES.forEach((C,i)=>ecoInitOne(i));ecoRecount();}
+// 重い集計（畑・森・兵力）は数秒ごと
+function ecoRecount(){
+  for(const C of COUNTRIES){if(!C.eco)continue;C.eco.fieldY=0;C.eco.flowerA=0;}
+  for(const f of FIELDS){if(f.ci<0||f.ci>=COUNTRIES.length)f.ci=nearestCi(f.x,f.z);const E=COUNTRIES[f.ci]&&COUNTRIES[f.ci].eco;if(!E)continue;
+    if(f.type==='flowers')E.flowerA+=f.area;else E.fieldY+=f.area/100*FIELD_Y[f.type];}
+  COUNTRIES.forEach((C,ci)=>{const E=C.eco;if(!E)return;
+    let w=0;treesIn(C.x,C.z,C.r+160,t=>{if(t.state===0)w++;});E.wood0=w;
+    E.cap=Math.max(20,popCapOf(ci));});
+  const mil=COUNTRIES.map(()=>0);
+  for(const e of enemies){if(!e.alive||e.kind==='citizen'||e.war)continue;const ci=e.kind==='mage'||e.kind==='brute'?e.ci:countryAt(e.pos.x,e.pos.z);if(ci==null||ci<0||!COUNTRIES[ci])continue;
+    const v=e.kind==='mage'||e.kind==='brute'?(e.rank==='king'?3000:e.rank==='elite'?500:e.rank==='soldier'?60:320):e.kind==='archer'?8:e.kind==='knight'||e.kind==='demon'?12:e.kind==='golem'?30:4;mil[ci]+=v*(e.elite?3:1);}
+  for(const bt of BATTLES)if(!bt.over)for(const side of['emp','dem'])for(const u of bt.u[side])if(u.alive)mil[side==='emp'?4:5]+=u.kind==='mage'?60:12*(u.elite?3:1);
+  COUNTRIES.forEach((C,ci)=>{if(C.eco)C.eco.milRaw=mil[ci];});}
+function updEconomy(dt){ecoT-=dt;if(ecoT>0)return;ecoT=1;const k=1/60;
+  ecoSlow-=1;if(ecoSlow<=0){ecoSlow=4;ecoRecount();}
+  COUNTRIES.forEach((C,ci)=>{if(!C.eco)ecoInitOne(ci);const E=C.eco;const dr=C.total?C.dest/C.total:0;
+    const p0=E.pop,f0=E.food,w0=E.wood,o0=E.ore;
+    // 食料：町の周りの農地（人口に見合う分）＋畑。消費は人口の1/10。
+    const base=C.village?E.cap/10*.6:E.cap/10*.95;
+    const prodF=(base+E.fieldY)*(1-dr*.9)*(.6+E.hap/250);
+    const useF=E.pop/10;E.food=Math.max(0,E.food+(prodF-useF)*k);
+    // 木材：近くの森から。建物の修繕と暮らしに使う。
+    const prodW=Math.min(E.wood0,400)*.1*(1-dr*.7),useW=E.pop/60+(dr>.05?E.cap/40*dr:0);E.wood=Math.max(0,E.wood+(prodW-useW)*k);
+    // 鉱石：鉱山から。兵の武具に使う。
+    const prodO=(ORE_BASE[ci]||(C.village?3:5))*(1-dr*.8),useO=(E.milRaw||0)/400;E.ore=Math.max(0,E.ore+(prodO-useO)*k);
+    // 蓄えの上限
+    E.food=Math.min(E.food,E.pop*20+500);E.wood=Math.min(E.wood,E.cap*6+500);E.ore=Math.min(E.ore,E.cap*4+(ORE_BASE[ci]||5)*40);
+    // 幸福度
+    const raid=RAIDS.some(r=>r.ci===ci&&r.units.some(u=>u.alive));
+    let tgt=62+Math.min(14,E.flowerA/3000)+Math.min(8,E.fieldY/20)-dr*70-(C.angered?14:0)-(raid?16:0)-(E.food<=0?30:0)-(E.wood<=0?6:0)+(E.happyT>gameTime?12:0);
+    if(C.faction==='dem')tgt-=6;E.hap=clamp(E.hap+(clamp(tgt,0,100)-E.hap)*.04,0,100);
+    // 人口：満ち足りれば増え、飢えや荒廃で減る
+    let g=E.food>0?E.pop*.03*(E.hap-40)/60:-E.pop*.06;if(E.pop>E.cap)g=Math.min(g,-(E.pop-E.cap)*.25);else g=Math.min(g,(E.cap-E.pop)*.5);
+    E.pop=Math.max(0,E.pop+g*k);
+    // 戦力：兵と民兵、武具（鉱石）の蓄えで上下
+    E.mil=(E.milRaw||0)*(E.ore>0?1:.7)+E.pop*.05;
+    E.dPop=lerp(E.dPop,(E.pop-p0)*60,.3);E.dFood=lerp(E.dFood,(E.food-f0)*60,.3);E.dWood=lerp(E.dWood,(E.wood-w0)*60,.3);E.dOre=lerp(E.dOre,(E.ore-o0)*60,.3);});
+  // 交易：人類側の余った食料を、足りない国へ回す
+  const hum=COUNTRIES.filter(C=>C.eco&&C.faction!=='dem');const need=hum.filter(C=>C.eco.food<C.eco.pop*2),have=hum.filter(C=>C.eco.food>C.eco.pop*6);
+  for(const n of need){const h=have.find(C=>C.eco.food>C.eco.pop*6);if(!h)break;const amt=Math.min((h.eco.food-h.eco.pop*6)*.1,n.eco.pop*2-n.eco.food);if(amt>0){h.eco.food-=amt;n.eco.food+=amt;}}
+  if(realmOpen)renderRealm();}
+function toggleRealm(){realmOpen=!realmOpen;$('#realm').classList.toggle('on',realmOpen);if(realmOpen){renderRealm();if(document.pointerLockElement)document.exitPointerLock();}}
+function renderRealm(){const tb=$('#realm tbody');if(!tb)return;const cell=(v,d)=>`${fmtN(v)}<span class="${d>.5?'up':d<-.5?'dn':''}">${arrow(d)||'　'}</span>`;
+  let sum={pop:0,mil:0,food:0,wood:0,ore:0};
+  let h=COUNTRIES.map((C,ci)=>{const E=C.eco;if(!E)return'';for(const k in sum)sum[k]+=E[k];const hc=E.hap<35?'hp0':E.hap<65?'hp1':'hp2';
+    return `<tr class="${C.faction||''}"><td>${C.label.replace('神聖ヴァルガルド帝国 ','')}</td><td>${cell(E.pop,E.dPop)}</td><td class="${hc}">${Math.round(E.hap)}</td><td>${fmtN(E.mil)}</td><td>${cell(E.food,E.dFood)}</td><td>${cell(E.wood,E.dWood)}</td><td>${cell(E.ore,E.dOre)}</td></tr>`;}).join('');
+  h+=`<tr class="sum"><td>全土</td><td>${fmtN(sum.pop)}</td><td></td><td>${fmtN(sum.mil)}</td><td>${fmtN(sum.food)}</td><td>${fmtN(sum.wood)}</td><td>${fmtN(sum.ore)}</td></tr>`;
+  tb.innerHTML=h;}
 // ================= save =================
 // 進行状況（魔晶・工房の強化・勢力・難易度・撃破数）を保存する。街や建物の状態は保存せず、読み込み時は世界が元に戻る。
-const SAVE_KEY='hatenMadouou.save';let saveReady=false;
+const SAVE_KEY='hatenMadouou.save';const ECO_FIXED=7+VILL.length;let saveReady=false;
 function saveGame(){if(!saveReady||!started)return;
   try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,at:Date.now(),diff:DIFF,mana:MANA,upg:UPG,pwr:PWR_BIAS,kills,kb:KB,built:BUILT,farms:FARMS,
-    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N}));}catch(e){}}
+    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,
+    eco:COUNTRIES.slice(0,ECO_FIXED).map(C=>C.eco?[Math.round(C.eco.pop),Math.round(C.eco.hap),Math.round(C.eco.food),Math.round(C.eco.wood),Math.round(C.eco.ore)]:null)}));}catch(e){}}
 function readSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&typeof s==='object'?s:null;}catch(e){return null;}}
 function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v==='number'&&isFinite(v)?v:d;
   MANA=Math.max(0,Math.floor(num(s.mana,0)));
@@ -3206,6 +3286,7 @@ function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v=
   for(const k of['emp','dem']){const f=s.fac&&s.fac[k];if(!f)continue;FAC[k].rep=num(f.rep,0);FAC[k].hostile=!!f.hostile;}
   PWR_BIAS=num(s.pwr,0);kills=Math.max(0,Math.floor(num(s.kills,0)));BUILT=Math.max(0,num(s.built,0));FARMS=Math.max(0,num(s.farms,0));
   if(s.kb&&typeof s.kb==='object')for(const k in s.kb){const v=num(s.kb[k],0);if(v>0)KB[k]=v;}
+  if(Array.isArray(s.eco))s.eco.forEach((a,i)=>{const C=COUNTRIES[i];if(!C||!C.eco||!Array.isArray(a))return;const [p,h,f,w,o]=a.map(v=>Math.max(0,num(v,0)));C.eco.pop=p;C.eco.hap=Math.min(100,h);C.eco.food=f;C.eco.wood=w;C.eco.ore=o;});
   if(Array.isArray(s.combos))for(const id of s.combos)if(COMBOS.some(c=>c.id===id))COMBO_SEEN.add(id);COMBO_N=Math.max(0,Math.floor(num(s.comboN,0)));
   return [0,1,2].includes(s.diff)?s.diff:1;}
 function renderSaveInfo(){const el=$('#saveInfo');const s=readSave();if(!s){el.innerHTML='';return;}
@@ -3228,11 +3309,11 @@ function makeDojo(ci,x,z,ry){const M3=THREE.BufferGeometryUtils.mergeBufferGeome
     const bar=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,1.6,6),VMAT.dw);bar.rotation.z=Math.PI/2;bar.position.y=1.7;g.add(bar);const hd=new THREE.Mesh(new THREE.SphereGeometry(.32,8,6),VMAT.straw);hd.position.y=2.5;g.add(hd);scene.add(g);}
   for(let k=0;k<4;k++){const e=new Enemy('knight',yx+rr(-6,6),yz+rr(-5,5),{tc:{x:yx,z:yz,r:12},aggroR:14});e.inTown=false;tintEnemy(e,[0xf0ece0,0x2a3a6a,0x6a1818,0x2a2a2a][k],.6);}
   return b;}
-function villageWheat(cx,cz,S,yaw){const f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));const sp=IS_MOBILE?2.4:1.8;
+function villageWheat(cx,cz,S,yaw){addField(cx,cz,S*S*.8,'wheat');const f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));const sp=IS_MOBILE?2.4:1.8;
   const cA=new THREE.Color(1.35,1.0,.35),cB=new THREE.Color(1.15,.8,.25);const G=V3(cx,0,cz);
   tintGround(G,S*.75,[.34,.24,.1],.75,(x,z)=>{const dx=x-cx,dz=z-cz;return Math.abs(dx*f.x+dz*f.z)<S/2&&Math.abs(dx*rt.x+dz*rt.z)<S/2;});
   for(let u=-S/2;u<S/2;u+=sp)for(let v=-S/2;v<S/2;v+=sp*.8){if(Math.abs((v/sp/.8)%6)<.9)continue;const x=cx+f.x*u+rt.x*v,z=cz+f.z*u+rt.z*v;spawnCrop(x,heightAt(x,z),z,Math.random()<.5?cA:cB,rr(.9,1.2),rr(1.3,1.7));}}
-function villagePaddy(cx,cz,S,yaw){const PS=10,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));const n=Math.max(2,Math.round(S/PS));const rc=new THREE.Color(.35,.85,.25),rc2=new THREE.Color(.28,.7,.2);
+function villagePaddy(cx,cz,S,yaw){addField(cx,cz,S*S*.8,'paddy');const PS=10,f=V3(Math.sin(yaw),0,Math.cos(yaw)),rt=V3(-Math.cos(yaw),0,Math.sin(yaw));const n=Math.max(2,Math.round(S/PS));const rc=new THREE.Color(.35,.85,.25),rc2=new THREE.Color(.28,.7,.2);
   for(let a=0;a<n;a++)for(let b=0;b<n;b++){const u=(a-(n-1)/2)*PS,v=(b-(n-1)/2)*PS;const x=cx+f.x*u+rt.x*v,z=cz+f.z*u+rt.z*v;let hmax=-1e9,hmin=1e9;
     for(const [du,dv] of [[-1,-1],[1,-1],[-1,1],[1,1]]){const h=heightAt(x+(f.x*du+rt.x*dv)*PS*.5,z+(f.z*du+rt.z*dv)*PS*.5);hmax=Math.max(hmax,h);hmin=Math.min(hmin,h);}if(hmin<.5)continue;
     const top=hmax+.35,bot=hmin-1.5;const i=padI;padI=(padI+1)%PAD_N;padEarth.count=padWater.count=Math.max(padEarth.count,i+1);plots[i]={x,z,s:PS};
@@ -3260,6 +3341,7 @@ function initVillages(){
   for(let t=-C6R+16;t<C6R-16;t+=16)for(const s2 of[-7.5,7.5]){if(Math.abs(t)>12){plantTree(C6X+t,C6Z+s2*1.02+(s2>0?.5:-.5),true);}}
 }
 initVillages();
+initEconomy();
 setDiff(loadSave());saveReady=true;renderSaveInfo();
 window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
