@@ -190,6 +190,16 @@ body.spec #bar,body.spec #tier,body.spec #cross,body.spec #acts,body.spec #bossb
 #spec .sc{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:8px}
 #spec button{font-family:var(--mincho),serif;font-size:13px;min-width:44px;padding:5px 10px;border-radius:14px;border:1px solid rgba(232,193,112,.5);background:#ffffff10;color:#f3e6c8;cursor:pointer}
 #spec .sh{font-size:11px;color:#d8ccb0;opacity:.7;margin-top:6px;font-family:var(--gothic)}
+#ending{position:fixed;inset:0;z-index:40;display:none;place-items:center;overflow-y:auto;padding:calc(var(--st) + 20px) 18px calc(var(--sb) + 20px);
+  background:radial-gradient(ellipse at 50% 40%,rgba(60,40,20,.55),rgba(8,5,16,.94) 70%);font-family:var(--mincho),serif;text-align:center;pointer-events:auto}
+#ending.on{display:grid;animation:endIn 2.4s ease both}@keyframes endIn{0%{opacity:0}100%{opacity:1}}
+#ending .ek{font-size:14px;letter-spacing:.8em;text-indent:.8em;color:var(--gold)}
+#ending .en{font-size:clamp(34px,7vw,72px);font-weight:800;letter-spacing:.25em;text-indent:.25em;margin:.3em 0;background:linear-gradient(180deg,#fff6da 0%,#e8c170 50%,#9a6a2a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 18px rgba(255,190,90,.45))}
+#ending .et{max-width:34em;margin:0 auto;font-size:clamp(14px,1.8vw,17px);line-height:2;color:var(--parch);text-shadow:0 1px 6px #000}
+#ending .es{margin:18px auto 0;font-size:13px;color:#d8ccb0;line-height:1.9;font-family:var(--gothic)}
+#ending button{margin-top:22px;font-family:var(--mincho),serif;font-size:17px;letter-spacing:.3em;padding:11px 30px;border:1px solid rgba(232,193,112,.8);border-radius:2px;background:linear-gradient(180deg,rgba(60,40,90,.6),rgba(20,12,40,.75));color:var(--gold-hi);cursor:pointer}
+#realm td.rl{color:#c9b8ff}#realm td.al{color:#9fe8b0}
+#quest .peace{border-color:#9fe8b0;color:#c8ffd8}
 #realm{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:min(760px,96vw);max-height:86vh;overflow:auto;padding:16px 16px 12px;border-radius:14px;background:rgba(14,10,28,.93);border:1px solid rgba(232,193,112,.5);box-shadow:0 0 40px rgba(120,80,220,.35);pointer-events:auto;opacity:0;visibility:hidden;transition:.2s;z-index:21;font-family:var(--mincho),serif}
 #realm.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
 #realm .wt{color:var(--gold);letter-spacing:.2em;text-align:center;font-size:18px}
@@ -278,7 +288,8 @@ body.spec #bar,body.spec #tier,body.spec #cross,body.spec #acts,body.spec #bossb
   <div id="toast"></div>
   <div id="quest"><div class="wt">依頼書 ─ 世界の勢力</div><div class="qb"></div><div class="bf"><button type="button" class="qx">閉じる</button></div></div>
   <div id="spec"><div class="sn"></div><div class="ss"></div><div class="sb"><i></i></div><div class="sc"><button type="button" data-s="prev">◀ 前</button><button type="button" data-s="next">次 ▶</button><button type="button" data-s="in">寄る</button><button type="button" data-s="out">引く</button><button type="button" data-s="spd">×1</button><button type="button" data-s="x">戻る</button></div><div class="sh"></div></div>
-  <div id="realm"><div class="wt">国勢 ─ 各国の暮らし</div><div class="rh">人口・幸福度・戦力と、食料・木材・鉱石の蓄え（矢印は増減の向き）</div><div class="tw"><table><thead><tr><th>国・村</th><th>人口</th><th>幸福</th><th>戦力</th><th>食料</th><th>木材</th><th>鉱石</th></tr></thead><tbody></tbody></table></div><div class="bf"><button type="button" class="rx">閉じる</button></div></div>
+  <div id="ending"><div><div class="ek">結末</div><div class="en"></div><div class="et"></div><div class="es"></div><button type="button">この世界に留まる</button></div></div>
+  <div id="realm"><div class="wt">国勢 ─ 各国の暮らし</div><div class="rh">人口・幸福度・戦力と、食料・木材・鉱石の蓄え（矢印は増減の向き）。8割以上壊した国は属国に、恩を積んで幸福にした国は盟友になる</div><div class="tw"><table><thead><tr><th>国・村</th><th>人口</th><th>幸福</th><th>戦力</th><th>食料</th><th>木材</th><th>鉱石</th><th>関係</th></tr></thead><tbody></tbody></table></div><div class="bf"><button type="button" class="rx">閉じる</button></div></div>
   <div id="wmap"><div class="wt">世界地図</div><canvas width="520" height="520"></canvas><div class="bf"><button type="button" class="mx">閉じる</button></div></div>
   <div id="bossbar"><div class="bn"></div><div class="bh"><i></i></div><div class="bs"><i></i></div></div>
   <div id="warp"><div class="wt">転移先</div></div>
@@ -1833,7 +1844,7 @@ function finishRestore(G,RM){
       const mi=MAGES.findIndex(m=>m.ci===ci);const m=MAGES[mi];
       if(m&&m.alive){m.active=false;m.shield=m.shMax;m.hp=m.maxHp;}
       else if(MAGE_DEFS[ci]){const nm=makeMage(MAGE_DEFS[ci]);if(mi>=0)MAGES[mi]=nm;else MAGES.push(nm);}
-      if(C.eco)C.eco.happyT=gameTime+180;showBanner(C.label,'復興');}}
+      if(C.eco)C.eco.happyT=gameTime+180;addFavor(ci,20);showBanner(C.label,'復興');}}
 }
 function spawnWild(kind,near){
   for(let i=0;i<40;i++){
@@ -2388,7 +2399,7 @@ const SP={
       if(!ok)continue;later(.2+i*(1.6/Math.max(1,n)),()=>{const y=groundAt(x,z);const col=V3(x,y,z);
         glowSphere(col.clone().setY(y+1.2),.3,2.2,lin(6,5,3),.5);burst(col.clone().setY(y+1),18,5,1,1,.2,PC.gold,PC.white,1,1.5,-3);
         const e=new Enemy('citizen',x,z,{tc,inTown:false});e.wanderT=rr(.5,3);});}
-    if(C&&C.eco){C.eco.pop+=n*6;C.eco.cap+=n*3;}
+    if(C&&C.eco){C.eco.pop+=n*6;C.eco.cap+=n*3;addFavor(ci,2);}
   },
   build(P,s,K){
     const N=[2,6,15,35][K.t],RM=[30,60,110,180][K.t],G=P.clone();G.y=groundAt(P.x,P.z);
@@ -3156,7 +3167,7 @@ function crowdDamage(u,dmg,imp,src,type){if(u.st!==1)return;if(src==='p')dmg*=P_
   if(u.hp>0)return;u.st=2;u.t=0;if(u.g)u.g.n[u.sd]--;
   if(imp){u.vx=imp.x;u.vy=Math.max(imp.y,6);u.vz=imp.z;u.fling=true;}else{u.vx=u.vz=0;u.vy=0;u.fling=false;}
   if(src==='p'){kills++;const side=CR_SIDE[u.sd];KB[side+'_crowd']=(KB[side+'_crowd']||0)+1;if(u.sd===1)KB.demon=(KB.demon||0)+1;
-    if(u.mode==='battle'){FAC[side].rep-=.15;FAC[CR_SIDE[1-u.sd]].rep+=.05;}else if(u.mode==='garrison'){COUNTRIES[u.sd?5:4].angered=true;}}}
+    if(u.mode==='battle'){FAC[side].rep-=.15;FAC[CR_SIDE[1-u.sd]].rep+=.05;}else if(u.mode==='raid'){addFavor(u.g.ci,.5);}else if(u.mode==='garrison'){COUNTRIES[u.sd?5:4].angered=true;}}}
 function crowdArea(pos,r,dmg,knock,up,type){for(const u of CRW){if(u.st!==1)continue;const dx=u.x-pos.x,dz=u.z-pos.z,d=Math.hypot(dx,dz);if(d>=r||Math.abs(u.y-pos.y)>r+10)continue;
     const f=1-d/r*.5,L=d||1;crowdDamage(u,dmg*f*rr(.9,1.1),knock>0?V3(dx/L*knock*f,up*f,dz/L*knock*f):null,'p',type);}}
 function crowdSeg(a,b,w,dmg,dir){for(const u of CRW){if(u.st!==1)continue;if(distSeg(V3(u.x,u.y+1.4,u.z),a,b)<w+.6)crowdDamage(u,dmg,dir.clone().multiplyScalar(14),'p','pierce');}}
@@ -3326,7 +3337,7 @@ function updBattles(dt){for(const bt of BATTLES){if(bt.over){if(gameTime>bt.clea
     if(!ea&&!da)w='draw';else if(!da)w='emp';else if(!ea)w='dem';else if(gameTime-bt.t0>330)w=ea>=da?'emp':'dem';
     if(w){bt.over=true;bt.win=w;bt.clear=gameTime+60;for(const s2 of['emp','dem'])for(const u of bt.u[s2])u.war=null;
       if(w==='emp'){PWR_BIAS+=1.5;showBanner('帝国軍、'+bt.f.n+'にて勝利','人類の勢力が増した');}else if(w==='dem'){PWR_BIAS-=1.5;showBanner('魔王軍、'+bt.f.n+'にて勝利','魔王軍の勢力が増した');}}}}
-function countKill(e){if(e.kind==='citizen'){const ci=countryAt(e.pos.x,e.pos.z);if(ci>=0&&COUNTRIES[ci].eco)COUNTRIES[ci].eco.pop=Math.max(0,COUNTRIES[ci].eco.pop-6);}if(e.war){const o=e.war==='emp'?'dem':'emp';FAC[e.war].rep-=1.2;FAC[o].rep+=.4;}const k=(e.fac||'x')+'_'+(e.rank||e.kind);KB[k]=(KB[k]||0)+1;KB[e.kind]=(KB[e.kind]||0)+1;}
+function countKill(e){if(e.raid!=null&&COUNTRIES[e.raid])addFavor(e.raid,1.5);if(e.kind==='citizen'){const ci=countryAt(e.pos.x,e.pos.z);if(ci>=0&&COUNTRIES[ci].eco)COUNTRIES[ci].eco.pop=Math.max(0,COUNTRIES[ci].eco.pop-6);}if(e.war){const o=e.war==='emp'?'dem':'emp';FAC[e.war].rep-=1.2;FAC[o].rep+=.4;}const k=(e.fac||'x')+'_'+(e.rank||e.kind);KB[k]=(KB[k]||0)+1;KB[e.kind]=(KB[e.kind]||0)+1;}
 function worldPower(){let H=0,D=0;COUNTRIES.forEach((C,i)=>{if(!C.total)return;const k=1-C.dest/C.total;const w=i===4||i===5?10:C.settle?.5:1;if(C.faction==='dem')D+=w*k;else H+=w*k;});
   for(const m of MAGES){if(!m.alive)continue;const w=m.rank==='king'?6:m.rank==='elite'?.5:m.rank==='soldier'?.08:.3;if(m.fac==='dem')D+=w;else H+=w;}
   {let ce=0,cd=0;for(const u of CRW)if(u.st===1){if(u.sd)cd++;else ce++;}H+=ce*.004;D+=cd*.004;}
@@ -3347,7 +3358,7 @@ const OFFERS=[],ACTIVE=[];let offerT=45,MID=0;
 const HUMAN_IDX=()=>COUNTRIES.map((C,i)=>i).filter(i=>!COUNTRIES[i].faction&&COUNTRIES[i].total>0);
 const pct=C=>C.total?C.dest/C.total*100:0;
 function rw(base){return Math.round(base*[.8,1,1.5][DIFF]);}
-function mkDefend(ci){const C=COUNTRIES[ci];const raid=RAIDS[RAIDS.length-1];return {fac:'emp',title:C.label+'防衛',desc:`魔王軍の侵攻隊を殲滅し、${C.label}を守れ（制限3分・被害25%未満）`,mana:rw(450),rep:12,pwr:2,t0:0,lim:180,
+function mkDefend(ci){const C=COUNTRIES[ci];const raid=RAIDS[RAIDS.length-1];return {fac:'emp',title:C.label+'防衛',desc:`魔王軍の侵攻隊を殲滅し、${C.label}を守れ（制限3分・被害25%未満）`,mana:rw(450),rep:12,pwr:2,t0:0,lim:180,defCi:ci,
   init(){this.raid=raid;},check(){const alive=this.raid.units.filter(u=>u.alive).length+(this.raid.n?this.raid.n[1]:0);const dmg=(C.dest-this.raid.d0)/C.total*100;if(dmg>=25)return[-1,`被害 ${dmg.toFixed(0)}%`];if(!alive)return[1];return[0,`残敵 ${alive}　被害 ${dmg.toFixed(0)}%`];}};}
 function genMission(fac){const L=[];
   if(fac==='emp'){const D=COUNTRIES[5];
@@ -3368,7 +3379,7 @@ function genMission(fac){const L=[];
 function offerMission(m){m.id=++MID;m.exp=gameTime+240;OFFERS.push(m);if(OFFERS.length>4)OFFERS.shift();toast(`📜 ${FAC[m.fac].name}より依頼「${m.title}」（J で依頼書）`);snd('bell',.7);renderQuest();}
 function acceptMission(id){const i=OFFERS.findIndex(m=>m.id===id);if(i<0)return;if(ACTIVE.length>=3){toast('受けられる依頼は3件まで');return;}const m=OFFERS.splice(i,1)[0];m.t0=gameTime;m.init&&m.init();ACTIVE.push(m);renderQuest();}
 function finishMission(m,ok){ACTIVE.splice(ACTIVE.indexOf(m),1);
-  if(ok){MANA+=m.mana;FAC[m.fac].rep+=m.rep;const o=m.fac==='emp'?'dem':'emp';if(m.repO)FAC[o].rep+=m.repO;PWR_BIAS+=m.pwr;showBanner('依頼達成　'+m.title,`魔晶 +${m.mana}　${FAC[m.fac].name}の信頼 +${m.rep}`);snd('coin',1);}
+  if(ok){MANA+=m.mana;if(m.defCi!=null)addFavor(m.defCi,15);FAC[m.fac].rep+=m.rep;const o=m.fac==='emp'?'dem':'emp';if(m.repO)FAC[o].rep+=m.repO;PWR_BIAS+=m.pwr;showBanner('依頼達成　'+m.title,`魔晶 +${m.mana}　${FAC[m.fac].name}の信頼 +${m.rep}`);snd('coin',1);}
   else{FAC[m.fac].rep-=5;showBanner('依頼失敗　'+m.title,'');}
   for(const k of['emp','dem'])if(FAC[k].rep<=-40&&!FAC[k].hostile){FAC[k].hostile=true;COUNTRIES[k==='emp'?4:5].angered=true;toast(`⚔ ${FAC[k].name}はあなたを敵と定めた`);}
   renderQuest();saveGame();}
@@ -3381,7 +3392,7 @@ function updWorld(dt){if(!started)return;
   offerT-=dt;if(offerT<=0){offerT=rr(70,120);const f=['emp','dem'].filter(k=>!FAC[k].hostile);if(f.length&&OFFERS.length<3)offerMission(genMission(f[Math.random()*f.length|0]));}
   for(let i=OFFERS.length-1;i>=0;i--)if(gameTime>OFFERS[i].exp)OFFERS.splice(i,1);
   saveT-=dt;if(saveT<=0){saveT=20;saveGame();}
-  updEconomy(dt);
+  updEconomy(dt);updRule(dt);
   wT-=dt;if(wT>0)return;wT=.5;
   for(const m of ACTIVE.slice()){const [st,txt]=m.check();m.prog=txt||'';if(m.lim&&gameTime-m.t0>m.lim&&st===0){finishMission(m,false);continue;}if(st===1)finishMission(m,true);else if(st===-1)finishMission(m,false);}
   const p=worldPower();$('#power .ph').style.width=(p*100).toFixed(1)+'%';$('#power .pl').textContent=`人類 ${(p*100).toFixed(0)}%`;$('#power .pr').textContent=`${(100-p*100).toFixed(0)}% 魔王軍`;
@@ -3390,7 +3401,7 @@ let questOpen=false,mapOpen=false;
 function toggleQuest(){questOpen=!questOpen;$('#quest').classList.toggle('on',questOpen);if(questOpen){renderQuest();if(document.pointerLockElement)document.exitPointerLock();}}
 const SHOP=[{k:'hp',n:'生命強化',d:'最大HP +400',c:l=>300*(l+1),max:6,fx(){PLAYER_MAX+=400;pHP+=400;}},{k:'pw',n:'魔力強化',d:'魔法の威力 +15%',c:l=>400*(l+1),max:6,fx(){P_MUL+=.15;}},{k:'df',n:'障壁強化',d:'受けるダメージ −10%',c:l=>350*(l+1),max:5,fx(){DEF_MUL*=.9;}}];
 function renderQuest(light){const el=$('#quest .qb');if(!el)return;const p=worldPower();
-  const repS=k=>`${FAC[k].name}　信頼 ${FAC[k].rep>0?'+':''}${Math.round(FAC[k].rep)}${FAC[k].hostile?'　<b class="host">敵対</b>':''}`;
+  const repS=k=>`${FAC[k].name}　信頼 ${FAC[k].rep>0?'+':''}${Math.round(FAC[k].rep)}${FAC[k].hostile?`　<b class="host">敵対</b>　<button type="button" class="peace" data-peace="${k}">和平の使者（魔晶 ${peaceCost(k)}）</button>`:''}`;
   let h=`<div class="qs"><div class="qt">世界の勢力</div><div class="pw2"><i style="width:${(p*100).toFixed(1)}%"></i></div><div class="qrow"><span>人類 ${(p*100).toFixed(1)}%</span><span>魔王軍 ${(100-p*100).toFixed(1)}%</span></div><div class="qrow sm"><span>${repS('emp')}</span></div><div class="qrow sm"><span>${repS('dem')}</span></div></div>`;
   h+=`<div class="qs"><div class="qt">受注中の依頼（${ACTIVE.length}/3）</div>`+(ACTIVE.length?ACTIVE.map(m=>`<div class="qm ${m.fac}"><div class="qh">${m.fac==='emp'?'帝国':'魔王軍'}｜${m.title}</div><div class="qd">${m.desc}</div><div class="qp">${m.prog||''}${m.lim?`　残り ${Math.max(0,Math.ceil(m.lim-(gameTime-m.t0)))}秒`:''}</div></div>`).join(''):'<div class="qd">なし</div>')+'</div>';
   h+=`<div class="qs"><div class="qt">届いた依頼</div>`+(OFFERS.length?OFFERS.map(m=>`<div class="qm ${m.fac}"><div class="qh">${m.fac==='emp'?'帝国':'魔王軍'}｜${m.title}</div><div class="qd">${m.desc}</div><div class="qd">報酬 魔晶 ${m.mana}　信頼 +${m.rep}</div><button type="button" data-acc="${m.id}">受ける</button><button type="button" data-dec="${m.id}">断る</button></div>`).join(''):'<div class="qd">なし（しばらく待つと届く）</div>')+'</div>';
@@ -3398,7 +3409,7 @@ function renderQuest(light){const el=$('#quest .qb');if(!el)return;const p=world
   el.innerHTML=h;}
 function toggleMap(){mapOpen=!mapOpen;$('#wmap').classList.toggle('on',mapOpen);if(mapOpen){drawWorldMap();if(document.pointerLockElement)document.exitPointerLock();}}
 function drawWorldMap(){const cv=$('#wmap canvas'),x=cv.getContext('2d'),W=cv.width;x.drawImage(mapCv,0,0,W,W);const sc=W/WORLD,P=(wx,wz)=>[(wx+HALF)*sc,(wz+HALF)*sc];
-  x.font='12px serif';x.textAlign='center';COUNTRIES.forEach((C,i)=>{const [a,b]=P(C.x,C.z);x.strokeStyle=C.faction==='dem'?'#ff5a5a':C.faction==='emp'?'#ffe08a':'#fff';x.lineWidth=2;x.beginPath();x.arc(a,b,Math.max(5,C.r*sc),0,7);x.stroke();
+  x.font='12px serif';x.textAlign='center';COUNTRIES.forEach((C,i)=>{const [a,b]=P(C.x,C.z);x.strokeStyle=C.rule==='vassal'?'#c9a0ff':C.rule==='ally'?'#8fe8a0':C.faction==='dem'?'#ff5a5a':C.faction==='emp'?'#ffe08a':'#fff';x.lineWidth=2;x.beginPath();x.arc(a,b,Math.max(5,C.r*sc),0,7);x.stroke();
     x.fillStyle='#fff';x.shadowColor='#000';x.shadowBlur=4;x.fillText(C.label.replace('神聖ヴァルガルド帝国 ',''),a,b-Math.max(7,C.r*sc)-4);x.shadowBlur=0;});
   {const [a,b]=P(HX,HZ);x.fillStyle='#d8b0ff';x.fillRect(a-3,b-3,6,6);x.fillText('天穹楼',a,b-8);}
   for(const m of ACTIVE)if(m.tgt&&m.tgt.alive){const [a,b]=P(m.tgt.pos.x,m.tgt.pos.z);x.strokeStyle='#ff4040';x.lineWidth=2;x.beginPath();x.arc(a,b,7,0,7);x.stroke();}
@@ -3421,6 +3432,7 @@ $('#questBtn').addEventListener('click',e=>{e.stopPropagation();toggleQuest();})
 $('#quest .qx').addEventListener('click',e=>{e.stopPropagation();toggleQuest();});$('#realmBtn').addEventListener('click',e=>{e.stopPropagation();toggleRealm();});$('#realm .rx').addEventListener('click',e=>{e.stopPropagation();toggleRealm();});$('#realm').addEventListener('pointerdown',e=>e.stopPropagation());$('#wmap .mx').addEventListener('click',e=>{e.stopPropagation();toggleMap();});
 for(const id of['#quest','#wmap'])$(id).addEventListener('pointerdown',e=>e.stopPropagation());
 $('#quest').addEventListener('click',e=>{e.stopPropagation();const t=e.target;if(t.dataset.acc)acceptMission(+t.dataset.acc);else if(t.dataset.dec){const i=OFFERS.findIndex(m=>m.id===+t.dataset.dec);if(i>=0)OFFERS.splice(i,1);renderQuest();}
+  else if(t.dataset.peace){const k=t.dataset.peace,c=peaceCost(k);if(MANA>=c){MANA-=c;makePeace(k);renderQuest();}else toast('魔晶が足りない');}
   else if(t.dataset.buy){const it=SHOP.find(x=>x.k===t.dataset.buy);const l=UPG[it.k];if(l<it.max&&MANA>=it.c(l)){MANA-=it.c(l);UPG[it.k]++;it.fx();snd('coin',1);renderQuest();saveGame();}else toast('魔晶が足りない');}});
 // ================= 田園の実り・港 =================
 const GROW_T={wheat:80,paddy:100,veg:60};
@@ -3494,7 +3506,7 @@ function buildPort(site,K){portMats();const {x,z,dx,dz}=site;const y=groundAt(x,
   const port={x,z,dx,dz,ci,wh,lh,lamp,pier,end:V3(x+dx*(L+4),0,z+dz*(L+4)),ships:[]};PORTS.push(port);
   const NS=[1,2,3,4][K.t];for(let i=0;i<NS&&SHIPS.length<(IS_MOBILE?10:18);i++){const sh=makeShip();const o={...sh,port,st:'dock',wait:2+i*4,pos:port.end.clone().add(V3(-dz*i*9,0,dx*i*9)),yaw:ry,tgt:null,spd:rr(13,17),cargo:0};
     o.g.position.copy(o.pos);o.g.rotation.y=ry;port.ships.push(o);SHIPS.push(o);}
-  if(C.eco)C.eco.ports=(C.eco.ports||0)+1;
+  if(C.eco)C.eco.ports=(C.eco.ports||0)+1;addFavor(ci,10);
   showBanner('潮騒の港',C.label+'に港が開かれた');}
 function seaLine(a,b){const d=a.distanceTo(b),n=Math.ceil(d/15);for(let i=1;i<=n;i++){const t=i/n;if(heightAt(lerp(a.x,b.x,t),lerp(a.z,b.z,t))>-2.5)return false;}return true;}
 function pickVoyage(o){const p=o.port;for(let k=0;k<16;k++){const a=Math.atan2(p.dx,p.dz)+rr(-1.2,1.2),d=rr(260,760);const t=V3(p.end.x+Math.sin(a)*d,0,p.end.z+Math.cos(a)*d);if(seaLine(p.end,t))return t;}
@@ -3518,7 +3530,7 @@ function tradeReturn(o){const p=o.port,C=COUNTRIES[p.ci];if(p.dead)return;TRADE+
 // 国ごとの人口・幸福度・戦力と、食料・木材・鉱石の蓄えを1秒ごとに動かす。数値は「1分あたり」で考える。
 const FIELDS=[];
 const FIELD_Y={wheat:1,paddy:1.3,veg:1.5,flowers:0};
-function addField(x,z,area,type){const f={x,z,area,type,ci:-1,idx:[],t:0,st:-1,grow:GROW_T[type]||80};FIELDS.push(f);if(FIELDS.length>400){const o=FIELDS.findIndex(q=>q.type==='flowers');FIELDS.splice(o>=0?o:0,1);}return f;}
+function addField(x,z,area,type){const f={x,z,area,type,ci:-1,idx:[],t:0,st:-1,grow:GROW_T[type]||80};FIELDS.push(f);if(started)addFavor(nearestCi(x,z),type==='flowers'?3:4);if(FIELDS.length>400){const o=FIELDS.findIndex(q=>q.type==='flowers');FIELDS.splice(o>=0?o:0,1);}return f;}
 const ORE_BASE=[26,34,12,60,160,160,28];// 王都・神楽京・アズラーン・エーテリア・帝都・魔都・桜花京（村は少し）
 let ecoT=0,ecoSlow=0,realmOpen=false;
 const fmtN=v=>Math.round(v).toLocaleString();
@@ -3559,7 +3571,7 @@ function updEconomy(dt){ecoT-=dt;if(ecoT>0)return;ecoT=1;const k=1/60;
     E.food=Math.min(E.food,E.pop*20+500);E.wood=Math.min(E.wood,E.cap*6+500);E.ore=Math.min(E.ore,E.cap*4+(ORE_BASE[ci]||5)*40);
     // 幸福度
     const raid=RAIDS.some(r=>r.ci===ci&&r.units.some(u=>u.alive));
-    let tgt=62+Math.min(14,E.flowerA/3000)+Math.min(8,E.fieldY/20)-dr*70-(C.angered?14:0)-(raid?16:0)-(E.food<=0?30:0)-(E.wood<=0?6:0)+(E.happyT>gameTime?12:0)+Math.min(8,(E.ports||0)*4);
+    let tgt=62+Math.min(14,E.flowerA/3000)+Math.min(8,E.fieldY/20)-dr*70-(C.angered?14:0)-(raid?16:0)-(E.food<=0?30:0)-(E.wood<=0?6:0)+(E.happyT>gameTime?12:0)+Math.min(8,(E.ports||0)*4)+(C.rule==='ally'?8:C.rule==='vassal'?-8:0);
     if(C.faction==='dem')tgt-=6;E.hap=clamp(E.hap+(clamp(tgt,0,100)-E.hap)*.04,0,100);
     // 人口：満ち足りれば増え、飢えや荒廃で減る
     let g=E.food>0?E.pop*.03*(E.hap-40)/60:-E.pop*.06;if(E.pop>E.cap)g=Math.min(g,-(E.pop-E.cap)*.25);else g=Math.min(g,(E.cap-E.pop)*.5);
@@ -3575,15 +3587,62 @@ function toggleRealm(){realmOpen=!realmOpen;$('#realm').classList.toggle('on',re
 function renderRealm(){const tb=$('#realm tbody');if(!tb)return;const cell=(v,d)=>`${fmtN(v)}<span class="${d>.5?'up':d<-.5?'dn':''}">${arrow(d)||'　'}</span>`;
   let sum={pop:0,mil:0,food:0,wood:0,ore:0};
   let h=COUNTRIES.map((C,ci)=>{const E=C.eco;if(!E)return'';for(const k in sum)sum[k]+=E[k];const hc=E.hap<35?'hp0':E.hap<65?'hp1':'hp2';
-    return `<tr class="${C.faction||''}"><td>${C.label.replace('神聖ヴァルガルド帝国 ','')}</td><td>${cell(E.pop,E.dPop)}</td><td class="${hc}">${Math.round(E.hap)}</td><td>${fmtN(E.mil)}</td><td>${cell(E.food,E.dFood)}</td><td>${cell(E.wood,E.dWood)}</td><td>${cell(E.ore,E.dOre)}</td></tr>`;}).join('');
-  h+=`<tr class="sum"><td>全土</td><td>${fmtN(sum.pop)}</td><td></td><td>${fmtN(sum.mil)}</td><td>${fmtN(sum.food)}</td><td>${fmtN(sum.wood)}</td><td>${fmtN(sum.ore)}</td></tr>`;
+    return `<tr class="${C.faction||''}"><td>${C.label.replace('神聖ヴァルガルド帝国 ','')}</td><td>${cell(E.pop,E.dPop)}</td><td class="${hc}">${Math.round(E.hap)}</td><td>${fmtN(E.mil)}</td><td>${cell(E.food,E.dFood)}</td><td>${cell(E.wood,E.dWood)}</td><td>${cell(E.ore,E.dOre)}</td><td class="${C.rule==='vassal'?'rl':C.rule==='ally'?'al':''}">${C.rule==='vassal'?'属国':C.rule==='ally'?'盟友':C.faction?'':'恩 '+Math.round(C.favor||0)}</td></tr>`;}).join('');
+  h+=`<tr class="sum"><td>全土</td><td>${fmtN(sum.pop)}</td><td></td><td>${fmtN(sum.mil)}</td><td>${fmtN(sum.food)}</td><td>${fmtN(sum.wood)}</td><td>${fmtN(sum.ore)}</td><td>属${COUNTRIES.filter(C=>C.rule==='vassal').length}・盟${COUNTRIES.filter(C=>C.rule==='ally').length}</td></tr>`;
   tb.innerHTML=h;}
+// ================= 支配・結末・和解 =================
+function addFavor(ci,v){const C=COUNTRIES[ci];if(!C||C.faction)return;C.favor=clamp((C.favor||0)+v,-50,100);}
+let ruleT=0,tribAcc=0,tribN=[0,0],tribT=60;
+function setRule(C,r,why){C.rule=r;C.hapT=0;
+  if(r==='vassal'){showBanner(C.label+'、魔導王に降る',C.faction==='emp'?'帝国は膝を屈した':C.faction==='dem'?'魔王軍は膝を屈した':'属国となり、貢ぎ物を納める');snd('bell',1);}
+  else if(r==='ally'){showBanner(C.label+'、魔導王と盟を結ぶ',why||'盟友となり、贈り物が届く');snd('chime',1);}
+  else toast(`${C.label}との盟約は破れた`);
+  if(realmOpen)renderRealm();saveGame();}
+function updRule(dt){ruleT-=dt;if(ruleT>0)return;ruleT=1;
+  COUNTRIES.forEach((C,ci)=>{if(!C.total||!C.eco)return;const k=C.dest/C.total;
+    if(C.angered&&!C.faction)C.favor=Math.max(-50,(C.favor||0)-2);
+    if(C.rule==='ally'&&C.angered){C.rule=null;C.favor=-20;setRule(C,null);return;}
+    if(C.rule!=='vassal'&&k>=.8&&C.angered&&C.start>=0){setRule(C,'vassal');return;}
+    const hapOk=C.eco.hap>=78&&(C.favor||0)>=(C.rule==='vassal'?40:25)&&k<.05&&!C.angered&&!C.faction;
+    C.hapT=hapOk?(C.hapT||0)+1:0;
+    if(C.hapT>=(C.rule==='vassal'?60:45)&&C.rule!=='ally')setRule(C,'ally',C.rule==='vassal'?'恩義に報い、属国から盟友へ':null);});
+  tribT-=1;if(tribT<=0){tribT=60;let m=0,nv=0,na=0;
+    for(const C of COUNTRIES){if(!C.eco||!C.rule)continue;const dr=C.total?C.dest/C.total:0;
+      if(C.rule==='vassal'){m+=Math.max(15,Math.round((C.eco.pop/15+C.eco.ore/60)*(1-dr*.5)));nv++;}else{m+=Math.max(20,Math.round(C.eco.pop/25+15));na++;}}
+    if(m>0){MANA+=m;TRIBUTE+=m;toast(`👑 貢ぎ物と贈り物 魔晶 +${m}（属国 ${nv}・盟友 ${na}）`);snd('coin',.6);}}
+  checkEndings();}
+let TRIBUTE=0;
+// ---- 和解 ----
+function peaceCost(k){return rw(k==='emp'?1200:1500);}
+function makePeace(k){const ci=k==='emp'?4:5,C=COUNTRIES[ci];FAC[k].hostile=false;FAC[k].rep=-15;C.angered=false;
+  for(const m of MAGES)if(m.ci===ci&&m.alive&&m.active){m.active=false;m.shield=m.shMax;}
+  for(const e of enemies)if(e.alive&&countryAt(e.pos.x,e.pos.z)===ci)e.aggro=false;
+  PEACE++;showBanner('和平成立',FAC[k].name+'は矛を収めた');snd('chime',1);saveGame();}
+let PEACE=0;
+// ---- 結末 ----
+const ENDINGS=[
+  {id:'dawn',n:'人類の夜明け',cond:()=>pct(COUNTRIES[5])>=80&&!MAGES.some(m=>m.rank==='king'&&m.alive)&&worldPower()>=.7,
+    t:'魔都ネクロディアは崩れ落ち、冥皇ゼファルドの名は歴史の闇へと消えた。人々は長い夜の終わりを知り、城壁の上で朝日を迎える。その光の中心に、ひとりの魔導王がいたことを、誰も忘れはしないだろう。'},
+  {id:'dusk',n:'魔王軍の世界',cond:()=>pct(COUNTRIES[4])>=80&&worldPower()<=.3,
+    t:'神聖ヴァルガルド帝国の白亜の都は灰となり、人類の旗は地に落ちた。大地を覆うのは魔王軍の黒き軍旗。だが魔族たちは知っている。この世界を真に形作ったのが、天穹楼に住まう魔導王その人であることを。'},
+  {id:'hegemony',n:'覇天統一',cond:()=>COUNTRIES[4].rule==='vassal'&&COUNTRIES[5].rule==='vassal'&&COUNTRIES.filter((C,i)=>i!==4&&i!==5&&C.rule).length>=6,
+    t:'帝国も魔王軍も、ついに魔導王の前に膝を屈した。諸国は貢ぎ、あるいは盟を結び、天下にはただひとつの王が立つ。人も魔も等しく従え、天を覇する者──覇天の魔導王。この世界に、あなたを止められるものはいない。'},
+];
+const END_SEEN=new Set();let endChkT=0;
+function checkEndings(){endChkT-=1;if(endChkT>0)return;endChkT=2;if(document.querySelector('#ending.on'))return;
+  for(const E of ENDINGS){if(END_SEEN.has(E.id))continue;let ok=false;try{ok=E.cond();}catch(e){}if(ok){showEnding(E);break;}}}
+function showEnding(E){END_SEEN.add(E.id);saveGame();const el=$('#ending');el.querySelector('.en').textContent=E.n;el.querySelector('.et').textContent=E.t;
+  el.querySelector('.es').innerHTML=`経過 ${fmtTime(gameTime)}　撃破 ${kills.toLocaleString()}　連鎖魔法 ${COMBO_N}回<br>収穫 食料 ${HARVEST.toLocaleString()}　交易 ${TRADE}回　属国 ${COUNTRIES.filter(C=>C.rule==='vassal').length}・盟友 ${COUNTRIES.filter(C=>C.rule==='ally').length}<br>到達した結末 ${END_SEEN.size} / ${ENDINGS.length}`;
+  el.classList.add('on');if(document.pointerLockElement)document.exitPointerLock();snd('chime',1);later(.4,()=>snd('bell',.8));}
+$('#ending button').addEventListener('click',e=>{e.stopPropagation();$('#ending').classList.remove('on');});
+$('#ending').addEventListener('pointerdown',e=>e.stopPropagation());
 // ================= save =================
 // 進行状況（魔晶・工房の強化・勢力・難易度・撃破数）を保存する。街や建物の状態は保存せず、読み込み時は世界が元に戻る。
 const SAVE_KEY='hatenMadouou.save';const ECO_FIXED=7+VILL.length;let saveReady=false;
 function saveGame(){if(!saveReady||!started)return;
   try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,at:Date.now(),diff:DIFF,mana:MANA,upg:UPG,pwr:PWR_BIAS,kills,kb:KB,built:BUILT,farms:FARMS,
-    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,
+    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
+    rule:COUNTRIES.slice(0,ECO_FIXED).map(C=>[C.rule==='vassal'?1:C.rule==='ally'?2:0,Math.round(C.favor||0)]),
     eco:COUNTRIES.slice(0,ECO_FIXED).map(C=>C.eco?[Math.round(C.eco.pop),Math.round(C.eco.hap),Math.round(C.eco.food),Math.round(C.eco.wood),Math.round(C.eco.ore)]:null)}));}catch(e){}}
 function readSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&typeof s==='object'?s:null;}catch(e){return null;}}
 function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v==='number'&&isFinite(v)?v:d;
@@ -3594,11 +3653,15 @@ function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v=
   PWR_BIAS=num(s.pwr,0);kills=Math.max(0,Math.floor(num(s.kills,0)));BUILT=Math.max(0,num(s.built,0));FARMS=Math.max(0,num(s.farms,0));
   if(s.kb&&typeof s.kb==='object')for(const k in s.kb){const v=num(s.kb[k],0);if(v>0)KB[k]=v;}
   if(Array.isArray(s.eco))s.eco.forEach((a,i)=>{const C=COUNTRIES[i];if(!C||!C.eco||!Array.isArray(a))return;const [p,h,f,w,o]=a.map(v=>Math.max(0,num(v,0)));C.eco.pop=p;C.eco.hap=Math.min(100,h);C.eco.food=f;C.eco.wood=w;C.eco.ore=o;});
+  if(Array.isArray(s.rule))s.rule.forEach((a,i)=>{const C=COUNTRIES[i];if(!C||!Array.isArray(a))return;C.rule=a[0]===1?'vassal':a[0]===2?'ally':null;C.favor=clamp(num(a[1],0),-50,100);});
+  if(Array.isArray(s.endings))for(const id of s.endings)if(ENDINGS.some(E=>E.id===id))END_SEEN.add(id);
+  HARVEST=Math.max(0,num(s.harvest,0));TRADE=Math.max(0,num(s.trade,0));TRIBUTE=Math.max(0,num(s.tribute,0));PEACE=Math.max(0,num(s.peace,0));
   if(Array.isArray(s.combos))for(const id of s.combos)if(COMBOS.some(c=>c.id===id))COMBO_SEEN.add(id);COMBO_N=Math.max(0,Math.floor(num(s.comboN,0)));
   return [0,1,2].includes(s.diff)?s.diff:1;}
 function renderSaveInfo(){const el=$('#saveInfo');const s=readSave();if(!s){el.innerHTML='';return;}
   const d=new Date(s.at||0),lv=SHOP.reduce((a,it)=>a+(UPG[it.k]||0),0);
-  el.innerHTML=`<b>前回の記録</b>（${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}）　魔晶 ${MANA}・強化 計Lv${lv}・撃破 ${kills}<button type="button" id="saveDel">記録を消す</button>`;
+  const ends=ENDINGS.filter(E=>END_SEEN.has(E.id)).map(E=>E.n).join('・');
+  el.innerHTML=`<b>前回の記録</b>（${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}）　魔晶 ${MANA}・強化 計Lv${lv}・撃破 ${kills}<button type="button" id="saveDel">記録を消す</button>`+(ends?`<br><b>到達した結末</b> ${END_SEEN.size}/${ENDINGS.length}　${ends}`:'');
   $('#saveDel').addEventListener('click',e=>{e.stopPropagation();if(!confirm('保存された記録（魔晶・強化・勢力の信頼など）を消して、最初からやり直しますか？'))return;
     saveReady=false;try{localStorage.removeItem(SAVE_KEY);}catch(e2){}location.reload();});}
 addEventListener('pagehide',saveGame);
@@ -3651,7 +3714,7 @@ initVillages();
 initCrowd();
 initEconomy();
 setDiff(loadSave());saveReady=true;renderSaveInfo();
-window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,ENDINGS,makePeace,destroyBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
