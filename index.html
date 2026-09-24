@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>覇天の魔導王</title>
+<title>大魔導士の気持ち</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@ button:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px;}
 #title.gone{opacity:0;pointer-events:none;}
 #titleText{grid-column:2;grid-row:1;align-self:stretch;display:flex;flex-direction:row-reverse;gap:18px;justify-content:flex-start;}
 #titleText h1{writing-mode:vertical-rl;margin:0;font-family:var(--mincho);font-weight:800;
-  font-size:clamp(54px,11vh,120px);letter-spacing:.12em;line-height:1;
+  font-size:clamp(40px,7.4vh,88px);letter-spacing:.08em;white-space:nowrap;line-height:1;
   background:linear-gradient(180deg,#fff6da 0%,#e8c170 45%,#9a6a2a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 0 18px rgba(255,190,90,.45)) drop-shadow(0 2px 0 rgba(0,0,0,.6));}
 #titleText p{writing-mode:vertical-rl;margin:0;font-family:var(--mincho);font-weight:600;font-size:clamp(14px,2.2vh,19px);
@@ -152,16 +152,17 @@ body.mobile #controls{order:4;margin:0;}
 @media (max-width:560px){
   #title{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;align-content:end;padding:calc(var(--st) + 18px) 20px calc(var(--sb) + 22px);
     background:linear-gradient(0deg,rgba(10,7,20,.9) 0%,rgba(10,7,20,.5) 45%,rgba(10,7,20,.1) 75%);}
-  #titleText{grid-column:1;grid-row:1;align-self:start;overflow:hidden;max-height:100%;}
-  #titleText h1{font-size:clamp(38px,7vh,64px);}
-  #titleText p{font-size:13px;letter-spacing:.2em;padding-top:2.4em;}
+  #titleText{grid-column:1;grid-row:1;align-self:start;overflow:hidden;max-height:100%;flex-direction:column;align-items:flex-end;gap:6px;}
+  #titleText h1{writing-mode:horizontal-tb;font-size:clamp(30px,10.5vw,46px);letter-spacing:.1em;}
+  #titleText p{writing-mode:horizontal-tb;padding-top:0;letter-spacing:.25em;}
+  #titleText p{font-size:13px;letter-spacing:.2em;padding-top:0;}
   #titleLeft .lead{font-size:14px;line-height:1.75;}
   #titleLeft{grid-row:2;}
   #controls{font-size:11.5px;line-height:1.75;}
 }
 @media (max-height:520px){
   #title{padding-top:calc(var(--st) + 12px);padding-bottom:calc(var(--sb) + 12px);}
-  #titleText h1{font-size:clamp(34px,11vh,56px);}
+  #titleText h1{font-size:clamp(26px,8.4vh,46px);}
   #titleText p{font-size:12px;letter-spacing:.18em;padding-top:2em;}
   #titleLeft .lead{font-size:13px;line-height:1.6;margin-bottom:10px;}
   #controls{font-size:11px;line-height:1.6;}
@@ -278,7 +279,7 @@ body.mobile #topbtns{max-width:calc(100vw - 230px)}
 
 <div id="hud">
   <div id="me">
-    <div class="name">魔導王<span class="ttl"></span></div>
+    <div class="name">大魔導士<span class="ttl"></span></div>
     <div class="bar hp"><i></i><b>2400</b></div>
     <div class="bar mp"><i></i><b>∞</b></div>
   </div>
@@ -322,11 +323,11 @@ body.mobile #topbtns{max-width:calc(100vw - 230px)}
 
 <div id="title">
   <div id="titleText">
-    <h1>覇天の魔導王</h1>
-    <p>この世界に、あなたを止められるものはいない。</p>
+    <h1>大魔導士の気持ち</h1>
+    <p>強すぎて、今日も退屈だ。</p>
   </div>
   <div id="titleLeft">
-    <p class="lead">山頂の超高層・天穹楼に住まう魔導王。炎も雷も、星さえも。八つの魔法はすべてあなたの手の中にある。<br>獣も竜も、王都の軍勢も、傷ひとつ付けられない。</p>
+    <p class="lead">最強の名を冠する大魔導士。魔王すら片手で退けてしまう力を持ちながら、山頂の天穹楼で迎えるのは、今日も平凡で少し退屈な一日。<br>炎も雷も、星さえも。その気になれば国ひとつ消せる魔法を、さて、今日は何に使おうか。</p>
     <dl id="controls"></dl>
     <div id="diffSel"><button type="button" class="diffb" data-d="0">イージー</button><button type="button" class="diffb on" data-d="1">ノーマル</button><button type="button" class="diffb" data-d="2">ハード</button></div>
     <button id="start" type="button" disabled>降臨する</button>
@@ -2046,7 +2047,7 @@ function updHome(dt){
   if(Math.random()<dt*6)glow.emit(HX+rr(-.8,.8),F+4+rr(-.8,.8),HZ+8+rr(-.8,.8),0,rr(.3,1),0,rr(.6,1.2),.35,.1,PC.violetB,PC.gold,.8,0,0);
 }
 function homeSpawn(){player.pos.set(HX,F,HZ+2);player.vel.set(0,0,0);player.flying=false;document.querySelector('[data-a="fly"]').classList.remove('on');player.face=Math.PI;camYaw=Math.PI;camPitch=.3;}
-const WARPS=[{n:'天穹楼',d:'魔導王の居城'},{n:'王都ルーンヘイム',d:'西洋の王都'},{n:'月詠国 神楽京',d:'東方の城下町'},{n:'蒼海の国 アズラーン',d:'白亜と碧の海上都市'},{n:'天空要塞都市 エーテリア',d:'雲上に浮かぶ要塞'},{n:'神聖ヴァルガルド帝国 帝都',d:'人類最大の帝国（西の果て）'},{n:'魔都ネクロディア',d:'魔王の座す都（東の大陸）'},{n:'東雲国 桜花京',d:'桜と黒漆の城下町'}];
+const WARPS=[{n:'天穹楼',d:'大魔導士の居城'},{n:'王都ルーンヘイム',d:'西洋の王都'},{n:'月詠国 神楽京',d:'東方の城下町'},{n:'蒼海の国 アズラーン',d:'白亜と碧の海上都市'},{n:'天空要塞都市 エーテリア',d:'雲上に浮かぶ要塞'},{n:'神聖ヴァルガルド帝国 帝都',d:'人類最大の帝国（西の果て）'},{n:'魔都ネクロディア',d:'魔王の座す都（東の大陸）'},{n:'東雲国 桜花京',d:'桜と黒漆の城下町'}];
 let warpOpen=false;
 function toggleWarp(){warpOpen=!warpOpen;$('#warp').classList.toggle('on',warpOpen);if(warpOpen&&document.pointerLockElement)document.exitPointerLock();}
 function travelTo(i){
@@ -2061,7 +2062,7 @@ function travelTo(i){
   else if(i===6){const x=DMX-DR-45,z=DMZ;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   else if(i===4){const x=C4X-C4R+12,z=C4Z;player.pos.set(x,C4Y,z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   else{const x=C3X-C3R-22,z=C3Z;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
-  showBanner(WARPS[i].n,i===0?'魔導王の居城':'転移完了');
+  showBanner(WARPS[i].n,i===0?'大魔導士の居城':'転移完了');
   magicCircle(player.pos,5,lin(5,3,9),1.2,{y:.2,spin:3});burst(player.pos.clone().setY(player.pos.y+1),80,14,1,2,.3,PC.violetB,PC.gold,1,2,0);
 }
 function travel(){toggleWarp();}
@@ -2117,7 +2118,7 @@ function hurtPlayer(dmg){
   if(pDead||pIfr>0||!started||SPEC)return;
   dmg=Math.round(dmg*DMG[DIFF]*DEF_MUL*rr(.9,1.1));pHP-=dmg;pHurtT=0;pIfr=.12;
   dmgText(player.pos.clone().setY(player.pos.y+3.4),dmg,false,true);screenFlash(lin(1,.12,.06),.18+Math.min(.3,dmg/800));shake(.15+Math.min(.5,dmg/600));
-  if(pHP<=0){pHP=0;pDead=true;showBanner('魔導王、膝をつく','天穹楼にて再起する');snd('bigboom',.6);
+  if(pHP<=0){pHP=0;pDead=true;showBanner('大魔導士、膝をつく','天穹楼にて再起する');snd('bigboom',.6);
     later(2.6,()=>{travelTo(0);pHP=PLAYER_MAX;pDead=false;});}
 }
 function updBossBar(){let best=null,bd=520;for(const m of MAGES){if(!m.alive||!m.active)continue;const d=m.pos.distanceTo(player.pos);if(d<bd){bd=d;best=m;}}
@@ -3134,7 +3135,7 @@ $('#start').disabled=false;$('#loadmsg').textContent='';
 $('#start').addEventListener('click',()=>{
   started=true;initAudio();$('#title').classList.add('gone');$('#hud').classList.add('on');
   homeSpawn();
-  setTimeout(()=>showBanner('天穹楼','魔導王の居城'),600);
+  setTimeout(()=>showBanner('天穹楼','大魔導士の居城'),600);
   if(!IS_MOBILE)tryLock();
   magicCircle(player.pos,6,lin(6,4,1.5),2,{y:.2,spin:2});burst(player.pos.clone().setY(player.pos.y+1),120,18,1.5,2,.3,PC.gold,PC.violetB,1,2,0);
   shockwave(player.pos,30,lin(4,3,1.2),1);snd('chime',.8);
@@ -3263,7 +3264,7 @@ function spawnBattleCrowd(bt,sd,n){const f=bt.f,s=sd?1:-1,W=14,per=W*6;const blo
     spawnCrowd(sd,x,z,{mode:'battle',g:bt,yaw:sd?-Math.PI/2:Math.PI/2,role:row>=3&&Math.random()<.7?1:0,banner:row===0&&(col===3||col===10),el:row===0&&col===6});}}
 function spawnRaidCrowd(raid,C,bx,bz,n){for(let i=0;i<n;i++)spawnCrowd(1,bx+rr(-14,14),bz+rr(-14,14),{mode:'raid',g:raid,yaw:Math.atan2(C.x-bx,C.z-bz),el:i===0});}
 // ================= 観戦 =================
-// 魔導王はその場に留まり、遠見の術で戦場や国を眺める。観戦中は魔法を使えず、傷も負わない。
+// 大魔導士はその場に留まり、遠見の術で戦場や国を眺める。観戦中は魔法を使えず、傷も負わない。
 const VIEW={x:0,z:-300};let SPEC=null;
 function specTargets(){const L=[];
   for(const bt of BATTLES)if(!bt.over)L.push({n:bt.f.n+'の戦い',x:bt.f.x,z:bt.f.z,bt,d:260});
@@ -3607,8 +3608,8 @@ function renderRealm(){const tb=$('#realm tbody');if(!tb)return;const cell=(v,d)
 function addFavor(ci,v){const C=COUNTRIES[ci];if(!C||C.faction)return;C.favor=clamp((C.favor||0)+v,-50,100);}
 let ruleT=0,tribAcc=0,tribN=[0,0],tribT=60;
 function setRule(C,r,why){C.rule=r;C.hapT=0;
-  if(r==='vassal'){showBanner(C.label+'、魔導王に降る',C.faction==='emp'?'帝国は膝を屈した':C.faction==='dem'?'魔王軍は膝を屈した':'属国となり、貢ぎ物を納める');snd('bell',1);}
-  else if(r==='ally'){showBanner(C.label+'、魔導王と盟を結ぶ',why||'盟友となり、贈り物が届く');snd('chime',1);}
+  if(r==='vassal'){showBanner(C.label+'、大魔導士に降る',C.faction==='emp'?'帝国は膝を屈した':C.faction==='dem'?'魔王軍は膝を屈した':'属国となり、貢ぎ物を納める');snd('bell',1);}
+  else if(r==='ally'){showBanner(C.label+'、大魔導士と盟を結ぶ',why||'盟友となり、贈り物が届く');snd('chime',1);}
   else toast(`${C.label}との盟約は破れた`);
   if(realmOpen)renderRealm();saveGame();}
 function updRule(dt){ruleT-=dt;if(ruleT>0)return;ruleT=1;
@@ -3635,11 +3636,11 @@ let PEACE=0;
 // ---- 結末 ----
 const ENDINGS=[
   {id:'dawn',n:'人類の夜明け',cond:()=>pct(COUNTRIES[5])>=80&&!MAGES.some(m=>m.rank==='king'&&m.alive)&&worldPower()>=.7,
-    t:'魔都ネクロディアは崩れ落ち、冥皇ゼファルドの名は歴史の闇へと消えた。人々は長い夜の終わりを知り、城壁の上で朝日を迎える。その光の中心に、ひとりの魔導王がいたことを、誰も忘れはしないだろう。'},
+    t:'魔都ネクロディアは崩れ落ち、冥皇ゼファルドの名は歴史の闇へと消えた。人々は長い夜の終わりを知り、城壁の上で朝日を迎える。その光の中心に、ひとりの大魔導士がいたことを、誰も忘れはしないだろう。'},
   {id:'dusk',n:'魔王軍の世界',cond:()=>pct(COUNTRIES[4])>=80&&worldPower()<=.3,
-    t:'神聖ヴァルガルド帝国の白亜の都は灰となり、人類の旗は地に落ちた。大地を覆うのは魔王軍の黒き軍旗。だが魔族たちは知っている。この世界を真に形作ったのが、天穹楼に住まう魔導王その人であることを。'},
+    t:'神聖ヴァルガルド帝国の白亜の都は灰となり、人類の旗は地に落ちた。大地を覆うのは魔王軍の黒き軍旗。だが魔族たちは知っている。この世界を真に形作ったのが、天穹楼に住まう大魔導士その人であることを。'},
   {id:'hegemony',n:'覇天統一',cond:()=>COUNTRIES[4].rule==='vassal'&&COUNTRIES[5].rule==='vassal'&&COUNTRIES.filter((C,i)=>i!==4&&i!==5&&C.rule).length>=6,
-    t:'帝国も魔王軍も、ついに魔導王の前に膝を屈した。諸国は貢ぎ、あるいは盟を結び、天下にはただひとつの王が立つ。人も魔も等しく従え、天を覇する者──覇天の魔導王。この世界に、あなたを止められるものはいない。'},
+    t:'帝国も魔王軍も、ついに大魔導士の前に膝を屈した。諸国は貢ぎ、あるいは盟を結び、天下にはただひとつの王が立つ。人も魔も等しく従え、天を覇する者──覇天の大魔導士。この世界に、あなたを止められるものはいない。'},
 ];
 const END_SEEN=new Set();let endChkT=0;
 function checkEndings(){endChkT-=1;if(endChkT>0)return;endChkT=2;if(document.querySelector('#ending.on'))return;
@@ -3654,8 +3655,8 @@ $('#ending').addEventListener('pointerdown',e=>e.stopPropagation());
 const ACH_KEY='hatenMadouou.ach';let WATCHED=0,AURA=null,achOpen=false,achT=0;
 const nRule=r=>COUNTRIES.filter(C=>C.rule===r).length;
 const ACHS=[
-  {id:'k10',n:'初陣',d:'敵を10体倒す',t:'駆け出しの魔導王',col:'#cfd8e8',c:()=>kills>=10},
-  {id:'k100',n:'百人斬り',d:'敵を100体倒す',t:'百戦の魔導王',col:'#ffb070',c:()=>kills>=100},
+  {id:'k10',n:'初陣',d:'敵を10体倒す',t:'駆け出しの大魔導士',col:'#cfd8e8',c:()=>kills>=10},
+  {id:'k100',n:'百人斬り',d:'敵を100体倒す',t:'百戦の大魔導士',col:'#ffb070',c:()=>kills>=100},
   {id:'k1000',n:'万軍を屠る者',d:'敵を1,000体倒す',t:'万軍殺し',col:'#ff5a3a',c:()=>kills>=1000},
   {id:'blitz',n:'電撃戦',d:'国をひとつ3分以内に陥落させる',t:'迅雷の覇者',col:'#9fc4ff',c:()=>COUNTRIES.some(C=>!C.village&&!C.settle&&C.done&&C.doneAt-C.start<=180)},
   {id:'combo3',n:'連鎖の探究者',d:'連鎖魔法を3種見いだす',t:'連鎖の探究者',col:'#8fd8ff',c:()=>COMBO_SEEN.size>=3},
@@ -3673,9 +3674,9 @@ const ACHS=[
   {id:'elite',n:'特務隊殲滅',d:'帝国特務隊を12名倒す',t:'帝国の悪夢',col:'#ffe08a',c:()=>(KB.emp_elite||0)>=12},
   {id:'king',n:'冥皇討滅',d:'魔王 冥皇ゼファルドを倒す',t:'魔王殺し',col:'#ff4a6a',c:()=>(KB.dem_king||0)>=1},
   {id:'rich',n:'富める王',d:'魔晶を10,000以上持つ',t:'魔晶の君',col:'#b9d7ff',c:()=>MANA>=10000},
-  {id:'dawn',n:'夜明けを告げる者',d:'結末「人類の夜明け」に至る',t:'暁の魔導王',col:'#ffe8b0',c:()=>END_SEEN.has('dawn')},
-  {id:'dusk',n:'闇の宰領',d:'結末「魔王軍の世界」に至る',t:'黄昏の魔導王',col:'#b03050',c:()=>END_SEEN.has('dusk')},
-  {id:'hegemony',n:'覇天',d:'結末「覇天統一」に至る',t:'覇天の魔導王',col:'#ffd070',c:()=>END_SEEN.has('hegemony')},
+  {id:'dawn',n:'夜明けを告げる者',d:'結末「人類の夜明け」に至る',t:'暁の大魔導士',col:'#ffe8b0',c:()=>END_SEEN.has('dawn')},
+  {id:'dusk',n:'闇の宰領',d:'結末「魔王軍の世界」に至る',t:'黄昏の大魔導士',col:'#b03050',c:()=>END_SEEN.has('dusk')},
+  {id:'hegemony',n:'覇天',d:'結末「覇天統一」に至る',t:'覇天の大魔導士',col:'#ffd070',c:()=>END_SEEN.has('hegemony')},
 ];
 const ACH=new Set();let TITLE=null;
 function loadAch(){try{const v=JSON.parse(localStorage.getItem(ACH_KEY)||'null');if(v&&Array.isArray(v.a))for(const id of v.a)if(ACHS.some(a=>a.id===id))ACH.add(id);if(v&&ACH.has(v.t))TITLE=v.t;}catch(e){}applyTitle();}
@@ -3691,13 +3692,13 @@ $('#ach .x').addEventListener('click',e=>{e.stopPropagation();toggleAch();});
 $('#ach').addEventListener('pointerdown',e=>e.stopPropagation());
 $('#ach').addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('[data-ach]');if(!b||!b.dataset.ach)return;TITLE=TITLE===b.dataset.ach?null:b.dataset.ach;saveAch();applyTitle();renderAch();});
 // ================= 世界の記録（建てた物・壊した物） =================
-// 魔導王が建てた物は「作った順の記録」として残し、読み込み時に同じ順で建て直す。
+// 大魔導士が建てた物は「作った順の記録」として残し、読み込み時に同じ順で建て直す。
 // 建物の壊れ具合・黄金化は、建物の並び順の範囲でまとめて保存する。
 let WLOG=[],BN0=0;
 function logW(e){if(REPLAY)return;WLOG.push(e);if(WLOG.length>800)WLOG.shift();}
 const NUMK=['','一','二','三','四','五','六','七','八','九','十'];
 function newSettlement(kind,x,z,r){SETTLE_N++;const ci=COUNTRIES.length;
-  const label=kind==='port'?'潮騒の港町'+(PORT_N?' 其の'+NUMK[Math.min(PORT_N+1,10)]:''):(SETTLE_N===1?'魔導王の新都':'魔導王の新都 其の'+NUMK[Math.min(SETTLE_N,10)]);
+  const label=kind==='port'?'潮騒の港町'+(PORT_N?' 其の'+NUMK[Math.min(PORT_N+1,10)]:''):(SETTLE_N===1?'大魔導士の新都':'大魔導士の新都 其の'+NUMK[Math.min(SETTLE_N,10)]);
   COUNTRIES.push({label,x,z,r,total:0,dest:0,start:-1,done:false,doneAt:0,settle:true});HOUSE_MK[ci]=(hx,hz)=>HOUSE_MK[0](hx,hz,ci);
   if(kind!=='port')logW({k:'s',x,z,r});return ci;}
 function mkHouse(ci,x,z){const b=HOUSE_MK[ci](x,z);logW({k:'h',ci,x,z,ry:+b.mesh.rotation.y.toFixed(3)});return b;}
