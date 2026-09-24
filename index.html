@@ -200,6 +200,20 @@ body.spec #bar,body.spec #tier,body.spec #cross,body.spec #acts,body.spec #bossb
 #ending button{margin-top:22px;font-family:var(--mincho),serif;font-size:17px;letter-spacing:.3em;padding:11px 30px;border:1px solid rgba(232,193,112,.8);border-radius:2px;background:linear-gradient(180deg,rgba(60,40,90,.6),rgba(20,12,40,.75));color:var(--gold-hi);cursor:pointer}
 #realm td.rl{color:#c9b8ff}#realm td.al{color:#9fe8b0}
 #quest .peace{border-color:#9fe8b0;color:#c8ffd8}
+#me .ttl{display:inline-block;margin-left:.7em;font-family:var(--mincho);font-weight:600;font-size:11.5px;letter-spacing:.12em;color:var(--tc,#fff0c4);text-shadow:0 0 8px var(--tc,#ffd070),0 1px 3px #000;white-space:nowrap;vertical-align:1px}
+#me .ttl:empty{display:none}
+#topbtns{flex-wrap:wrap;max-width:calc(100vw - 300px)}
+body.mobile #topbtns{max-width:calc(100vw - 230px)}
+#ach{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:min(640px,94vw);max-height:86vh;overflow:auto;padding:16px 16px 12px;border-radius:14px;background:rgba(14,10,28,.93);border:1px solid rgba(232,193,112,.5);box-shadow:0 0 40px rgba(120,80,220,.35);pointer-events:auto;opacity:0;visibility:hidden;transition:.2s;z-index:21;font-family:var(--mincho),serif}
+#ach.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+#ach .wt{color:var(--gold);letter-spacing:.2em;text-align:center;font-size:18px}
+#ach .ah{font-size:12px;color:#d8ccb0;opacity:.8;text-align:center;margin:4px 0 10px;font-family:var(--gothic)}
+#ach .ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:7px}
+#ach .ac{padding:8px 10px;border-radius:10px;border:1px solid #fff2;background:#ffffff08;text-align:left;color:#eee;font-family:var(--mincho),serif;cursor:pointer}
+#ach .ac b{display:block;font-size:14px;color:var(--c,#fff3cf)}#ach .ac i{display:block;font-style:normal;font-size:11.5px;color:#d8ccb0;margin-top:2px;font-family:var(--gothic)}
+#ach .ac small{display:block;font-size:11px;margin-top:3px;color:var(--c,#e8c170)}
+#ach .ac.lk{opacity:.45;cursor:default}#ach .ac.sel{border-color:var(--c);box-shadow:0 0 12px color-mix(in srgb,var(--c) 45%,transparent)}
+#ach .bf{text-align:right}#ach button.x{font-family:var(--mincho),serif;font-size:13px;padding:5px 12px;border-radius:14px;border:1px solid rgba(232,193,112,.5);background:#ffffff10;color:#f3e6c8;cursor:pointer;margin:8px 0 0}
 #realm{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:min(760px,96vw);max-height:86vh;overflow:auto;padding:16px 16px 12px;border-radius:14px;background:rgba(14,10,28,.93);border:1px solid rgba(232,193,112,.5);box-shadow:0 0 40px rgba(120,80,220,.35);pointer-events:auto;opacity:0;visibility:hidden;transition:.2s;z-index:21;font-family:var(--mincho),serif}
 #realm.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
 #realm .wt{color:var(--gold);letter-spacing:.2em;text-align:center;font-size:18px}
@@ -264,11 +278,11 @@ body.spec #bar,body.spec #tier,body.spec #cross,body.spec #acts,body.spec #bossb
 
 <div id="hud">
   <div id="me">
-    <div class="name">魔導王</div>
+    <div class="name">魔導王<span class="ttl"></span></div>
     <div class="bar hp"><i></i><b>2400</b></div>
     <div class="bar mp"><i></i><b>∞</b></div>
   </div>
-  <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button><button class="tb" id="realmBtn" type="button">国勢</button><button class="tb" id="specBtn" type="button">観戦</button></div>
+  <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button><button class="tb" id="realmBtn" type="button">国勢</button><button class="tb" id="specBtn" type="button">観戦</button><button class="tb" id="achBtn" type="button">実績</button></div>
   <div id="stats">
     <div class="lbl">王都ルーンヘイム 壊滅率</div>
     <div class="pct" id="ruinPct">0%</div>
@@ -289,6 +303,7 @@ body.spec #bar,body.spec #tier,body.spec #cross,body.spec #acts,body.spec #bossb
   <div id="quest"><div class="wt">依頼書 ─ 世界の勢力</div><div class="qb"></div><div class="bf"><button type="button" class="qx">閉じる</button></div></div>
   <div id="spec"><div class="sn"></div><div class="ss"></div><div class="sb"><i></i></div><div class="sc"><button type="button" data-s="prev">◀ 前</button><button type="button" data-s="next">次 ▶</button><button type="button" data-s="in">寄る</button><button type="button" data-s="out">引く</button><button type="button" data-s="spd">×1</button><button type="button" data-s="x">戻る</button></div><div class="sh"></div></div>
   <div id="ending"><div><div class="ek">結末</div><div class="en"></div><div class="et"></div><div class="es"></div><button type="button">この世界に留まる</button></div></div>
+  <div id="ach"><div class="wt">実績と称号</div><div class="ah"></div><div class="ag"></div><div class="bf"><button type="button" class="x">閉じる</button></div></div>
   <div id="realm"><div class="wt">国勢 ─ 各国の暮らし</div><div class="rh">人口・幸福度・戦力と、食料・木材・鉱石の蓄え（矢印は増減の向き）。8割以上壊した国は属国に、恩を積んで幸福にした国は盟友になる</div><div class="tw"><table><thead><tr><th>国・村</th><th>人口</th><th>幸福</th><th>戦力</th><th>食料</th><th>木材</th><th>鉱石</th><th>関係</th></tr></thead><tbody></tbody></table></div><div class="bf"><button type="button" class="rx">閉じる</button></div></div>
   <div id="wmap"><div class="wt">世界地図</div><canvas width="520" height="520"></canvas><div class="bf"><button type="button" class="mx">閉じる</button></div></div>
   <div id="bossbar"><div class="bn"></div><div class="bh"><i></i></div><div class="bs"><i></i></div></div>
@@ -2851,7 +2866,7 @@ addEventListener('keydown',e=>{
   if(SPEC){if(e.code==='KeyV'||e.code==='Escape')toggleSpec();else if(e.code==='ArrowLeft'||e.code==='KeyA')specStep(-1);else if(e.code==='ArrowRight'||e.code==='KeyD')specStep(1);else if(e.code==='KeyT')specSpeed();
     if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();return;}
   if(e.code==='KeyV'&&!questOpen&&!mapOpen&&!bookOpen&&!warpOpen&&!realmOpen){toggleSpec();return;}
-  const n=e.code.startsWith('Digit')?+e.code.slice(5):parseInt(e.key,10);if(questOpen){if(e.code==='KeyJ'||e.code==='Escape')toggleQuest();return;}if(mapOpen){if(e.code==='KeyN'||e.code==='Escape')toggleMap();return;}if(realmOpen){if(e.code==='KeyK'||e.code==='Escape')toggleRealm();return;}if(e.code==='KeyK'){toggleRealm();return;}if(e.code==='KeyJ'){toggleQuest();return;}if(e.code==='KeyN'){toggleMap();return;}if(bookOpen){if(e.code==='KeyB'||e.code==='Escape')toggleBook();return;}if(warpOpen){if(n>=1&&n<=WARPS.length)travelTo(n-1);if(e.code==='Escape'||e.code==='KeyH')toggleWarp();return;}if(e.code==='KeyB'){toggleBook();return;}if(n>=1&&n<=9){if(SLOTS[n-1]!=null)cast(SLOTS[n-1]);}else if(n===0&&e.code==='Digit0'){if(SLOTS[9]!=null)cast(SLOTS[9]);}
+  const n=e.code.startsWith('Digit')?+e.code.slice(5):parseInt(e.key,10);if(questOpen){if(e.code==='KeyJ'||e.code==='Escape')toggleQuest();return;}if(mapOpen){if(e.code==='KeyN'||e.code==='Escape')toggleMap();return;}if(achOpen){if(e.code==='KeyL'||e.code==='Escape')toggleAch();return;}if(e.code==='KeyL'){toggleAch();return;}if(realmOpen){if(e.code==='KeyK'||e.code==='Escape')toggleRealm();return;}if(e.code==='KeyK'){toggleRealm();return;}if(e.code==='KeyJ'){toggleQuest();return;}if(e.code==='KeyN'){toggleMap();return;}if(bookOpen){if(e.code==='KeyB'||e.code==='Escape')toggleBook();return;}if(warpOpen){if(n>=1&&n<=WARPS.length)travelTo(n-1);if(e.code==='Escape'||e.code==='KeyH')toggleWarp();return;}if(e.code==='KeyB'){toggleBook();return;}if(n>=1&&n<=9){if(SLOTS[n-1]!=null)cast(SLOTS[n-1]);}else if(n===0&&e.code==='Digit0'){if(SLOTS[9]!=null)cast(SLOTS[9]);}
   if(e.code==='KeyF')toggleFly();
   if(e.code==='KeyQ')setTier(TIER-1);
   if(e.code==='KeyH')travel();
@@ -2932,7 +2947,7 @@ function renderBook(){const g=$('#book .bg');if(!g)return;g.innerHTML='';
 rebuildBar();
 $('#controls').innerHTML=IS_MOBILE?
   '<dt>移動</dt><dd>画面の左側をなぞる</dd><dt>視点</dt><dd>画面の右側をなぞる</dd><dt>魔法</dt><dd>下の紋章をタップ（照準は画面中央）。「魔法書」で並びを編成</dd><dt>飛翔</dt><dd>「飛」で切替、「昇」「降」で高度</dd><dt>威力</dt><dd>「弱・中・強・極」をタップ</dd><dt>転移</dt><dd>「転」で転移先を選択</dd>':
-  '<dt>移動</dt><dd>WASD　疾走 Shift</dd><dt>視点</dt><dd>マウス（クリックで固定、Escで解除。固定できない時はドラッグ）</dd><dt>魔法</dt><dd>1〜9・0キー（B の魔法書で編成）、またはクリックで選択中の魔法</dd><dt>飛翔</dt><dd>F で切替　上昇 Space　下降 C</dd><dt>威力</dt><dd>Q／E で 弱・中・強・極 を切替</dd><dt>転移</dt><dd>H で転移先を選択（天穹楼・各国）</dd><dt>世界</dt><dd>J 依頼書（勢力・依頼・強化）　N 世界地図　K 国勢　V 観戦</dd><dt>音</dt><dd>M で切替</dd>';
+  '<dt>移動</dt><dd>WASD　疾走 Shift</dd><dt>視点</dt><dd>マウス（クリックで固定、Escで解除。固定できない時はドラッグ）</dd><dt>魔法</dt><dd>1〜9・0キー（B の魔法書で編成）、またはクリックで選択中の魔法</dd><dt>飛翔</dt><dd>F で切替　上昇 Space　下降 C</dd><dt>威力</dt><dd>Q／E で 弱・中・強・極 を切替</dd><dt>転移</dt><dd>H で転移先を選択（天穹楼・各国）</dd><dt>世界</dt><dd>J 依頼書　N 世界地図　K 国勢　V 観戦　L 実績</dd><dt>音</dt><dd>M で切替</dd>';
 
 // ================= aim =================
 const aimPoint=V3();const camDir=V3();
@@ -3111,7 +3126,8 @@ function step(dt){
   // ambient motes
   if(Math.random()<dt*20){const c=camera.position;glow.emit(c.x+rr(-60,60),c.y+rr(-15,20),c.z+rr(-60,60),rr(-.5,.5),rr(-.2,.5),rr(-.5,.5),rr(3,6),.5,.5,PC.gold,PC.gold,.35,0,0);}
   glow.update(dt);smoke.update(dt);
-  if(started){updHud(dt);updDmgText(dt);}
+  if(started){updHud(dt);updDmgText(dt);updAch(dt);
+    if(AURA&&!SPEC&&!pDead&&Math.random()<dt*14){const a=Math.random()*6.28,r=rr(.6,1.6),p=player.pos;glow.emit(p.x+Math.cos(a)*r,p.y+rr(0,.6),p.z+Math.sin(a)*r,0,rr(1.5,3.5),0,rr(.8,1.4),rr(.35,.6),.1,AURA,AURA,.8,.5,-.5);}}
 }
 
 populate();
@@ -3282,7 +3298,7 @@ function specCam(dt){const T=SPEC.L[SPEC.i];
     const pool=T.bt?CRW.filter(u=>u.st===1&&u.g===T.bt):T.raid?CRW.filter(u=>u.st===1&&u.g===T.raid):null;
     if(pool&&pool.length){let sx=0,sz=0;for(const u of pool){sx+=u.x;sz+=u.z;}tx=sx/pool.length;tz=sz/pool.length;}
     else if(T.port){const sh=T.port.ships.find(o=>o.st!=='dock');if(sh){tx=sh.pos.x;tz=sh.pos.z;}}
-    SPEC.tx=tx;SPEC.tz=tz;specInfo();}
+    SPEC.tx=tx;SPEC.tz=tz;specInfo();if(T.bt&&T.bt.over&&!T.bt.watched){T.bt.watched=true;WATCHED++;}}
   const a=Math.min(1,dt*1.5);SPEC.fx=lerp(SPEC.fx,SPEC.tx??T.x,a);SPEC.fz=lerp(SPEC.fz,SPEC.tz??T.z,a);SPEC.fy=lerp(SPEC.fy,Math.max(groundAt(SPEC.fx,SPEC.fz),0)+4,a);
   if(gameTime-SPEC.lastIn>4)camYaw+=dt*.07/SPEC.speed;
   const pit=clamp(camPitch,.12,1.3),cp=Math.cos(pit),dir=V3(Math.sin(camYaw)*cp,-Math.sin(pit),Math.cos(camYaw)*cp);
@@ -3636,6 +3652,47 @@ function showEnding(E){END_SEEN.add(E.id);saveGame();const el=$('#ending');el.qu
   el.classList.add('on');if(document.pointerLockElement)document.exitPointerLock();snd('chime',1);later(.4,()=>snd('bell',.8));}
 $('#ending button').addEventListener('click',e=>{e.stopPropagation();$('#ending').classList.remove('on');});
 $('#ending').addEventListener('pointerdown',e=>e.stopPropagation());
+// ================= 実績・称号 =================
+// 実績と称号は「記録を消す」でも消えないよう、別のキーに保存する。
+const ACH_KEY='hatenMadouou.ach';let WATCHED=0,AURA=null,achOpen=false,achT=0;
+const nRule=r=>COUNTRIES.filter(C=>C.rule===r).length;
+const ACHS=[
+  {id:'k10',n:'初陣',d:'敵を10体倒す',t:'駆け出しの魔導王',col:'#cfd8e8',c:()=>kills>=10},
+  {id:'k100',n:'百人斬り',d:'敵を100体倒す',t:'百戦の魔導王',col:'#ffb070',c:()=>kills>=100},
+  {id:'k1000',n:'万軍を屠る者',d:'敵を1,000体倒す',t:'万軍殺し',col:'#ff5a3a',c:()=>kills>=1000},
+  {id:'blitz',n:'電撃戦',d:'国をひとつ3分以内に陥落させる',t:'迅雷の覇者',col:'#9fc4ff',c:()=>COUNTRIES.some(C=>!C.village&&!C.settle&&C.done&&C.doneAt-C.start<=180)},
+  {id:'combo3',n:'連鎖の探究者',d:'連鎖魔法を3種見いだす',t:'連鎖の探究者',col:'#8fd8ff',c:()=>COMBO_SEEN.size>=3},
+  {id:'combo7',n:'連鎖の極み',d:'連鎖魔法をすべて見いだす',t:'七連の賢者',col:'#d6a8ff',c:()=>COMBO_SEEN.size>=COMBOS.length},
+  {id:'harv1',n:'豊穣の王',d:'収穫で食料5,000を得る',t:'豊穣の王',col:'#f0d060',c:()=>HARVEST>=5000},
+  {id:'harv2',n:'大地の恵み',d:'収穫で食料50,000を得る',t:'黄金の穂の君',col:'#ffd35a',c:()=>HARVEST>=50000},
+  {id:'port',n:'港を拓く者',d:'港を築く',t:'潮騒の主',col:'#6ab0e8',c:()=>PORT_N>=1},
+  {id:'trade',n:'海の商人',d:'交易船を10回帰港させる',t:'七つの海の王',col:'#3fb6d8',c:()=>TRADE>=10},
+  {id:'build',n:'創都の主',d:'魔法で建物を100棟建てる',t:'創都の祖',col:'#e0c090',c:()=>BUILT>=100},
+  {id:'gold',n:'黄金郷',d:'建物100棟を同時に黄金に変える',t:'黄金郷の主',col:'#ffc84a',c:()=>buildings.filter(b=>b.gold).length>=100},
+  {id:'ally3',n:'慈悲深き王',d:'盟友を3か国つくる',t:'慈愛の王',col:'#9fffd0',c:()=>nRule('ally')>=3},
+  {id:'vass3',n:'征服者',d:'属国を3か国つくる',t:'征服王',col:'#c9a0ff',c:()=>nRule('vassal')>=3},
+  {id:'peace',n:'和平の使者',d:'敵対した勢力と和解する',t:'和平の王',col:'#b8f0c8',c:()=>PEACE>=1},
+  {id:'watch',n:'戦の見届け人',d:'会戦を決着まで観戦する',t:'遠見の賢王',col:'#e6dcff',c:()=>WATCHED>=1},
+  {id:'elite',n:'特務隊殲滅',d:'帝国特務隊を12名倒す',t:'帝国の悪夢',col:'#ffe08a',c:()=>(KB.emp_elite||0)>=12},
+  {id:'king',n:'冥皇討滅',d:'魔王 冥皇ゼファルドを倒す',t:'魔王殺し',col:'#ff4a6a',c:()=>(KB.dem_king||0)>=1},
+  {id:'rich',n:'富める王',d:'魔晶を10,000以上持つ',t:'魔晶の君',col:'#b9d7ff',c:()=>MANA>=10000},
+  {id:'dawn',n:'夜明けを告げる者',d:'結末「人類の夜明け」に至る',t:'暁の魔導王',col:'#ffe8b0',c:()=>END_SEEN.has('dawn')},
+  {id:'dusk',n:'闇の宰領',d:'結末「魔王軍の世界」に至る',t:'黄昏の魔導王',col:'#b03050',c:()=>END_SEEN.has('dusk')},
+  {id:'hegemony',n:'覇天',d:'結末「覇天統一」に至る',t:'覇天の魔導王',col:'#ffd070',c:()=>END_SEEN.has('hegemony')},
+];
+const ACH=new Set();let TITLE=null;
+function loadAch(){try{const v=JSON.parse(localStorage.getItem(ACH_KEY)||'null');if(v&&Array.isArray(v.a))for(const id of v.a)if(ACHS.some(a=>a.id===id))ACH.add(id);if(v&&ACH.has(v.t))TITLE=v.t;}catch(e){}applyTitle();}
+function saveAch(){try{localStorage.setItem(ACH_KEY,JSON.stringify({a:[...ACH],t:TITLE}));}catch(e){}}
+function updAch(dt){achT-=dt;if(achT>0)return;achT=2;for(const a of ACHS){if(ACH.has(a.id))continue;let ok=false;try{ok=a.c();}catch(e){}if(ok){unlockAch(a);break;}}}
+function unlockAch(a){ACH.add(a.id);if(!TITLE)TITLE=a.id;saveAch();applyTitle();toast(`🏆 実績「${a.n}」─ 称号「${a.t}」を得た（L で実績）`);snd('bell',.8);later(.2,()=>snd('coin',.7));if(achOpen)renderAch();}
+function applyTitle(){const a=ACHS.find(x=>x.id===TITLE);$('#me .ttl').textContent=a?a.t:'';document.documentElement.style.setProperty('--tc',a?a.col:'#fff0c4');AURA=a?new THREE.Color(a.col).multiplyScalar(2.6):null;}
+function toggleAch(){achOpen=!achOpen;$('#ach').classList.toggle('on',achOpen);if(achOpen){renderAch();if(document.pointerLockElement)document.exitPointerLock();}}
+function renderAch(){$('#ach .ah').textContent=`達成 ${ACH.size} / ${ACHS.length}　達成した実績を押すと、その称号を名乗る（オーラの色も変わる）`;
+  $('#ach .ag').innerHTML=ACHS.map(a=>{const got=ACH.has(a.id);return `<button type="button" class="ac${got?'':' lk'}${TITLE===a.id?' sel':''}" style="--c:${a.col}" data-ach="${got?a.id:''}"><b>${got?'🏆 ':''}${a.n}</b><i>${a.d}</i><small>${got?'称号「'+a.t+'」':'称号 ？？？'}</small></button>`;}).join('');}
+$('#achBtn').addEventListener('click',e=>{e.stopPropagation();toggleAch();});
+$('#ach .x').addEventListener('click',e=>{e.stopPropagation();toggleAch();});
+$('#ach').addEventListener('pointerdown',e=>e.stopPropagation());
+$('#ach').addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('[data-ach]');if(!b||!b.dataset.ach)return;TITLE=TITLE===b.dataset.ach?null:b.dataset.ach;saveAch();applyTitle();renderAch();});
 // ================= save =================
 // 進行状況（魔晶・工房の強化・勢力・難易度・撃破数）を保存する。街や建物の状態は保存せず、読み込み時は世界が元に戻る。
 const SAVE_KEY='hatenMadouou.save';const ECO_FIXED=7+VILL.length;let saveReady=false;
@@ -3661,8 +3718,8 @@ function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v=
 function renderSaveInfo(){const el=$('#saveInfo');const s=readSave();if(!s){el.innerHTML='';return;}
   const d=new Date(s.at||0),lv=SHOP.reduce((a,it)=>a+(UPG[it.k]||0),0);
   const ends=ENDINGS.filter(E=>END_SEEN.has(E.id)).map(E=>E.n).join('・');
-  el.innerHTML=`<b>前回の記録</b>（${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}）　魔晶 ${MANA}・強化 計Lv${lv}・撃破 ${kills}<button type="button" id="saveDel">記録を消す</button>`+(ends?`<br><b>到達した結末</b> ${END_SEEN.size}/${ENDINGS.length}　${ends}`:'');
-  $('#saveDel').addEventListener('click',e=>{e.stopPropagation();if(!confirm('保存された記録（魔晶・強化・勢力の信頼など）を消して、最初からやり直しますか？'))return;
+  el.innerHTML=`<b>前回の記録</b>（${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}）　魔晶 ${MANA}・強化 計Lv${lv}・撃破 ${kills}・実績 ${ACH.size}/${ACHS.length}<button type="button" id="saveDel">記録を消す</button>`+(ends?`<br><b>到達した結末</b> ${END_SEEN.size}/${ENDINGS.length}　${ends}`:'');
+  $('#saveDel').addEventListener('click',e=>{e.stopPropagation();if(!confirm('保存された記録（魔晶・強化・勢力の信頼など）を消して、最初からやり直しますか？（実績と称号は残ります）'))return;
     saveReady=false;try{localStorage.removeItem(SAVE_KEY);}catch(e2){}location.reload();});}
 addEventListener('pagehide',saveGame);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveGame();});
@@ -3713,7 +3770,7 @@ function initVillages(){
 initVillages();
 initCrowd();
 initEconomy();
-setDiff(loadSave());saveReady=true;renderSaveInfo();
+setDiff(loadSave());saveReady=true;loadAch();renderSaveInfo();
 window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,ENDINGS,makePeace,destroyBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
