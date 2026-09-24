@@ -258,6 +258,16 @@ body.spec #qtrack{display:none}
 #guide b{color:#9fe0ff;font-weight:700}#guide .bf{text-align:right}
 body.mobile #guide .gpc{display:none}body:not(.mobile) #guide .gsp{display:none}
 #guide button{font-family:var(--mincho),serif;font-size:14px;padding:6px 16px;border-radius:14px;border:1px solid rgba(232,193,112,.5);background:#ffffff10;color:#f3e6c8;cursor:pointer;margin:10px 0 0}
+#lockR{position:absolute;left:0;top:0;pointer-events:none;display:none;text-align:center;will-change:transform;z-index:4}
+#lockR .rt{width:46px;height:46px;margin:0 auto;border:2px solid var(--lc,#ff6a5a);transform:rotate(45deg);box-shadow:0 0 10px var(--lc,#ff6a5a),inset 0 0 8px var(--lc,#ff6a5a);animation:lockSpin 2.4s linear infinite}
+@keyframes lockSpin{0%{transform:rotate(45deg) scale(1)}50%{transform:rotate(135deg) scale(.86)}100%{transform:rotate(225deg) scale(1)}}
+#lockR .ln{margin-top:10px;font-family:var(--mincho);font-size:12px;letter-spacing:.1em;color:#fff;text-shadow:0 0 6px var(--lc,#ff6a5a),0 1px 3px #000;white-space:nowrap}
+#lockR .lb{width:70px;height:4px;margin:3px auto 0;background:#0008;border-radius:2px;overflow:hidden}#lockR .lb i{display:block;height:100%;background:var(--lc,#ff6a5a)}
+#lockBtns{position:absolute;right:14px;bottom:calc(var(--sb) + 150px);display:flex;flex-direction:column;gap:8px;pointer-events:auto}
+#lockBtns .act{display:block}#lockBtns .act.on{background:rgba(255,106,90,.45);border-color:#ffb0a0}
+body.mobile #lockBtns{right:164px;bottom:calc(var(--sb) + 60px)}
+@media (max-width:560px){body.mobile #lockBtns{right:164px;bottom:calc(var(--sb) + 54px)}}
+body.spec #lockBtns,body.spec #lockR{display:none !important}
 #realm{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:min(760px,96vw);max-height:86vh;overflow:auto;padding:16px 16px 12px;border-radius:14px;background:rgba(14,10,28,.93);border:1px solid rgba(232,193,112,.5);box-shadow:0 0 40px rgba(120,80,220,.35);pointer-events:auto;opacity:0;visibility:hidden;transition:.2s;z-index:21;font-family:var(--mincho),serif}
 #realm.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
 #realm .wt{color:var(--gold);letter-spacing:.2em;text-align:center;font-size:18px}
@@ -360,8 +370,8 @@ body.mobile #guide .gpc{display:none}body:not(.mobile) #guide .gsp{display:none}
   <div id="qtrack"></div>
   <div id="guide"><div class="wt">遊び方 ─ はじめての方へ</div>
 <h3>このゲームについて</h3><p>あなたは最強の大魔導士（または修行中の見習い）。広い世界を自由に飛び回り、魔法で国を滅ぼすのも、畑や港を作って豊かにするのも自由です。物語（<b>物語</b>ボタン）に沿って遊ぶと、やることが自然に見つかります。</p>
-<h3>操作</h3><ul class="gpc"><li><b>移動</b> WASD、<b>疾走</b> Shift、<b>視点</b> マウス（クリックで固定・Escで解除）</li><li><b>魔法</b> 1〜9・0キー、またはクリックで選択中の魔法。照準は画面中央</li><li><b>威力</b> Q／E で「弱・中・強・極」を切替。強いほど派手で、次に使えるまで長くなる</li><li><b>飛翔</b> F で切替、Space で上昇、C で下降。<b>転移</b> H で各国へ一瞬で移動</li></ul>
-<ul class="gsp"><li>画面の<b>左側をなぞって移動</b>、<b>右側をなぞって視点</b>を回す</li><li>下の紋章をタップで<b>魔法</b>（照準は画面中央）。左下の「弱・中・強・極」で<b>威力</b></li><li>右下の「飛」で飛翔、「昇」「降」で高度、「疾」で疾走、「転」で転移</li></ul>
+<h3>操作</h3><ul class="gpc"><li><b>移動</b> WASD、<b>疾走</b> Shift、<b>視点</b> マウス（クリックで固定・Escで解除）</li><li><b>魔法</b> 1〜9・0キー、またはクリックで選択中の魔法。照準は画面中央</li><li><b>威力</b> Q／E で「弱・中・強・極」を切替。強いほど派手で、次に使えるまで長くなる</li><li><b>飛翔</b> F で切替、Space で上昇、C で下降。<b>転移</b> H で各国へ一瞬で移動</li><li><b>ロックオン</b> R で近くの敵に自動で照準、Tab で次の標的へ。魔法はその敵に向かって飛ぶ</li></ul>
+<ul class="gsp"><li>画面の<b>左側をなぞって移動</b>、<b>右側をなぞって視点</b>を回す</li><li>下の紋章をタップで<b>魔法</b>（照準は画面中央）。左下の「弱・中・強・極」で<b>威力</b></li><li>右下の「飛」で飛翔、「昇」「降」で高度、「疾」で疾走、「転」で転移</li><li>「狙」で<b>ロックオン</b>（近くの敵に自動で照準）、「替」で次の標的へ</li></ul>
 <h3>魔法</h3><p><b>魔法書</b>を開くと、すべての魔法の説明が読めます。押すとワンタッチ枠に加わり、キー1〜9・0（スマホは下の紋章）で唱えられます。</p>
 <ul><li><b>攻撃</b>：炎・雷・氷・水・風・地、終焉の極光、星墜とし、穿光</li><li><b>創造</b>：復元・豊穣・人・建物・花畑・麦畑・水田・野菜畑・港。壊すだけでなく、世界を豊かにできる</li><li><b>連鎖魔法</b>：属性の魔法を同じ場所に重ねると起こる。例：水をまいて雷で「雷水陣」</li><li><b>召喚と変化</b>：精霊3種は一定時間そばで戦い、神龍は一帯を無に帰す。「夜烏の変化」は体を烏の群れに変えて攻撃を受け付けない</li></ul>
 <h3>世界と勢力</h3><ul><li><b>依頼</b>（J）：帝国と魔王軍から依頼が届く。魔晶を稼いで工房で強化できる</li><li><b>国勢</b>（K）：国ごとの人口や食料。壊した国は属国に、豊かにした国は盟友になる</li><li><b>地図</b>（N）・<b>観戦</b>（V）：両軍の会戦を遠くから眺められる</li><li><b>物語</b>（G）・<b>実績</b>（L）：物語を進めると、封印された何かが目を覚ます……</li><li><b>外の世界</b>：この世界は小さな世界のひとつ。北の海の彼方の<b>巨神帝国</b>から、巨神兵が上陸してくることがある。光線を溜めている間に倒すか、避けよう</li></ul>
@@ -376,6 +386,8 @@ body.mobile #guide .gpc{display:none}body:not(.mobile) #guide .gsp{display:none}
   <div id="book"><div class="wt">魔法書 ─ ワンタッチ枠の編成</div><div class="bh2">押すと枠に加える／もう一度押すと外す。並びは加えた順で、キー1〜9・0（スマホは下の紋章）に対応。</div><div class="bg"></div><div class="cmbT">連鎖魔法 ─ 属性を重ねると起こる</div><div class="cmb"></div><div class="bf"><span class="cnt"></span><button type="button" class="bd">初期設定</button><button type="button" class="bx">閉じる</button></div></div>
   <div id="bar"></div>
   <div id="tier"><button type="button" data-t="0">弱</button><button type="button" data-t="1" class="on">中</button><button type="button" data-t="2">強</button><button type="button" data-t="3">極</button></div>
+  <div id="lockR"><div class="rt"></div><div class="ln"></div><div class="lb"><i></i></div></div>
+  <div id="lockBtns"><button class="act" id="lockBtn" type="button" title="ロックオン（R）">狙</button><button class="act" id="lockNext" type="button" title="標的の切り替え（Tab）">替</button></div>
   <div id="acts">
     <button class="act" data-a="fly" type="button">飛</button>
     <button class="act" data-a="home" type="button">転</button>
@@ -3322,6 +3334,7 @@ addEventListener('keydown',e=>{
   if(SPEC){if(e.code==='KeyV'||e.code==='Escape')toggleSpec();else if(e.code==='ArrowLeft'||e.code==='KeyA')specStep(-1);else if(e.code==='ArrowRight'||e.code==='KeyD')specStep(1);else if(e.code==='KeyT')specSpeed();
     if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();return;}
   if(e.code==='KeyV'&&!questOpen&&!mapOpen&&!bookOpen&&!warpOpen&&!realmOpen){toggleSpec();return;}
+  if(e.code==='Tab'){e.preventDefault();lockCycle();return;}if(e.code==='KeyR'&&!questOpen&&!mapOpen&&!bookOpen&&!warpOpen){lockToggle();return;}
   const n=e.code.startsWith('Digit')?+e.code.slice(5):parseInt(e.key,10);if(questOpen){if(e.code==='KeyJ'||e.code==='Escape')toggleQuest();return;}if(mapOpen){if(e.code==='KeyN'||e.code==='Escape')toggleMap();return;}if(guideOpen){if(e.code==='Escape'||e.code==='Slash')toggleGuide();return;}if(e.code==='Slash'){toggleGuide();return;}if(storyOpen){if(e.code==='KeyG'||e.code==='Escape')toggleStory();return;}if(e.code==='KeyG'){toggleStory();return;}if(achOpen){if(e.code==='KeyL'||e.code==='Escape')toggleAch();return;}if(e.code==='KeyL'){toggleAch();return;}if(realmOpen){if(e.code==='KeyK'||e.code==='Escape')toggleRealm();return;}if(e.code==='KeyK'){toggleRealm();return;}if(e.code==='KeyJ'){toggleQuest();return;}if(e.code==='KeyN'){toggleMap();return;}if(bookOpen){if(e.code==='KeyB'||e.code==='Escape')toggleBook();return;}if(warpOpen){if(n>=1&&n<=WARPS.length)travelTo(n-1);if(e.code==='Escape'||e.code==='KeyH')toggleWarp();return;}if(e.code==='KeyB'){toggleBook();return;}if(n>=1&&n<=9){if(SLOTS[n-1]!=null)cast(SLOTS[n-1]);}else if(n===0&&e.code==='Digit0'){if(SLOTS[9]!=null)cast(SLOTS[9]);}
   if(e.code==='KeyF')toggleFly();
   if(e.code==='KeyQ')setTier(TIER-1);
@@ -3403,8 +3416,8 @@ function renderBook(){const g=$('#book .bg');if(!g)return;g.innerHTML='';
   $('#book .cnt').textContent=`装備 ${SLOTS.length} / 10`;}
 rebuildBar();
 $('#controls').innerHTML=IS_MOBILE?
-  '<dt>移動</dt><dd>画面の左側をなぞる</dd><dt>視点</dt><dd>画面の右側をなぞる</dd><dt>魔法</dt><dd>下の紋章をタップ（照準は画面中央）。「魔法書」で並びを編成</dd><dt>飛翔</dt><dd>「飛」で切替、「昇」「降」で高度</dd><dt>威力</dt><dd>「弱・中・強・極」をタップ</dd><dt>転移</dt><dd>「転」で転移先を選択</dd>':
-  '<dt>移動</dt><dd>WASD　疾走 Shift</dd><dt>視点</dt><dd>マウス（クリックで固定、Escで解除。固定できない時はドラッグ）</dd><dt>魔法</dt><dd>1〜9・0キー（B の魔法書で編成）、またはクリックで選択中の魔法</dd><dt>飛翔</dt><dd>F で切替　上昇 Space　下降 C</dd><dt>威力</dt><dd>Q／E で 弱・中・強・極 を切替</dd><dt>転移</dt><dd>H で転移先を選択（天穹楼・各国）</dd><dt>説明</dt><dd>／（スラッシュ）で遊び方、B の魔法書で魔法の説明</dd><dt>世界</dt><dd>G 物語　J 依頼書　N 世界地図　K 国勢　V 観戦　L 実績</dd><dt>音</dt><dd>M で切替</dd>';
+  '<dt>移動</dt><dd>画面の左側をなぞる</dd><dt>視点</dt><dd>画面の右側をなぞる</dd><dt>魔法</dt><dd>下の紋章をタップ（照準は画面中央）。「魔法書」で並びを編成</dd><dt>飛翔</dt><dd>「飛」で切替、「昇」「降」で高度</dd><dt>威力</dt><dd>「弱・中・強・極」をタップ</dd><dt>照準</dt><dd>「狙」でロックオン、「替」で標的を切り替え</dd><dt>転移</dt><dd>「転」で転移先を選択</dd>':
+  '<dt>移動</dt><dd>WASD　疾走 Shift</dd><dt>視点</dt><dd>マウス（クリックで固定、Escで解除。固定できない時はドラッグ）</dd><dt>魔法</dt><dd>1〜9・0キー（B の魔法書で編成）、またはクリックで選択中の魔法</dd><dt>飛翔</dt><dd>F で切替　上昇 Space　下降 C</dd><dt>威力</dt><dd>Q／E で 弱・中・強・極 を切替</dd><dt>照準</dt><dd>R でロックオン（近くの敵に自動で照準）、Tab で標的を切り替え</dd><dt>転移</dt><dd>H で転移先を選択（天穹楼・各国）</dd><dt>説明</dt><dd>／（スラッシュ）で遊び方、B の魔法書で魔法の説明</dd><dt>世界</dt><dd>G 物語　J 依頼書　N 世界地図　K 国勢　V 観戦　L 実績</dd><dt>音</dt><dd>M で切替</dd>';
 
 // ================= aim =================
 const aimPoint=V3();const camDir=V3();
@@ -3423,6 +3436,7 @@ function updAim(){
   if(!hit&&!hitE)t=Math.min(t,600);
   aimPoint.copy(o).addScaledVector(camDir,Math.min(t,best));
   if(!hit&&!hitE){aimPoint.y=Math.max(aimPoint.y,groundAt(aimPoint.x,aimPoint.z));}
+  if(LOCK.on&&LOCK.t&&lockAlive(LOCK.t))aimPoint.copy(lockPos(LOCK.t));
   const s=SPELLS[selSpell];
   marker.position.set(aimPoint.x,groundAt(aimPoint.x,aimPoint.z)+.5,aimPoint.z);marker.scale.setScalar(Math.min(s.r,60));
   marker.material.color.set(s.col).multiplyScalar(1.8);
@@ -3576,7 +3590,7 @@ function step(dt){
     if(Math.random()<dt*4)smoke.emit(t.x,t.y+t.s*2.5,t.z,1,rr(4,7),0,rr(3,5),4,12,PC.smokeA,PC.smokeB,.4,.3,-1);
     if(b.life<=0)burningTrees.splice(i,1);}
   applyCraters();
-  if(started)updAim();
+  if(started){updLock(dt);updAim();}
   // lights
   for(const o of lights){if(o.peak<=0)continue;o.t+=dt;const k=o.t/o.dur;o.l.intensity=k>=1?0:o.peak*.12*(1-k)*(1-k)*(.85+Math.random()*.3);if(k>=1)o.peak=0;}
   // sun follows
@@ -3631,7 +3645,7 @@ function initCrowd(){crowdMesh=[0,1].map(sd=>{const m=new THREE.InstancedMesh(so
 function crSlot(sd){const cap=CROWD_MAX/2|0;if(crFree[sd].length)return crFree[sd].pop();if(crTop[sd]<cap){const i=crTop[sd]++;crowdMesh[sd].count=crTop[sd];return i;}return -1;}
 function bnSlot(sd){if(bnFree[sd].length)return bnFree[sd].pop();const cap=IS_MOBILE?40:120;if(bnTop[sd]<cap){const i=bnTop[sd]++;bannerMesh[sd].count=bnTop[sd];return i;}return -1;}
 function spawnCrowd(sd,x,z,o){const i=crSlot(sd);if(i<0)return null;const el=!!o.el;
-  const u={sd,i,x,z,y:groundAt(x,z),yaw:o.yaw||0,hp:120*EHP[DIFF]*(el?4:1),st:1,role:o.role||0,g:o.g,mode:o.mode,tgt:null,rt:rr(0,.8),cd:rr(.5,1.5),bob:Math.random()*6,t:0,
+  const u={sd,i,x,z,y:groundAt(x,z),yaw:o.yaw||0,hp:120*EHP[DIFF]*(el?4:1),max:120*EHP[DIFF]*(el?4:1),st:1,role:o.role||0,g:o.g,mode:o.mode,tgt:null,rt:rr(0,.8),cd:rr(.5,1.5),bob:Math.random()*6,t:0,
     el,hx:x,hz:z,fr:0,sp:(sd?7:6.5)*(o.role?.85:1)*rr(.9,1.1),bn:-1,dirty:true,gold:false,vx:0,vy:0,vz:0,isCrowd:true};
   if(o.banner){u.bn=bnSlot(sd);}
   crowdMesh[sd].setColorAt(i,el?tmpC.setRGB(1.25,1.1,.7):o.role?tmpC.setRGB(.8,.95,.85):tmpC.setRGB(rr(.9,1.05),rr(.9,1.05),rr(.9,1.05)));crowdMesh[sd].instanceColor.needsUpdate=true;
@@ -4461,6 +4475,44 @@ if(window.__inapp){const el=$('#inapp');el.classList.add('on');
   el.innerHTML=window.__inapp==='line'?'LINEの中のブラウザでは、画面を下になぞるとブラウザごと閉じてしまうことがあります。Safari などのブラウザで遊ぶのがおすすめです。<br><button type="button">ブラウザで開く</button>'
     :'アプリの中のブラウザでは、なぞる操作でブラウザが閉じることがあります。右上のメニューから「ブラウザで開く」を選ぶのがおすすめです。';
   const b=el.querySelector('button');if(b)b.addEventListener('click',e=>{e.stopPropagation();location.href=ext();});}
+// ================= ロックオン（自動照準） =================
+// 近くの敵に照準を合わせ続ける。魔法はその敵へ向かう。切り替えで近い順に次の敵へ
+const LOCK={on:(()=>{try{return localStorage.getItem('hatenMadouou.lock')==='1';}catch(e){return false;}})(),t:null,scanT:0};
+const KIND_N={wolf:'狼',knight:'騎士',archer:'弓兵',golem:'ゴーレム',wyvern:'飛竜',boss:'黒鋼の古竜',demon:'魔族兵'};
+function lockAlive(t){return t.isTitan?t.alive:t.isCrowd?t.st===1:(t.alive&&!t.statue);}
+function lockPos(t){return t.isTitan?t.pos.clone().setY(t.pos.y+80):t.isCrowd?V3(t.x,t.y+1.4,t.z):t.pos.clone().setY(t.pos.y+(t.h||2)*.5);}
+function lockName(t){return t.isTitan?t.nm:t.isCrowd?(t.sd?'魔王軍の兵':'帝国軍の兵')+(t.el?'（精鋭）':''):t.nm||KIND_N[t.kind]||'敵';}
+function lockHp(t){return t.isTitan?t.hp/(t.max||1):t.isCrowd?t.hp/(t.max||1):t.hp/(t.maxHp||1);}
+function lockHostile(t){return t.isTitan?true:t.isCrowd?hostileU(t):hostileE(t);}
+// 候補：近くの敵（住人は除く）。自動で選ぶのは敵対している相手と巨神兵だけ
+function lockCands(all){const p=player.pos,L=[];
+  for(const e of enemies){if(!e.alive||e.statue||e.kind==='citizen')continue;const d=e.pos.distanceTo(p);if(d>(e.kind==='mage'||e.kind==='brute'||e.kind==='boss'?420:320))continue;if(!all&&!hostileE(e))continue;L.push([e,d]);}
+  for(const u of CRW){if(u.st!==1)continue;const d=Math.hypot(u.x-p.x,u.z-p.z);if(d>220)continue;if(!all&&!hostileU(u))continue;L.push([u,d]);}
+  for(const t of TITANS){if(!t.alive)continue;const d=Math.hypot(t.pos.x-p.x,t.pos.z-p.z);if(d<1100)L.push([t,d]);}
+  L.sort((a,b)=>a[1]-b[1]);return L.slice(0,24).map(a=>a[0]);}
+function lockToggle(){LOCK.on=!LOCK.on;try{localStorage.setItem('hatenMadouou.lock',LOCK.on?'1':'0');}catch(e){}LOCK.t=null;
+  if(LOCK.on){const c=lockCands(false);LOCK.t=c[0]||null;}lockUI();toast(LOCK.on?(LOCK.t?`🎯 ロックオン：${lockName(LOCK.t)}`:'🎯 ロックオン（近くに敵がいない）'):'ロックオン解除');snd('null',.5);}
+function lockCycle(){if(!LOCK.on){LOCK.on=true;try{localStorage.setItem('hatenMadouou.lock','1');}catch(e){}}
+  const c=lockCands(true);if(!c.length){LOCK.t=null;lockUI();toast('近くに標的がいない');return;}
+  const i=LOCK.t?c.indexOf(LOCK.t):-1;LOCK.t=c[(i+1)%c.length];lockUI();snd('null',.4);}
+function lockUI(){$('#lockBtn').classList.toggle('on',LOCK.on);}
+function updLock(dt){const el=$('#lockR');
+  if(!LOCK.on||SPEC||pDead){el.style.display='none';return;}
+  LOCK.scanT-=dt;
+  if(LOCK.t){const p=lockPos(LOCK.t),d=Math.hypot(p.x-player.pos.x,p.z-player.pos.z);if(!lockAlive(LOCK.t)||d>(LOCK.t.isTitan?1300:520))LOCK.t=null;}
+  if(!LOCK.t&&LOCK.scanT<=0){LOCK.scanT=.4;LOCK.t=lockCands(false)[0]||null;}
+  const t=LOCK.t;if(!t){el.style.display='none';return;}
+  const p=lockPos(t);
+  // 視点を標的の方へ寄せる（画面の外にいるときほど強く）
+  const want=Math.atan2(p.x-player.pos.x,p.z-player.pos.z);let dy=want-camYaw;dy=Math.atan2(Math.sin(dy),Math.cos(dy));if(Math.abs(dy)>.35)camYaw+=dy*Math.min(1,dt*2.2);
+  projV.copy(p);projV.y+=t.isTitan?70:t.isCrowd?1.6:(t.h||2)*.6;projV.project(camera);
+  if(projV.z>1||Math.abs(projV.x)>1.2||Math.abs(projV.y)>1.2){el.style.display='none';return;}
+  el.style.display='block';el.style.setProperty('--lc',lockHostile(t)?'#ff6a5a':'#e8e4d0');
+  el.style.transform=`translate(${(projV.x*.5+.5)*innerWidth}px,${(-projV.y*.5+.5)*innerHeight}px) translate(-50%,-23px)`;
+  el.querySelector('.ln').textContent=lockName(t);el.querySelector('.lb i').style.width=(clamp(lockHp(t),0,1)*100).toFixed(0)+'%';}
+$('#lockBtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();lockToggle();});
+$('#lockNext').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();lockCycle();});
+lockUI();
 // ================= save =================
 // 進行状況（魔晶・工房の強化・勢力・難易度・撃破数）と、世界の記録（建てた物・壊した物）を保存する。
 const SAVE_KEY=APP?'hatenMadouou.save.app.'+MODE.fac:'hatenMadouou.save';const ECO_FIXED=7+VILL.length;let saveReady=false;
@@ -4571,7 +4623,7 @@ initCrowd();
 initEconomy();
 BN0=buildings.length;
 setDiff(loadSave());postLoad();saveReady=true;loadAch();renderSaveInfo();
-window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,LOCK,lockToggle,lockCycle,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
