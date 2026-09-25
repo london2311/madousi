@@ -362,6 +362,8 @@ body.spec #lockBtns,body.spec #lockR{display:none !important}
 #warp .wt{font-family:var(--mincho),serif;color:var(--gold);letter-spacing:.3em;text-align:center;font-size:18px;margin-bottom:4px}
 #warp button{font-family:var(--mincho),serif;font-size:17px;padding:10px 14px;border-radius:10px;border:1px solid #fff3;background:#ffffff10;color:#f3e6c8;cursor:pointer;text-align:left}
 #warp button small{display:block;font-size:12px;opacity:.7;margin-top:2px}
+#warp,#warp *{touch-action:pan-y}
+#warp button:active{transform:scale(.98)}
 #warp button:hover{background:#e8c17033;border-color:#e8c170}
 </style>
 </head>
@@ -483,7 +485,7 @@ const MODE=(()=>{try{const v=JSON.parse(localStorage.getItem('hatenMadouou.mode'
 const APP=MODE.m==='app';
 let LV=1,EXP=0;
 const LV_MAX=30,expNeed=l=>Math.round(60*Math.pow(l,1.6));
-const SPELL_LV={a_sun:30,a_moon:30,a_jup:30,a_nep:30,a_black:30,a_fall:30,a_love:30,atf:21,mirror:23,proton:29,inferno:26,rift:25,raincall:20,tsunami:17,crow:10,s_fire:13,s_ice:15,s_thun:16,dragon:30,fire:1,ice:1,flowers:1,thunder:3,wheat:2,veg:2,bloom:4,water:4,paddy:3,wind:6,earth:8,people:9,pierce:10,build:11,port:12,restore:14,meteor:18,gold:24,ultima:28};
+const SPELL_LV={a_sakura:30,a_sun:30,a_moon:30,a_jup:30,a_nep:30,a_black:30,a_fall:30,a_love:30,atf:21,mirror:23,proton:29,inferno:26,rift:25,raincall:20,tsunami:17,crow:10,s_fire:13,s_ice:15,s_thun:16,dragon:30,fire:1,ice:1,flowers:1,thunder:3,wheat:2,veg:2,bloom:4,water:4,paddy:3,wind:6,earth:8,people:9,pierce:10,build:11,port:12,restore:14,meteor:18,gold:24,ultima:28};
 const TIER_LV=[1,5,12,22],FLY_LV=7;
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const rand = mulberry32(20260923);
@@ -1029,10 +1031,18 @@ function removeTree(t,fling){
   if(fling){const p=V3(t.x,t.y+t.s,t.z);for(let i=0;i<3;i++)spawnDebris(p,t.state===1?0x151210:(i?0x2f5a2a:0x4a3526),.6+rand()*.8,18);}
 }
 function burnTree(t){
-  if(t.state!==0)return;t.state=1;(t.type===0?conifers:broads).setColorAt(t.idx,tmpC.setRGB(.035,.03,.028));trunks.setColorAt(t.ti,tmpC.setRGB(.15,.12,.1));
+  if(t.state!==0)return;t.state=1;t.ice=0;(t.type===0?conifers:broads).setColorAt(t.idx,tmpC.setRGB(.035,.03,.028));trunks.setColorAt(t.ti,tmpC.setRGB(.15,.12,.1));
   conifers.instanceColor.needsUpdate=true;broads.instanceColor.needsUpdate=true;trunks.instanceColor.needsUpdate=true;
   burningTrees.push({t,life:4+Math.random()*4});
 }
+// 凍った木：しばらく氷に包まれ、火で燃え、地の魔法や斬撃で砕け散る
+const ICE_TREES=[];const ICE_LEAF=new THREE.Color(.72,.88,1.08),ICE_TRUNK=new THREE.Color(.8,.92,1.1);
+function freezeTree(t){if(t.state!==0)return;if(!t.ice)ICE_TREES.push(t);t.ice=gameTime+70;(t.type===0?conifers:broads).setColorAt(t.idx,ICE_LEAF);trunks.setColorAt(t.ti,ICE_TRUNK);
+  conifers.instanceColor.needsUpdate=broads.instanceColor.needsUpdate=trunks.instanceColor.needsUpdate=true;}
+function iceTreeBreak(t){const p=V3(t.x,t.y+t.s*1.2,t.z);t.ice=0;removeTree(t,false);for(let i=0;i<(IS_MOBILE?3:6);i++)spawnDebris(p,i%2?0xbfe8ff:0x9fd0f0,.5+Math.random()*.9,16);
+  burst(p,IS_MOBILE?8:16,10,.8,1,.3,PC.iceA,PC.iceB,1,1,10);}
+function updIceTrees(){for(let i=ICE_TREES.length-1;i>=0;i--){const t=ICE_TREES[i];if(!t.ice||t.state!==0){t.ice=0;ICE_TREES.splice(i,1);continue;}
+  if(gameTime>t.ice){t.ice=0;ICE_TREES.splice(i,1);(t.type===0?conifers:broads).setColorAt(t.idx,t.col);trunks.setColorAt(t.ti,tmpC.setRGB(1,1,1));conifers.instanceColor.needsUpdate=broads.instanceColor.needsUpdate=trunks.instanceColor.needsUpdate=true;}}}
 function removeTreesIn(x,z,r,fling){treesIn(x,z,r,(t)=>removeTree(t,fling&&Math.random()<.4));}
 
 // rocks
@@ -1667,6 +1677,7 @@ class Enemy{
     if(!npc)this.aggro=true;
     if(dmg>0&&type!=='fall'&&!npc)dmgText(this.pos.clone().setY(this.pos.y+this.h),Math.round(dmg));
     if(this.hp<=0){this.alive=false;this.dying=0;this.deathType=type;this.air=true;if(!this.fly&&this.vel.y<8)this.vel.y+=10;
+      if(this.frozen>0&&!this.big&&(type==='earth'||type==='slash'||this.cutN))iceBreak(this,type==='earth'&&!this.cutN?'crumble':'split');
       if(!npc){kills++;countKill(this);}if((this.kind==='mage'||this.kind==='brute')&&!this.quietDie)sayMage(this,'die',{dead:true,dur:4.5});if((this.kind==='mage'||this.kind==='brute')&&this.rank!=='soldier'&&!this.quietDie){const nm=this.nm,rk=this.rank;later(1,()=>showBanner(nm+'、敗れる',rk==='king'?'魔王 討滅':rk==='majin'?'魔人 討滅':rk==='elite'?'強敵 撃破':'宮廷魔導士 撃破'));}if(this.onDeath)this.onDeath(this);if(this.kind==='boss')later(1.2,()=>showBanner('黒鋼の古竜、討滅','この世界に、もはや敵はいない'));}
   }
   finish(){
@@ -2207,8 +2218,8 @@ function updHome(dt){
 }
 function homeSpawn(){if(APP){appHome();return;}player.pos.set(HX,F,HZ+2);player.vel.set(0,0,0);player.flying=false;document.querySelector('[data-a="fly"]').classList.remove('on');player.face=Math.PI;camYaw=Math.PI;camPitch=.3;}
 const WARPS=[{n:'天穹楼',d:'大魔導士の居城'},{n:'王都ルーンヘイム',d:'西洋の王都'},{n:'月詠国 神楽京',d:'東方の城下町'},{n:'蒼海の国 アズラーン',d:'白亜と碧の海上都市'},{n:'天空要塞都市 エーテリア',d:'雲上に浮かぶ要塞'},{n:'神聖ヴァルガルド帝国 帝都',d:'人類最大の帝国（西の果て）'},{n:'魔都ネクロディア',d:'魔王の座す都（東の大陸）'},{n:'東雲国 桜花京',d:'桜と黒漆の城下町'},{n:'古の遺跡',d:'西の果てに眠る太古の都の跡'},{n:'封印の地',d:'北東の果て、虚ろの祭壇'},{n:'巨神帝国',d:'北の海の彼方、外の世界'}];
-let warpOpen=false;
-function toggleWarp(){warpOpen=!warpOpen;$('#warp').classList.toggle('on',warpOpen);if(warpOpen&&document.pointerLockElement)document.exitPointerLock();}
+let warpOpen=false,warpOpenedAt=0;
+function toggleWarp(){warpOpen=!warpOpen;$('#warp').classList.toggle('on',warpOpen);if(warpOpen)warpOpenedAt=performance.now();if(warpOpen&&document.pointerLockElement)document.exitPointerLock();}
 function travelTo(i){
   warpOpen=false;$('#warp').classList.remove('on');
   magicCircle(player.pos,5,lin(5,3,9),1.2,{y:.2,spin:3});burst(player.pos.clone().setY(player.pos.y+1),80,14,1,2,.3,PC.violetB,PC.gold,1,2,0);snd('chime',.7);
@@ -2232,9 +2243,27 @@ function travel(){toggleWarp();}
 // ================= tier =================
 let TIER=1;const TN=['弱','中','強','極'],TD=[.5,1,2,4],TCD=[.4,.6,.75,1];
 const TK=[{s:.45,n:.35,t:0},{s:1,n:1,t:1},{s:1.9,n:2.4,t:2},{s:3.4,n:4.5,t:3}];
-WARPS.forEach((w,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`${i+1}　${w.n}<small>${w.d}</small>`;b.addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();travelTo(i);});$('#warp').appendChild(b);});
+WARPS.forEach((w,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`${i+1}　${w.n}<small>${w.d}</small>`;safeTap(b,()=>{if(warpOpen)travelTo(i);},()=>warpOpenedAt);$('#warp').appendChild(b);});
 document.querySelectorAll('#tier button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setTier(+b.dataset.t);}));
 function setTier(t){TIER=clamp(t,0,maxTier());document.querySelectorAll('#tier button').forEach(b=>b.classList.toggle('on',+b.dataset.t===TIER));}
+// ================= 凍った体が砕ける・割れる =================
+// 凍りついた敵に地の魔法を当てるとバラバラに崩れ、一閃や桜舞で斬ると真っ二つに割れて倒れる
+function iceBreak(e,mode){const c=e.pos.clone();c.y+=e.h*.5;e.cutN=null;
+  snd('shatter',.9,c);burst(c,IS_MOBILE?20:44,14,1.2,1.4,.3,PC.iceA,PC.iceB,1,1,18);
+  if(mode==='crumble'){const n=Math.round((IS_MOBILE?8:16)*Math.min(2.5,e.sz||1));for(let i=0;i<n;i++){const q=c.clone().add(V3(rr(-.6,.6),rr(-e.h*.4,e.h*.4),rr(-.6,.6)));spawnDebris(q,i%3?0xbfe8ff:0x8fc4e0,(.35+Math.random()*.6)*(e.sz||1),rr(6,14));}
+    scene.remove(e.g);e.dead=true;return;}
+  splitBody(e.g,e.cutDir||V3(Math.cos(Math.random()*6.28),0,Math.sin(Math.random()*6.28)),c);e.dead=true;}
+function splitBody(g0,n,c){renderer.localClippingEnabled=true;g0.updateMatrixWorld(true);scene.remove(g0);n=n.clone().setY(0).normalize();const inv=g0.matrixWorld.clone().invert();
+  const parts=[];for(const s2 of[1,-1]){const h=g0.clone(true);const lp=new THREE.Plane().setFromNormalAndCoplanarPoint(n.clone().multiplyScalar(s2),c).applyMatrix4(inv);const pl=new THREE.Plane();const mats=[];
+    h.traverse(o=>{if(!o.isMesh)return;o.castShadow=false;const cm=m=>{const k=m.clone();k.clippingPlanes=[pl];k.side=THREE.DoubleSide;k.transparent=true;mats.push(k);return k;};o.material=Array.isArray(o.material)?o.material.map(cm):cm(o.material);});
+    scene.add(h);const ax=V3(0,1,0).cross(n.clone().multiplyScalar(s2)).normalize();parts.push({h,lp,pl,mats,ax,v:n.clone().multiplyScalar(s2*rr(2,4)).setY(rr(2,4)),rot:0,max:rr(1.1,1.5)});}
+  // 切り口の氷のきらめき
+  for(let i=0;i<(IS_MOBILE?10:24);i++){const q=c.clone().add(V3(rr(-1,1),rr(-1.5,1.5),rr(-1,1)));glow.emit(q.x,q.y,q.z,n.x*rr(-4,4),rr(1,5),n.z*rr(-4,4),rr(.5,1),rr(.4,.9),.1,PC.white,PC.iceA,1,.5,6);}
+  let t=0;addFx({update(dt){t+=dt;for(const P of parts){const h=P.h;if(t>.18&&P.rot<P.max){const d=Math.min(P.max-P.rot,dt*(.45+P.rot*1.9));P.rot+=d;h.rotateOnWorldAxis(P.ax,d);}
+      P.v.y-=20*dt;h.position.addScaledVector(P.v,dt);const gy=groundAt(h.position.x,h.position.z);if(h.position.y<gy){h.position.y=gy;P.v.set(0,0,0);}
+      h.updateMatrixWorld(true);P.pl.copy(P.lp).applyMatrix4(h.matrixWorld);
+      if(t>6)for(const m of P.mats)m.opacity=Math.max(0,1-(t-6)/2);}
+    if(t>8){for(const P of parts){scene.remove(P.h);for(const m of P.mats)m.dispose();}return false;}return true;}});}
 // ================= damage =================
 function damageArea(pos,r,dmg,knock,type,opts={}){
   dmg*=TD[TIER];knock*=(TIER>1?1.3:TIER<1?.6:1);
@@ -2253,7 +2282,7 @@ function damageArea(pos,r,dmg,knock,type,opts={}){
     if(d<r&&vy<r){const f=1-clamp(d/r,0,1)*.6;damageBuilding(b,dmg*f*(opts.bmul||1),opts.ignite||0);}
   }
   if(opts.trees!==false){
-    treesIn(pos.x,pos.z,r,(t,d)=>{if(knock>18&&d<r*.75)removeTree(t,Math.random()<.5);else if(opts.ignite)burnTree(t);});
+    treesIn(pos.x,pos.z,r,(t,d)=>{if(t.ice&&(type==='earth'||type==='slash'||type==='pierce')){iceTreeBreak(t);return;}if(knock>18&&d<r*.75)removeTree(t,Math.random()<.5);else if(opts.ignite)burnTree(t);else if(type==='ice')freezeTree(t);});
   }
   breakLanterns(pos.x,pos.z,r*.8);
   crowdArea(pos,r,dmg,knock,up,type);
@@ -2339,13 +2368,14 @@ const SPELLS=[
   {id:'a_black',k:'黒',name:'古代魔法・黒',read:'こだいまほう・くろ',col:'#8a60c0',c3:lin(3,1,6),cd:60,r:200,anc:1},
   {id:'a_fall',k:'墜',name:'古代魔法・天墜',read:'こだいまほう・てんつい',col:'#d8d8e8',c3:lin(6,6,8),cd:50,r:300,anc:1},
   {id:'a_love',k:'愛',name:'古代魔法・神愛',read:'こだいまほう・しんあい',col:'#ffe0f0',c3:lin(9,7,8),cd:20,r:120,anc:1},
+  {id:'a_sakura',k:'桜',name:'古代魔法・桜舞',read:'こだいまほう・おうぶ',col:'#ff9ec8',c3:lin(9,3.5,6),cd:50,r:300,anc:1},
   {id:'crow',k:'烏',name:'夜烏の変化',read:'よがらすのへんげ',col:'#9a86c8',c3:lin(2,1.4,4),cd:14,r:10},
   {id:'s_fire',k:'焔',name:'炎の精霊',read:'ほのおのせいれい',col:'#ff6a2a',c3:lin(9,3,.6),cd:18,r:40},
   {id:'s_ice',k:'霜',name:'氷の精霊',read:'こおりのせいれい',col:'#8fe0ff',c3:lin(2,6,10),cd:18,r:40},
   {id:'s_thun',k:'霆',name:'雷の精霊',read:'いかずちのせいれい',col:'#b8c8ff',c3:lin(5,6,12),cd:18,r:40},
   {id:'dragon',k:'龍',name:'神龍降臨',read:'しんりゅうこうりん',col:'#ffe28a',c3:lin(9,7,2.5),cd:80,r:300},
 ];
-const SPELL_DESC={"a_sun":"空に第二の太陽を呼び、大陸のすべてを焼き払う。建物も森も軍勢も、灰になる。","a_moon":"青白い月を呼び、大陸のすべてを凍らせる。海は氷原となり、兵は氷像となって砕ける（約2分で解ける）。","a_jup":"木星ほどもある星を大陸に墜とす。すべてが無に帰し、巨大な穿孔が残る。","a_nep":"海を呼び、大陸を海の底に沈める。水面より低いものはすべて呑まれ、やがて潮は引く。","a_black":"照準に黒い穴を開き、敵も建物も山々も吸い込んで無に帰す。あとには深い渦の跡が残る。","a_fall":"見えない圧力が天から降り、照準の一帯を押し潰す。建物も山々も、まったいらになる。","a_love":"世界への愛。この大陸のあらゆる破壊を元に戻す。建物・森・大地・凍りや水没も、すべて。","atf":"八角形の光の壁を張り巡らせる。その間はどんな攻撃も通さず、近づく敵を弾き飛ばす。攻撃を受けるたび、その方向に障壁が浮かび上がる。","mirror":"受けた攻撃をそのまま何十倍にもして、撃ってきた近くの敵へ跳ね返す。その間は傷を負わない。","proton":"巨神兵と同じ破壊の光。力を溜めて照準へ光線を放つと、着弾点から先へ爆発が大地を這うように連なり、一帯を焼き払う。","inferno":"自分を中心に、極なら直径2kmを業火で焼き尽くす。建物も森も大地も黒く焦げる。自分は焼かれない。","rift":"照準の方向へ光の一閃を放ち、大地を一刀両断する。極なら大陸を割るほどの裂け目が走る。","raincall":"天候を支配して雷雨を呼ぶ。空が暗くなり雨が降り、周りの敵へ雷が落ち続ける。","tsunami":"照準の方向へ巨大な津波を押し出す。津波に氷の魔法をかけると凍りつき、その上を歩ける氷の丘になる。","fire": "火球を放ち、着弾点で爆発する。建物や木を燃やす。威力を上げると火球の数が増える。", "thunder": "近くの敵へ次々と雷を落とす。当たった敵は一瞬しびれる。極では天から巨大な雷柱。", "ice": "一帯を凍らせ、氷柱で貫く。凍った敵は動けない。極では巨大な氷山が長く残り、周りを凍らせ続ける。", "water": "前方へ大津波を押し出し、敵も建物も押し流す。雷を重ねると連鎖魔法「雷水陣」。", "wind": "竜巻を起こし、敵を巻き上げながらさまよう。炎を重ねると「焔旋風」。", "earth": "大地を割り、岩の槍を突き上げて敵を打ち上げる。氷を重ねると「砕氷崩山」。", "ultima": "溜めてから放つ極光の大爆発。広い範囲のすべてを消し飛ばす、大魔導士の奥の手。", "meteor": "空から隕石の雨を降らせる。建物を壊すのが得意。", "pierce": "光の槍を撃ち抜く。まっすぐ遠くまで貫き、強敵との一騎打ちに向く。", "gold": "一帯の地面・木・建物・敵を黄金に変える。黄金になった建物は壊れた扱いになる。", "restore": "壊れた建物・燃えた木・えぐれた地面を元に戻す。国を復興させると喜ばれる。", "bloom": "花と木を芽吹かせ、地面を豊かにする。強以上で大樹（世界樹）が生える。", "people": "住人を呼び寄せ、その国の人口を増やす。", "build": "家や塔を建てる。国の外で唱えると新しい町ができる。", "flowers": "花畑を広げる。近くの国の幸福度が上がる。", "wheat": "麦畑を作る。実ると収穫され、近くの国の食料になる。", "paddy": "水田を作る。稲が黄金色に実ると収穫され、食料になる。", "veg": "野菜畑（キャベツ・南瓜・トマト・茄子）を作る。育つのが早い。", "port": "岸辺に港を築く。交易船が行き来して、資源と魔晶を持ち帰る。岸辺を狙って唱える。", "crow": "体を烏の群れに変える。その間はどんな攻撃も受け付けず、移動も速くなる。いざという時の守りに。", "s_fire": "炎の精霊を呼ぶ。頭上に控え、敵対している相手へ火球を撃つ。住人や平時の衛兵は狙わない。", "s_ice": "氷の精霊を呼ぶ。敵対している相手を凍らせ、氷柱で縫い止める。", "s_thun": "雷の精霊を呼ぶ。敵対している相手へ、次々と跳ねる稲妻を放つ。", "dragon": "天から神龍を呼ぶ。一帯を息吹で薙ぎ払い、最後にすべてを無に帰す。大結界も大きく削る。"};
+const SPELL_DESC={"a_sakura":"無数の桜の花びらが奔流となって大地を舞う。触れたものは、人も建物も、山も木々も、天空の浮島さえも、すべて細かく切り刻まれる。凍った敵は真っ二つに割れる。","a_sun":"空に第二の太陽を呼び、大陸のすべてを焼き払う。建物も森も軍勢も、灰になる。","a_moon":"青白い月を呼び、大陸のすべてを凍らせる。海は氷原となり、兵は氷像となって砕ける（約2分で解ける）。","a_jup":"木星ほどもある星を大陸に墜とす。すべてが無に帰し、巨大な穿孔が残る。","a_nep":"海を呼び、大陸を海の底に沈める。水面より低いものはすべて呑まれ、やがて潮は引く。","a_black":"照準に黒い穴を開き、敵も建物も山々も吸い込んで無に帰す。あとには深い渦の跡が残る。","a_fall":"見えない圧力が天から降り、照準の一帯を押し潰す。建物も山々も、まったいらになる。","a_love":"世界への愛。この大陸のあらゆる破壊を元に戻す。建物・森・大地・凍りや水没も、すべて。","atf":"八角形の光の壁を張り巡らせる。その間はどんな攻撃も通さず、近づく敵を弾き飛ばす。攻撃を受けるたび、その方向に障壁が浮かび上がる。","mirror":"受けた攻撃をそのまま何十倍にもして、撃ってきた近くの敵へ跳ね返す。その間は傷を負わない。","proton":"巨神兵と同じ破壊の光。力を溜めて照準へ光線を放つと、着弾点から先へ爆発が大地を這うように連なり、一帯を焼き払う。","inferno":"自分を中心に、極なら直径2kmを業火で焼き尽くす。建物も森も大地も黒く焦げる。自分は焼かれない。","rift":"照準の方向へ光の一閃を放ち、大地を一刀両断する。極なら大陸を割るほどの裂け目が走る。","raincall":"天候を支配して雷雨を呼ぶ。空が暗くなり雨が降り、周りの敵へ雷が落ち続ける。","tsunami":"照準の方向へ巨大な津波を押し出す。津波に氷の魔法をかけると凍りつき、その上を歩ける氷の丘になる。","fire": "火球を放ち、着弾点で爆発する。建物や木を燃やす。威力を上げると火球の数が増える。", "thunder": "近くの敵へ次々と雷を落とす。当たった敵は一瞬しびれる。極では天から巨大な雷柱。", "ice": "一帯を凍らせ、氷柱で貫く。凍った敵は動けない。極では巨大な氷山が長く残り、周りを凍らせ続ける。", "water": "前方へ大津波を押し出し、敵も建物も押し流す。雷を重ねると連鎖魔法「雷水陣」。", "wind": "竜巻を起こし、敵を巻き上げながらさまよう。炎を重ねると「焔旋風」。", "earth": "大地を割り、岩の槍を突き上げて敵を打ち上げる。氷を重ねると「砕氷崩山」。", "ultima": "溜めてから放つ極光の大爆発。広い範囲のすべてを消し飛ばす、大魔導士の奥の手。", "meteor": "空から隕石の雨を降らせる。建物を壊すのが得意。", "pierce": "光の槍を撃ち抜く。まっすぐ遠くまで貫き、強敵との一騎打ちに向く。", "gold": "一帯の地面・木・建物・敵を黄金に変える。黄金になった建物は壊れた扱いになる。", "restore": "壊れた建物・燃えた木・えぐれた地面を元に戻す。国を復興させると喜ばれる。", "bloom": "花と木を芽吹かせ、地面を豊かにする。強以上で大樹（世界樹）が生える。", "people": "住人を呼び寄せ、その国の人口を増やす。", "build": "家や塔を建てる。国の外で唱えると新しい町ができる。", "flowers": "花畑を広げる。近くの国の幸福度が上がる。", "wheat": "麦畑を作る。実ると収穫され、近くの国の食料になる。", "paddy": "水田を作る。稲が黄金色に実ると収穫され、食料になる。", "veg": "野菜畑（キャベツ・南瓜・トマト・茄子）を作る。育つのが早い。", "port": "岸辺に港を築く。交易船が行き来して、資源と魔晶を持ち帰る。岸辺を狙って唱える。", "crow": "体を烏の群れに変える。その間はどんな攻撃も受け付けず、移動も速くなる。いざという時の守りに。", "s_fire": "炎の精霊を呼ぶ。頭上に控え、敵対している相手へ火球を撃つ。住人や平時の衛兵は狙わない。", "s_ice": "氷の精霊を呼ぶ。敵対している相手を凍らせ、氷柱で縫い止める。", "s_thun": "雷の精霊を呼ぶ。敵対している相手へ、次々と跳ねる稲妻を放つ。", "dragon": "天から神龍を呼ぶ。一帯を息吹で薙ぎ払い、最後にすべてを無に帰す。大結界も大きく削る。"};
 const cds=SPELLS.map(()=>0);let selSpell=0;
 function announce(s){const el=$('#spellName');el.innerHTML=`${s.name}<small>${s.read}</small>`;el.style.setProperty('--sc',s.col);el.classList.remove('show');void el.offsetWidth;el.classList.add('show');}
 
@@ -2812,7 +2842,7 @@ function rift(P,K){const o=player.pos.clone();const dir=V3(P.x-o.x,0,P.z-o.z);if
     crater(p.x,p.z,W*rr(.5,.7),W*rr(.7,1.1),.8);if(i%3===0){burst(p,IS_MOBILE?6:12,20,1.2,3,8,PC.dust,PC.dustB,.6,1,-2,smoke,4,W*.5);glow.emit(p.x,p.y+2,p.z,0,rr(20,50),0,.6,W*.3,.5,PC.white,PC.violetB,1,.5,10);}
     if(i%10===0)spawnDebris(p.clone().addScaledVector(side,rr(-W,W)*.5),0x5a4e42,rr(1,3),rr(18,30));if(i%12===0)snd('quake',.5,p);});
   later(.3,()=>{const c1=o.clone(),c2=b.clone();c1.y+=2;c2.y+=2;
-    for(const e of enemies){if(!e.alive)continue;const c=e.pos.clone();c.y=c1.y;if(distSeg(c,c1,c2)<W+e.radius)e.hit(9999*TD[TIER],side.clone().multiplyScalar(rr(-1,1)*30).setY(20),'pierce');}
+    for(const e of enemies){if(!e.alive)continue;const c=e.pos.clone();c.y=c1.y;if(distSeg(c,c1,c2)<W+e.radius){if(e.frozen>0){e.cutN=1;e.cutDir=side.clone();}e.hit(9999*TD[TIER],side.clone().multiplyScalar(rr(-1,1)*30).setY(20),'pierce');e.cutN=null;}}
     for(const u of CRW)if(u.st===1&&distSeg(V3(u.x,c1.y,u.z),c1,c2)<W)crowdDamage(u,9999*TD[TIER],V3(0,18,0),'p','pierce');
     for(const bd of buildings){if(bd.destroyed)continue;if(distSeg(V3(bd.x,c1.y,bd.z),c1,c2)<W+bd.rad)damageBuilding(bd,bd.maxHp*2*TD[TIER],.3);}
     if(typeof titanSeg==='function')titanSeg(c1,c2,W,9999*TD[TIER]*6);skySeg(c1,c2,W,9999*TD[TIER]*6);
@@ -2914,7 +2944,33 @@ function playerProton(P,K){const len=[300,700,1400,2600][K.t],W=[10,16,24,36][K.
   magicCircle(player.pos,10+K.t*4,lin(8,5,2),2,{y:.3,spin:3,follow:player.pos});snd('chime',1);
   let t=0;addFx({update(dt){t+=dt;const tp=staffTip();for(let q=0;q<10;q++){const a=Math.random()*6.28,b=Math.random()*3.14,r=rr(5,12);
       glow.emit(tp.x+Math.sin(b)*Math.cos(a)*r,tp.y+Math.cos(b)*r,tp.z+Math.sin(b)*Math.sin(a)*r,-Math.sin(b)*Math.cos(a)*r*2.5,-Math.cos(b)*r*2.5,-Math.sin(b)*Math.sin(a)*r*2.5,.4,1.6,.3,PC.fireA,PC.white,1,0,0);}return t<1.2;}});
-  later(1.2,()=>protonBeam(staffTip(),P,len,W,'player',6000));}
+  later(1.2,()=>playerBeam(len,W,6000,K));}
+// 大魔導士のプロトンビーム：溜め終わった瞬間の照準へ撃つ。地上を狙えば照準の先へ大地を薙ぎ、爆炎の壁が広く立ち上がる。空を狙えば空へ一直線
+function playerBeam(len,W,power,K){const o=staffTip(),P=aimPoint.clone();const d3=P.clone().sub(o);if(d3.lengthSq()<1)camera.getWorldDirection(d3);d3.normalize();
+  const sky=P.y>groundAt(P.x,P.z)+6;snd('crack',1.3,P);screenFlash(lin(1.6,1.1,.6),.6);shake(.8);
+  if(sky){const end=o.clone().addScaledVector(d3,Math.max(len*1.6,1500));let t=0,lb=-1;
+    addFx({update(dt){t+=dt;if(t-lb>.07){lb=t;beamFx(o,end,W*1.1,lin(3,1.8,.8),.16);}for(let q=0;q<(IS_MOBILE?4:10);q++){const p=o.clone().lerp(end,Math.random());glow.emit(p.x,p.y,p.z,rr(-8,8),rr(-8,8),rr(-8,8),.5,rr(W*.2,W*.5),.3,PC.white,PC.fireA,1,.5,0);}return t<1.3;}});
+    later(.1,()=>{snd('bigboom',1.1,P);skySeg(o,end,W*1.6,power*TD[TIER]*20);titanSeg(o,end,W*1.4,power*TD[TIER]*4);
+      for(const e of enemies){if(!e.alive||e.kind==='citizen')continue;if(distSeg(e.pos.clone().setY(e.pos.y+(e.h||2)*.5),o,end)<W*1.4+e.radius)e.hit(power*TD[TIER],null,'fire');}
+      if(aimHitSky()){fireDome(P,W*5);damageArea(P,W*4,power,20,'fire',{up:10,ignite:1,trees:false});}});
+    return;}
+  const fwd=V3(d3.x,0,d3.z);if(fwd.lengthSq()<1e-4)fwd.set(Math.sin(camYaw),0,Math.cos(camYaw));fwd.normalize();const side=V3(fwd.z,0,-fwd.x);
+  const n=Math.min(IS_MOBILE?20:36,Math.max(6,Math.floor(len/(W*2.4)))),SW=1.9,sg=Math.random()<.5?-1:1;
+  const path=[];for(let i=0;i<=n;i++){const u=i/n;const p=P.clone().addScaledVector(fwd,u*len).addScaledVector(side,sg*Math.sin(u*Math.PI*1.6)*W*2.2);p.y=groundAt(p.x,p.z);path.push(p);}
+  flashLight(P.clone().setY(P.y+80),lin(1,.7,.35),300,len*1.5,SW+5);later(.1,()=>snd('bigboom',1.2,P));
+  let t=0,lb=-1;addFx({update(dt){t+=dt;const k=Math.min(1,t/SW),fi=k*n,i0=Math.floor(fi),p=path[Math.min(n,i0)].clone().lerp(path[Math.min(n,i0+1)],fi-i0);
+    if(t-lb>.06){lb=t;beamFx(o,p,W*.8,lin(3,1.8,.8),.14);}
+    for(let q=0;q<(IS_MOBILE?6:14);q++)glow.emit(p.x+rr(-W,W),p.y+rr(0,W*.6),p.z+rr(-W,W),rr(-10,10),rr(10,40),rr(-10,10),rr(.4,.9),rr(W*.2,W*.5),.4,PC.white,PC.fireA,1,.6,-2);
+    if(Math.random()<.4)shake(.4,p);return t<SW;}});
+  const R=W*3.2,SD=W*5.5;
+  for(let i=0;i<=n;i++){const p=path[i],d=SW*(i/n)+.5+rr(0,.15);
+    firePillar(p,R,W*20*rr(.8,1.2),d);
+    const sides=IS_MOBILE?(i%2?[]:[1]):[-1,1];for(const s2 of sides){const q=p.clone().addScaledVector(side,s2*SD*rr(.8,1.2)).addScaledVector(fwd,rr(-W,W));q.y=groundAt(q.x,q.z);firePillar(q,R*.8,W*14*rr(.7,1.1),d+rr(.1,.4));
+      later(d+.2,()=>{damageArea(q,R*1.3,power*.8,24,'fire',{up:24,ignite:1,bmul:2.5,trees:false});scorchTrees(q.x,q.z,R*1.6);});}
+    later(d,()=>{burst(p,IS_MOBILE?20:40,R*1.8,1.3,R*.3,2,PC.fireA,PC.fireB,1,1.8,-6,glow,R,R*.3);if(i%3===0){shake(1,p);snd('bigboom',.55,p);}if(i%4===2)fireDome(p,W*3.2);scorchTrees(p.x,p.z,R*1.8);
+      damageArea(p,R*1.5,power,30,'fire',{up:30,ignite:1,bmul:2.5,trees:false});});}
+  const E=path[n];later(SW+.8,()=>{fireDome(E,W*9);shockwave(E,W*16,lin(6,3,1),1.2,2);snd('bigboom',1.2,E);shake(1.6,E);damageArea(E,W*7,power*1.5,40,'fire',{up:40,ignite:1,bmul:3});scorchTrees(E.x,E.z,W*9);});}
+function aimHitSky(){if(!LG.alive)return false;const c=LG.pos.clone();c.y-=90;if(aimPoint.distanceTo(c)<260)return true;for(const I of LG.isles)if(I.alive&&aimPoint.distanceTo(I.pos)<I.sz*1.4)return true;return false;}
 Object.assign(SP,{proton(P,s,K){playerProton(P,K);}});
 // ================= 外の世界：巨神帝国と巨神兵 =================
 // この世界は、ほんの小さな世界のひとつにすぎない。北の海の彼方には巨神帝国ゴルディオンがあり、巨神兵5体を擁する
@@ -3075,6 +3131,12 @@ function lagnaArrive(silent){LG.st='move';LG.seen=true;LG.on=true;LG.alive=true;
   for(const I of LG.isles)if(I.alive)I.g.visible=true;
   if(!silent){showBanner('雲の彼方より、天空の城','天空王国ラグナ ─ 地上のすべてを滅ぼしに来た');toast(`⚠ 天空の城ラグナが現れた。機械兵とインドラの矢に注意（N で地図・${IS_MOBILE?'「観戦」':'V'} で観戦）`);
     snd('growl',1.5);later(.8,()=>snd('bigboom',.7));later(3,()=>kingSay('arrive'));saveGame();}}
+// 天空の城は最初から空にある：最初に狙う国と天穹楼の間に浮かび、ゆっくりと国へ向かう
+function lagnaAtStart(){if(!LG.g||LG.seen||LG.dead)return;lagnaArrive(true);const C=COUNTRIES[LG.ci];if(C){const hx=APP?player.pos.x:HX,hz=APP?player.pos.z:HZ;
+    const dx=hx-C.x,dz=hz-C.z,L=Math.hypot(dx,dz)||1,k=Math.min(900,L*.4);LG.pos.set(C.x+dx/L*k,0,C.z+dz/L*k);LG.pos.y=lagnaTopY(LG.pos.x,LG.pos.z);LG.face=Math.atan2(-dx,-dz);}
+  LG.indraT=Math.max(LG.indraT,90);LG.g.position.copy(LG.pos);
+  later(4,()=>{showBanner('天空の城ラグナ','空に、城が浮かんでいる ─ 地上のすべてを滅ぼすために');toast(`⚠ 天空の城ラグナが${C?C.label+'へ向かっている':'空に現れた'}（N で地図・${IS_MOBILE?'「観戦」':'V'} で観戦）`);snd('growl',1.2);});
+  later(7,()=>kingSay('arrive'));}
 function lagnaDeploy(n){n=Math.min(n,Math.floor(LG.reserve),ROB_MAX-robAlive());if(n<=0)return 0;LG.reserve-=n;
   const base=LG.pos.clone();for(let i=0;i<n;i++)later(i*.06,()=>{if(!LG.alive)return;const a=Math.random()*6.28,r=rr(60,180);spawnRobot(LG.pos.x+Math.cos(a)*r,LG.pos.y-rr(40,200),LG.pos.z+Math.sin(a)*r,'strike',LG.ci);});
   return n;}
@@ -3702,7 +3764,57 @@ function aLove(){const G=player.pos.clone();showBanner('古代魔法・神愛','
   lanternPos.forEach((p,i)=>{if(!p.alive){p.alive=true;dummy.position.copy(p);dummy.rotation.set(0,0,0);dummy.scale.set(1,1,1);dummy.updateMatrix();lanternPost.setMatrixAt(i,dummy.matrix);dummy.position.y+=4.3;dummy.updateMatrix();lanternLamp.setMatrixAt(i,dummy.matrix);}});
   lanternPost.instanceMatrix.needsUpdate=lanternLamp.instanceMatrix.needsUpdate=true;
   for(const C of COUNTRIES)if(C.eco&&!C.outer)C.eco.happyT=gameTime+240;pHP=PLAYER_MAX;}
-Object.assign(SP,{a_sun(P){aSun();},a_moon(P){aMoon();},a_jup(P){aJupiter(P);},a_nep(P){aNeptune();},a_black(P){aBlack(P);},a_fall(P){aFall(P);},a_love(P){aLove();}});
+// 桜舞：無数の桜の花びらが奔流となって大地を舞い、触れたものを人も建物も山も木々も、すべて切り刻む
+const PET_N=IS_MOBILE?2600:7600;let petals=null,SAKURA=null;const PETD=[];
+function initPetals(){const g=new THREE.CircleGeometry(.55,6);g.scale(1,.6,1);
+  petals=new THREE.InstancedMesh(g,new THREE.MeshBasicMaterial({color:0xffffff,side:THREE.DoubleSide,transparent:true,opacity:.95,depthWrite:false}),PET_N);
+  petals.frustumCulled=false;petals.renderOrder=3;
+  for(let i=0;i<PET_N;i++){const w=Math.random();const c=w<.05?tmpC.setRGB(2.2,1.6,1.8):w<.35?tmpC.setRGB(1.8,.62,1.02):tmpC.setHSL(.925+Math.random()*.05,.8+Math.random()*.2,.58+Math.random()*.14);petals.setColorAt(i,c);petals.setMatrixAt(i,zeroM);
+    PETD.push({k:0,off:Math.random(),jx:rr(-1,1),jy:rr(-1,1),jz:rr(-1,1),sp:rr(2,7),ph:Math.random()*6.28,s:rr(.7,1.4),amb:Math.random()<.14});}
+  petals.count=0;scene.add(petals);}
+function aSakura(P){if(!petals)initPetals();const G=P.clone();G.y=groundAt(G.x,G.z);const R=1300,N=IS_MOBILE?5:9;
+  SAKURA={G,R,t:0,T:13,st:[],cutT:0,carve:0,skyT:0};
+  for(let k=0;k<N;k++)SAKURA.st.push({a0:Math.random()*6.28,w:rr(.18,.32)*(k%2?1:-1),b:rr(.25,.5),ph:Math.random()*6,c:rr(.4,.9),h0:rr(6,22),hist:[],acc:0,W:rr(22,34),head:V3()});
+  for(let i=0;i<PET_N;i++)PETD[i].k=i%N;petals.count=PET_N;
+  showBanner('古代魔法・桜舞','散れ');snd('chime',1.1);later(.3,()=>snd('whoosh',1.2));later(.8,()=>snd('chime',.8));
+  magicCircle(player.pos,14,lin(3,1.4,2),2.5,{y:.3,spin:2,follow:player.pos});post.flashCol.setRGB(1.4,.8,1);post.flash=Math.max(post.flash,.35);}
+function sakuraHead(S,st,t,out){const tip=staffTip();const a=st.a0+st.w*t*1.6,r=S.R*(.12+.8*Math.abs(Math.sin(st.b*t+st.ph)));
+  let x=S.G.x+Math.cos(a)*r,z=S.G.z+Math.sin(a)*r,y=groundAt(x,z)+st.h0+Math.sin(t*st.c*2+st.ph)*14;
+  if(st===S.st[0]&&LG.alive&&t>5.5&&t<10&&Math.hypot(LG.pos.x-S.G.x,LG.pos.z-S.G.z)<S.R+700){const q=(t-5.5)*1.3;x=LG.pos.x+Math.cos(q)*240;z=LG.pos.z+Math.sin(q)*240;y=LG.pos.y-120+Math.sin(q*1.7)*140;}
+  const e=Math.min(1,t/1.6),k=e*e*(3-2*e);return out.set(lerp(tip.x,x,k),lerp(tip.y,y,k),lerp(tip.z,z,k));}
+const _ph=V3(),_pq=V3(),_pm=new THREE.Matrix4(),_pqt=new THREE.Quaternion(),_pe=new THREE.Euler(),_ps=V3();
+function updSakura(dt){const S=SAKURA;if(!S)return;S.t+=dt;if(S.t>=S.T){SAKURA=null;petals.count=0;return;}const t=S.t,fade=t>S.T-2.5?Math.max(0,(S.T-t)/2.5):1;
+  for(const st of S.st){sakuraHead(S,st,t,st.head);st.acc+=dt;while(st.acc>=1/30){st.acc-=1/30;st.hist.unshift(st.head.clone());if(st.hist.length>40)st.hist.pop();}}
+  // 花びらの奔流
+  const cp=camera.position;
+  for(let i=0;i<PET_N;i++){const d=PETD[i],st=S.st[d.k];let x,y,z;
+    if(d.amb){const r=S.R*.9*((i*.618)%1),a=i*2.4+t*.1;x=S.G.x+Math.cos(a)*r;z=S.G.z+Math.sin(a)*r;y=groundAt(x,z)+((d.ph*30+t*(8-d.sp))%80+80)%80;x+=Math.sin(t*d.sp*.3+d.ph)*6;}
+    else{const H=st.hist;if(!H.length)continue;const fi=d.off*(H.length-1),i0=Math.floor(fi),A=H[i0],B=H[Math.min(H.length-1,i0+1)],f=fi-i0;
+      const w=st.W*(.22+d.off*.85),sw=t*d.sp+d.ph;x=lerp(A.x,B.x,f)+(d.jx*Math.cos(sw)-d.jz*Math.sin(sw))*w;y=lerp(A.y,B.y,f)+d.jy*w*.5+Math.sin(sw*1.3)*3;z=lerp(A.z,B.z,f)+(d.jx*Math.sin(sw)+d.jz*Math.cos(sw))*w;
+      if(t>S.T-2.5){const k=1-fade;y-=k*k*30*d.s;x+=d.jx*k*60;z+=d.jz*k*60;}}
+    const dc=Math.hypot(x-cp.x,y-cp.y,z-cp.z),sc=d.s*(.6+dc*.0045)*(fade*.8+.2);
+    _pe.set(t*d.sp+d.ph,t*d.sp*.7,d.ph);_pqt.setFromEuler(_pe);_ps.set(sc,sc,sc);_pq.set(x,y,z);_pm.compose(_pq,_pqt,_ps);petals.setMatrixAt(i,_pm);}
+  petals.instanceMatrix.needsUpdate=true;petals.material.opacity=.95*fade;
+  if(Math.random()<dt*(IS_MOBILE?10:24)){const st=S.st[Math.random()*S.st.length|0];glow.emit(st.head.x+rr(-10,10),st.head.y+rr(-5,10),st.head.z+rr(-10,10),rr(-6,6),rr(-2,6),rr(-6,6),rr(.5,1),rr(.8,1.6),.2,PC.white,PC.violetA,1,.5,-1);}
+  if(Math.random()<dt*1.5)snd('whoosh',.5,S.st[0].head);
+  // 触れたものを切り刻む
+  S.cutT-=dt;if(S.cutT<=0&&t>1&&t<S.T-2){S.cutT=.1;for(const st of S.st){const H=st.hist;for(const j of[0,8,18,30]){const p=H[Math.min(j,H.length-1)];if(p)sakuraCut(p,st.W*(j?1.2:1),j===0);}}}}
+function sakuraCut(p,w,carve){
+  for(const e of enemies){if(!e.alive||e.statue)continue;const dx=e.pos.x-p.x,dz=e.pos.z-p.z;if(dx*dx+dz*dz>(w+e.radius)**2||Math.abs(e.pos.y-p.y)>w+30)continue;
+    const a=Math.random()*6.28;e.cutDir=V3(Math.cos(a),0,Math.sin(a));if(e.frozen>0)e.cutN=1;e.hit((e.hp+(e.shield||0))*2/P_MUL+1,null,'slash');e.cutN=null;}
+  for(const u of CRW){if(u.st!==1)continue;const dx=u.x-p.x,dz=u.z-p.z;if(dx*dx+dz*dz<w*w&&Math.abs(u.y-p.y)<w+20)crowdDamage(u,u.hp*2/P_MUL+1,V3(rr(-8,8),10,rr(-8,8)),'p','slash');}
+  robotsArea(p,w,1e12,'p','slash');
+  for(const t2 of TITANS)if(t2.alive&&Math.hypot(t2.pos.x-p.x,t2.pos.z-p.z)<w+30&&p.y<t2.pos.y+170)titanHit(t2,t2.max*.08/P_MUL);
+  if(LG.alive){for(const I of LG.isles)if(I.alive&&p.distanceTo(I.pos)<w+I.sz*1.5)breakIsle(I);const c=LG.pos.clone();c.y-=90;if(p.distanceTo(c)<w+240){LG.hp-=LG.max*.012;LG.angerP=90;if(LG.hp<=0)lagnaFall();}}
+  for(const s of SKY.sats)if(!s.dead&&p.distanceTo(s.g.position)<w+s.sz*1.5)satHit(s,1e12);
+  for(const B of BARRIERS)if(B.hp>0&&Math.hypot(B.x-p.x,B.z-p.z)<B.r+w)hitBarrier(B,{x:p.x,y:p.y,z:p.z,height:0},B.max*.04);
+  for(const b of buildings){if(b.destroyed||b.gold)continue;if(Math.abs(b.x-p.x)>w+b.rad||Math.abs(b.z-p.z)>w+b.rad)continue;if(Math.hypot(b.x-p.x,b.z-p.z)>w+b.rad||p.y>b.y+b.height+w)continue;
+    if(barrierFor(b))continue;const near=(b.x-camera.position.x)**2+(b.z-camera.position.z)**2<700*700;destroyBuilding(b);
+    if(near){const c=V3(b.x,b.y+b.height*.5,b.z);for(let i=0;i<(IS_MOBILE?4:10);i++)spawnDebris(c.clone().add(V3(rr(-b.rad,b.rad)*.5,rr(-b.height,b.height)*.4,rr(-b.rad,b.rad)*.5)),i%3?0xd9c8a8:0xf0b8c8,rr(.4,1.2),rr(12,26));}}
+  treesIn(p.x,p.z,w,t=>{if(t.ice)iceTreeBreak(t);else removeTree(t,true);});
+  if(carve){const th=Math.random()*3.14,cx=Math.cos(th),cz=Math.sin(th);
+    terrainEdit(p.x,p.z,w*1.3,(h,q,x,z)=>{if(h<4)return;const stripe=Math.abs(Math.sin((x*cx+z*cz)*.35));return h-Math.max(0,1-q*q)*(1.5+stripe*5)*Math.min(1,h/30);});}}
+Object.assign(SP,{a_sakura(P){aSakura(P);},a_sun(P){aSun();},a_moon(P){aMoon();},a_jup(P){aJupiter(P);},a_nep(P){aNeptune();},a_black(P){aBlack(P);},a_fall(P){aFall(P);},a_love(P){aLove();}});
 function updAncient(dt){updSea(dt);if(MOON&&gameTime>MOON.end){moonThaw();toast('氷が解け、大地に色が戻った');}}
 // ================= 召喚魔法 =================
 // 精霊は大魔導士のそばに浮かび、敵対している相手だけを自動で攻撃する。神龍は一帯を無に帰す。
@@ -4161,12 +4273,13 @@ function rebuildBar(){barEl.innerHTML='';SPELLS.forEach(s=>s.el=null);
 function updBarSel(){SPELLS.forEach((s,i)=>{if(!s.el)return;s.el.classList.toggle('sel',i===selSpell);s.el.classList.toggle('lock',!spellOk(s));});}
 let bookOpen=false;
 // 魔法書の選択はスクロールやかすった指で切り替わらないよう、指を離した時点で「ほとんど動いていない・長押しでない」ときだけ反応する
-function bookTap(el,fn){let sx=0,sy=0,st=0,ok=false,tap=false;
+function safeTap(el,fn,since){let sx=0,sy=0,st=0,ok=false,tap=false;
   el.addEventListener('pointerdown',e=>{e.stopPropagation();sx=e.clientX;sy=e.clientY;st=e.timeStamp;ok=true;tap=false;});
   el.addEventListener('pointermove',e=>{if(ok&&Math.hypot(e.clientX-sx,e.clientY-sy)>8)ok=false;});
   el.addEventListener('pointercancel',()=>{ok=false;});
-  el.addEventListener('pointerup',e=>{tap=ok&&e.timeStamp-st<650&&Math.hypot(e.clientX-sx,e.clientY-sy)<=8&&st-bookOpenedAt>300;ok=false;});
+  el.addEventListener('pointerup',e=>{tap=ok&&e.timeStamp-st<650&&Math.hypot(e.clientX-sx,e.clientY-sy)<=8&&st-since()>300;ok=false;});
   el.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(e.detail===0){fn();return;}if(!tap)return;tap=false;fn();});}
+function bookTap(el,fn){safeTap(el,fn,()=>bookOpenedAt);}
 let bookOpenedAt=0;
 function toggleBook(){bookOpen=!bookOpen;$('#book').classList.toggle('on',bookOpen);if(bookOpen){bookOpenedAt=performance.now();renderBook();if(document.pointerLockElement)document.exitPointerLock();}}
 function renderBook(){const g=$('#book .bg'),g2=$('#book .ancg');if(!g)return;g.innerHTML='';if(g2)g2.innerHTML='';
@@ -4347,7 +4460,7 @@ function step(dt){
     if(!started&&e.kind!=='boss'&&!e.fly){e.animate(dt,false);continue;}e.update(dt);}
   for(let i=fx.length-1;i>=0;i--){if(!fx[i].update(dt))fx.splice(i,1);}
   cullT-=dt;if(cullT<=0){cullT=.3;cullWorld();}
-  updWorld(dt);updCrowd(dt);updSites(dt);updTitans(dt);updLagna(dt);updRobots(dt);updRel(dt);updTech(dt);updBarros(dt);updVoices(dt);updSpirits(dt);updIceMts(dt);updCrow(dt);updShields(dt);updWeather(dt);updAncient(dt);updWaves(dt);updBarriers(dt);
+  updWorld(dt);updCrowd(dt);updSites(dt);updTitans(dt);updLagna(dt);updRobots(dt);updRel(dt);updTech(dt);updBarros(dt);updVoices(dt);updIceTrees();updSakura(dt);updSpirits(dt);updIceMts(dt);updCrow(dt);updShields(dt);updWeather(dt);updAncient(dt);updWaves(dt);updBarriers(dt);
   updBuildings(dt);updDebris(dt);updHome(dt);updFlora(dt);updSkyCity(dt);updFarm(dt);
   for(let i=burningTrees.length-1;i>=0;i--){const b=burningTrees[i];b.life-=dt;const t=b.t;
     if(Math.random()<dt*25)glow.emit(t.x+rr(-1,1)*t.s*.4,t.y+t.s*rr(1,2.6),t.z+rr(-1,1)*t.s*.4,0,rr(4,8),0,rr(.5,1),rr(2,4),.4,PC.fireA,PC.fireB,1,.5,-2);
@@ -4376,7 +4489,7 @@ requestAnimationFrame(frame);
 $('#start').disabled=false;$('#loadmsg').textContent='';
 $('#start').addEventListener('click',()=>{
   started=true;initAudio();$('#title').classList.add('gone');$('#hud').classList.add('on');
-  appStart();homeSpawn();questPostStart();firstGuide();
+  appStart();homeSpawn();questPostStart();firstGuide();lagnaAtStart();
   setTimeout(()=>APP?showBanner(APP_BASE.n,'見習い魔法使い（'+FAC_N[MODE.fac]+'）の修行が始まる'):showBanner('天穹楼','大魔導士の居城'),600);
   if(!IS_MOBILE)tryLock();
   magicCircle(player.pos,6,lin(6,4,1.5),2,{y:.2,spin:2});burst(player.pos.clone().setY(player.pos.y+1),120,18,1.5,2,.3,PC.gold,PC.violetB,1,2,0);
@@ -4422,6 +4535,7 @@ function crowdAlive(g,sd){return g?g.n[sd]:0;}
 function crowdDamage(u,dmg,imp,src,type){if(u.st!==1)return;if(src==='p')dmg*=P_MUL;u.hp-=dmg;
   if(type==='ice')u.fr=Math.max(u.fr,5);else if(type==='thunder')u.fr=Math.max(u.fr,1.2);
   if(u.hp>0)return;u.st=2;u.t=0;if(u.g)u.g.n[u.sd]--;
+  if(u.fr>1.5&&(type==='earth'||type==='slash'||type==='pierce')&&(u.x-camera.position.x)**2+(u.z-camera.position.z)**2<500*500){const q=V3(u.x,u.y+1.4,u.z);for(let i=0;i<(IS_MOBILE?3:6);i++)spawnDebris(q,0xbfe8ff,.3+Math.random()*.4,10);burst(q,8,8,.6,.8,.2,PC.iceA,PC.iceB,1,1,12);u.shatter=true;}
   if(imp){u.vx=imp.x;u.vy=Math.max(imp.y,6);u.vz=imp.z;u.fling=true;}else{u.vx=u.vz=0;u.vy=0;u.fling=false;}
   if(src==='p'){kills++;gainExp(u.el?20:6);const side=CR_SIDE[u.sd];KB[side+'_crowd']=(KB[side+'_crowd']||0)+1;if(u.sd===1)KB.demon=(KB.demon||0)+1;
     if(u.mode==='battle'){FAC[side].rep-=.15;FAC[CR_SIDE[1-u.sd]].rep+=.05;}else if(u.mode==='raid'){addFavor(u.g.ci,.5);}else if(u.mode==='garrison'){COUNTRIES[u.sd?5:4].angered=true;}}}
@@ -4455,6 +4569,7 @@ function updCrowd(dt){if(!crowdMesh||!CRW.length)return;
   const cx=camera.position.x,cz=camera.position.z;let chM=[false,false],chB=[false,false];
   for(let n=CRW.length-1;n>=0;n--){const u=CRW[n];
     if(u.st===0){CRW.splice(n,1);continue;}
+    if(u.st===2&&u.shatter){crowdFree(u);chM[u.sd]=true;continue;}
     if(u.st===2){u.t+=dt;if(u.fling){u.vy-=36*dt;u.x+=u.vx*dt;u.y+=u.vy*dt;u.z+=u.vz*dt;const g=groundAt(u.x,u.z);if(u.y<g){u.y=g;u.vx*=.3;u.vz*=.3;u.vy=0;u.fling=false;}}
       if(u.t>3)u.y-=dt*1.2;if(u.t>4.5){crowdFree(u);chM[u.sd]=true;continue;}u.dirty=true;}
     else if(u.st===3){if(u.g&&u.g.over&&gameTime>u.g.clear+30){crowdFree(u);chM[u.sd]=true;continue;}}
@@ -5537,7 +5652,7 @@ setDiff(loadSave());postLoad();lagnaLoad();techLoad(TECH_LOAD);saveReady=true;
 // 主な国の町にも住人を置く（人々の声が聞こえるように）
 for(const ci of[0,1,2,3,4,6]){const C=COUNTRIES[ci];if(!C)continue;const n=IS_MOBILE?5:12,r0=ci===3?C4R-20:ci===4?ER-60:C.r*.7;
   for(let i=0;i<n;i++){const a=Math.random()*6.28,r=Math.sqrt(Math.random())*r0,x=C.x+Math.cos(a)*r,z=C.z+Math.sin(a)*r;if(groundAt(x,z)<1)continue;new Enemy('citizen',x,z,{tc:{x:C.x,z:C.z,r:r0},inTown:false});}}loadAch();renderSaveInfo();
-window.__h={TECH,techDevelop,BARROS,barrosStart,say,kingSay,sayMage,SAYS,indraFire,LG,ROB,SKY,REL,AIDS,THREAT,rel,relAdd,spawnAid,spawnRobot,lagnaArrive,lagnaFall,breakIsle,indraCharge,updRel,skyArea,robAlive,get kb(){return KB;},BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,get sea(){return SEA;},get moon(){return MOON;},hgrid,LOCK,lockToggle,lockCycle,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={trees,ICE_TREES,get sakura(){return SAKURA;},TECH,techDevelop,BARROS,barrosStart,say,kingSay,sayMage,SAYS,indraFire,LG,ROB,SKY,REL,AIDS,THREAT,rel,relAdd,spawnAid,spawnRobot,lagnaArrive,lagnaFall,breakIsle,indraCharge,updRel,skyArea,robAlive,get kb(){return KB;},BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,get sea(){return SEA;},get moon(){return MOON;},hgrid,LOCK,lockToggle,lockCycle,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
