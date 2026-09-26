@@ -217,6 +217,7 @@ body.spec #bar,body.spec #tier,body.spec #cross,body.spec #acts,body.spec #bossb
 .say.mg{background:rgba(24,16,40,.9);color:#f4ead0;border:1px solid rgba(232,193,112,.6)}.say.mg::after{border-top-color:rgba(24,16,40,.9)}.say.mg b{color:var(--gold)}
 .say.dm{border-color:rgba(220,60,70,.7)}.say.dm b{color:#ff8a8a}
 .say.sky{background:rgba(14,40,48,.9);color:#dff8f4;border:1px solid rgba(143,240,224,.7);font-size:14px;max-width:min(320px,70vw)}.say.sky::after{border-top-color:rgba(14,40,48,.9)}.say.sky b{color:#8ff0e0}
+.say.sk2{background:rgba(40,16,56,.92);color:#f6ecff;border:1px solid rgba(200,140,255,.75);font-size:13.5px}.say.sk2::after{border-top-color:rgba(40,16,56,.92)}.say.sk2 b{color:#d8a8ff}
 .say.sg{background:rgba(40,30,10,.92);border-color:#ffe08a;color:#fff6dc;font-size:13.5px}.say.sg::after{border-top-color:rgba(40,30,10,.92)}
 #emerg{position:fixed;inset:0;z-index:38;display:none;place-items:center;padding:calc(var(--st) + 16px) 16px calc(var(--sb) + 16px);background:radial-gradient(ellipse at 50% 45%,rgba(90,8,8,.78),rgba(10,2,4,.94) 75%);font-family:var(--mincho),serif;text-align:center;pointer-events:auto;overflow-y:auto}
 #emerg.on{display:grid;animation:endIn 1s ease both}
@@ -379,7 +380,7 @@ body.spec #lockBtns,body.spec #lockR{display:none !important}
     <div class="bar hp"><i></i><b></b></div>
     <div class="bar mp"><i></i><b>∞</b></div>
   </div>
-  <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="gfxBtn" type="button">画質</button><button class="tb" id="saveBtn" type="button">セーブ</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button><button class="tb" id="realmBtn" type="button">国勢</button><button class="tb" id="specBtn" type="button">観戦</button><button class="tb" id="achBtn" type="button">実績</button><button class="tb" id="storyBtn" type="button">物語</button><button class="tb" id="guideBtn" type="button">遊び方</button></div>
+  <div id="topbtns"><button class="tb" id="muteBtn" type="button">音 オン</button><button class="tb" id="diffBtn" type="button">難易度 ノーマル</button><button class="tb" id="gfxBtn" type="button">画質</button><button class="tb" id="saveBtn" type="button">セーブ</button><button class="tb" id="auraBtn" type="button">オーラ</button><button class="tb" id="bookBtn" type="button">魔法書</button><button class="tb" id="questBtn" type="button">依頼</button><button class="tb" id="mapBtn" type="button">地図</button><button class="tb" id="realmBtn" type="button">国勢</button><button class="tb" id="specBtn" type="button">観戦</button><button class="tb" id="achBtn" type="button">実績</button><button class="tb" id="storyBtn" type="button">物語</button><button class="tb" id="guideBtn" type="button">遊び方</button></div>
   <div id="stats">
     <div class="lbl">王都ルーンヘイム 壊滅率</div>
     <div class="pct" id="ruinPct">0%</div>
@@ -409,7 +410,7 @@ body.spec #lockBtns,body.spec #lockR{display:none !important}
 <ul class="gsp"><li>画面の<b>左側をなぞって移動</b>、<b>右側をなぞって視点</b>を回す</li><li>下の紋章をタップで<b>魔法</b>（照準は画面中央）。左下の「弱・中・強・極」で<b>威力</b></li><li>右下の「飛」で飛翔、「昇」「降」で高度、「疾」で疾走、「転」で転移</li><li>「狙」で<b>ロックオン</b>（近くの敵に自動で照準）、「替」で次の標的へ</li></ul>
 <h3>魔法</h3><p><b>魔法書</b>を開くと、すべての魔法の説明が読めます。押すとワンタッチ枠に加わり、キー1〜9・0（スマホは下の紋章）で唱えられます。</p>
 <ul><li><b>攻撃</b>：炎・雷・氷・水・風・地、終焉の極光、星墜とし、穿光</li><li><b>創造</b>：復元・豊穣・人・建物・花畑・麦畑・水田・野菜畑・港。壊すだけでなく、世界を豊かにできる</li><li><b>連鎖魔法</b>：属性の魔法を同じ場所に重ねると起こる。例：水をまいて雷で「雷水陣」</li><li><b>召喚と変化</b>：精霊3種は一定時間そばで戦い、神龍は一帯を無に帰す。「夜烏の変化」は体を烏の群れに変えて攻撃を受け付けない</li></ul>
-<h3>世界と勢力</h3><ul><li><b>依頼</b>（J）：帝国と魔王軍から依頼が届く。魔晶を稼いで工房で強化できる</li><li><b>国勢</b>（K）：国ごとの人口や食料。壊した国は属国に、豊かにした国は盟友になる</li><li><b>地図</b>（N）・<b>観戦</b>（V）：両軍の会戦を遠くから眺められる</li><li><b>物語</b>（G）・<b>実績</b>（L）：物語を進めると、封印された何かが目を覚ます……</li><li><b>外の世界</b>：この世界は小さな世界のひとつ。北の海の彼方の<b>巨神帝国</b>から、巨神兵が上陸してくることがある。光線を溜めている間に倒すか、避けよう</li><li><b>天空王国ラグナ</b>：しばらくすると、雲の彼方から巨大な<b>天空の城</b>が現れる。国の上空に留まって<b>飛行機械兵</b>を降らせ、町を火の海にし、ときどき<b>インドラの矢</b>で大地を撃ち抜く。まわりの<b>浮島</b>と城は<b>強・極</b>の魔法でしか砕けず、砕けた島は地上へ落ちる。浮島が残っている間、城への傷は4分の1</li><li><b>諸勢力の関係</b>（K の国勢）：敵対する兵は出会えば自ら戦い、「同盟」の勢力は襲われた国へ<b>援軍</b>を送る。共通の敵に襲われ続けると、帝国と魔王軍でさえ休戦する。信頼の厚い勢力は、襲われている大魔導士にも援軍を送ってくれる</li><li><b>地上の反撃</b>：天空の城が現れると、地上の国々は研究を急ぐ。まれに、インドラの矢を防ぐ<b>天盾</b>や、天空の城に挑む<b>守護機兵</b>を完成させる</li><li><b>禁呪バロス</b>：天空の城に国を焼かれ、崩壊率が8割を超えた国には、ごくまれに古代魔法の継承者が生まれる。国家非常事態が宣言され、国民とともに世界を滅ぼす禁呪を唱える。術者を討つか、その前に天空の城を墜とせば止められる</li><li><b>人々の声</b>：町を歩くと、住人や兵のつぶやきが聞こえる。国家術師や幹部は、近づくと話しかけてくる</li></ul>
+<h3>世界と勢力</h3><ul><li><b>依頼</b>（J）：帝国と魔王軍から依頼が届く。魔晶を稼いで工房で強化できる</li><li><b>国勢</b>（K）：国ごとの人口や食料。壊した国は属国に、豊かにした国は盟友になる</li><li><b>地図</b>（N）・<b>観戦</b>（V）：両軍の会戦を遠くから眺められる</li><li><b>物語</b>（G）・<b>実績</b>（L）：物語を進めると、封印された何かが目を覚ます……</li><li><b>外の世界</b>：この世界は小さな世界のひとつ。北の海の彼方の<b>巨神帝国</b>から、巨神兵が上陸してくることがある。光線を溜めている間に倒すか、避けよう</li><li><b>天空王国ラグナ</b>：しばらくすると、雲の彼方から巨大な<b>天空の城</b>が現れる。国の上空に留まって<b>飛行機械兵</b>を降らせ、町を火の海にし、ときどき<b>インドラの矢</b>で大地を撃ち抜く。まわりの<b>浮島</b>と城は<b>強・極</b>の魔法でしか砕けず、砕けた島は地上へ落ちる。浮島が残っている間、城への傷は4分の1</li><li><b>諸勢力の関係</b>（K の国勢）：敵対する兵は出会えば自ら戦い、「同盟」の勢力は襲われた国へ<b>援軍</b>を送る。共通の敵に襲われ続けると、帝国と魔王軍でさえ休戦する。信頼の厚い勢力は、襲われている大魔導士にも援軍を送ってくれる</li><li><b>地上の反撃</b>：天空の城が現れると、地上の国々は研究を急ぐ。まれに、インドラの矢を防ぐ<b>天盾</b>や、天空の城に挑む<b>守護機兵</b>を完成させる</li><li><b>禁呪バロス</b>：天空の城に国を焼かれ、崩壊率が8割を超えた国には、ごくまれに古代魔法の継承者が生まれる。国家非常事態が宣言され、国民とともに世界を滅ぼす禁呪を唱える。術者を討つか、その前に天空の城を墜とせば止められる</li><li><b>オーラ</b>（U・「気」）：魔法使いは強さに応じた大きさのオーラをまとう。自分のオーラを展開すると、弱い敵はひるみ、怯え、驚く。隠せば気づかれない</li><li><b>宇宙の帝王</b>：しばらくすると、宇宙帝王ギルザードが側近二人と宇宙船で降り立ち、国々を焼き、星を滅ぼす炎の球「滅星球」を放つ。溜めている間に深手を負わせれば止められる</li><li><b>広がる世界</b>：帝都と魔都には外郭の街区が広がり、各地に小国20と村50がある。帝国と魔王軍は空の兵を持ち、天空の機械兵と渡り合う</li><li><b>人々の声</b>：町を歩くと、住人や兵のつぶやきが聞こえる。国家術師や幹部は、近づくと話しかけてくる</li></ul>
 <h3>困ったとき</h3><ul><li>倒れても拠点で起き上がるだけ。進行は自動でセーブされる</li><li>スマホが熱いときは、上の「画質」を<b>省電力</b>に</li><li>強すぎて退屈なら、タイトルで<b>魔法使い見習い</b>を選ぶと Lv1 から成長を楽しめる</li></ul>
 <div class="bf"><button type="button" class="x">はじめる</button></div></div>
   <div id="story"><div class="wt">物語</div><div class="sh"></div><div class="sb2"></div><div class="bf"><button type="button" class="x">閉じる</button></div></div>
@@ -429,6 +430,7 @@ body.spec #lockBtns,body.spec #lockR{display:none !important}
     <button class="act" data-a="dash" type="button">疾</button>
     <button class="act" data-a="up" type="button">昇</button>
     <button class="act" data-a="down" type="button">降</button>
+    <button class="act" data-a="aura" type="button">気</button>
   </div>
 </div>
 
@@ -486,7 +488,7 @@ const MODE=(()=>{try{const v=JSON.parse(localStorage.getItem('hatenMadouou.mode'
 const APP=MODE.m==='app';
 let LV=1,EXP=0;
 const LV_MAX=30,expNeed=l=>Math.round(60*Math.pow(l,1.6));
-const SPELL_LV={a_sakura:30,a_sun:30,a_moon:30,a_jup:30,a_nep:30,a_black:30,a_fall:30,a_love:30,atf:21,mirror:23,proton:29,inferno:26,rift:25,raincall:20,tsunami:17,crow:10,s_fire:13,s_ice:15,s_thun:16,dragon:30,fire:1,ice:1,flowers:1,thunder:3,wheat:2,veg:2,bloom:4,water:4,paddy:3,wind:6,earth:8,people:9,pierce:10,build:11,port:12,restore:14,meteor:18,gold:24,ultima:28};
+const SPELL_LV={kurobako:24,a_sakura:30,a_sun:30,a_moon:30,a_jup:30,a_nep:30,a_black:30,a_fall:30,a_love:30,atf:21,mirror:23,proton:29,inferno:26,rift:25,raincall:20,tsunami:17,crow:10,s_fire:13,s_ice:15,s_thun:16,dragon:30,fire:1,ice:1,flowers:1,thunder:3,wheat:2,veg:2,bloom:4,water:4,paddy:3,wind:6,earth:8,people:9,pierce:10,build:11,port:12,restore:14,meteor:18,gold:24,ultima:28};
 const TIER_LV=[1,5,12,22],FLY_LV=7;
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const rand = mulberry32(20260923);
@@ -697,8 +699,8 @@ const COUNTRIES=[
   ...VILL.map(v=>({label:v.n,x:v.x,z:v.z,r:75,total:0,dest:0,start:-1,done:false,doneAt:0,settle:true,village:true})),
   {label:'巨神帝国 帝都ゴルディオン',x:OCX,z:OCZ,r:TI_R,total:0,dest:0,start:-1,done:false,doneAt:0,faction:'titan',big:true,outer:true},
 ];
-function nearTown(x,z){for(const c of COUNTRIES)if(Math.hypot(x-c.x,z-c.z)<c.r+40)return true;return false;}
-function countryAt(x,z){for(let i=0;i<COUNTRIES.length;i++){const c=COUNTRIES[i];if(Math.hypot(x-c.x,z-c.z)<c.r+40)return i;}return -1;}
+function nearTown(x,z){for(const c of COUNTRIES){if(Math.hypot(x-c.x,z-c.z)<c.r+40)return true;if(c.ext)for(const e of c.ext)if(Math.hypot(x-e.x,z-e.z)<e.r+30)return true;}return false;}
+function countryAt(x,z){for(let i=0;i<COUNTRIES.length;i++){const c=COUNTRIES[i];if(Math.hypot(x-c.x,z-c.z)<c.r+40)return i;if(c.ext)for(const e of c.ext)if(Math.hypot(x-e.x,z-e.z)<e.r+30)return i;}return -1;}
 function nearestCountry(){let b=COUNTRIES[0],bd=1e9;for(const c of COUNTRIES){const d=Math.hypot(player.pos.x-c.x,player.pos.z-c.z);if(d<bd){bd=d;b=c;}}return b;}
 function baseHeight(x,z){let h=baseHeight0(x,z);const d=Math.max(Math.abs(x-HX),Math.abs(z-HZ));if(d<110)h=lerp(h,HOME_H0,1-smooth(34,110,d));for(const F of FLATS){const df=Math.hypot(x-F.x,z-F.z);if(df<F.r+F.t)h=lerp(h,F.h,1-smooth(F.r,F.r+F.t,df));}
   const d6=Math.max(Math.abs(x-C6X),Math.abs(z-C6Z));if(d6<C6R+120)h=lerp(h,C6H,1-smooth(C6R+10,C6R+120,d6));
@@ -1089,9 +1091,14 @@ const goldMat=new THREE.MeshStandardMaterial({color:0xd8a84a,metalness:.9,roughn
 const rubbleMat=new THREE.MeshStandardMaterial({color:0x3a3430,roughness:1,flatShading:true});
 
 let CUR_C=0;
+// 建物の近傍探索用の格子（町の中の衝突判定・照準を、全建物ではなく近くの建物だけで行う）
+const BGRID=new Map(),BBIG=[],BCELL=48;
+function bIndex(b){if(b.rad>BCELL*.5){BBIG.push(b);return;}const k=(Math.floor(b.x/BCELL)+512)*4096+Math.floor(b.z/BCELL)+512;let L=BGRID.get(k);if(!L){L=[];BGRID.set(k,L);}L.push(b);}
+function bNear(x,z,fn){for(const b of BBIG)if(fn(b))return true;const cx=Math.floor(x/BCELL),cz=Math.floor(z/BCELL);
+  for(let a=-1;a<=1;a++)for(let c=-1;c<=1;c++){const L=BGRID.get((cx+a+512)*4096+cz+c+512);if(L)for(const b of L)if(fn(b))return true;}return false;}
 function addBuilding(geo,mats,x,z,y,rad,height,hp,kind){
   const m=new THREE.Mesh(geo,mats);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;scene.add(m);
-  const b={country:CUR_C,mesh:m,x,z,y,rad,height,hp,maxHp:hp,baseHp:hp*(CUR_C===4||CUR_C===5||CUR_C===TI?(APP?5:15):1),burn:0,destroyed:false,collapse:-1,kind,children:[],smokeT:0,archers:[]};buildings.push(b);return b;
+  const b={country:CUR_C,mesh:m,x,z,y,rad,height,hp,maxHp:hp,baseHp:hp*(CUR_C===4||CUR_C===5||CUR_C===TI?(APP?5:15):1),burn:0,destroyed:false,collapse:-1,kind,children:[],smokeT:0,archers:[]};buildings.push(b);bIndex(b);return b;
 }
 function houseGeo(w,h,d,rh){
   const body=new THREE.BoxGeometry(w,h,d).translate(0,h/2,0);
@@ -1552,7 +1559,7 @@ const BARRIERS=[];
 function mkBarrier(ci,x,z,y,r,col){const u={col:{value:col},hit:{value:0},t:{value:0},op:{value:1}};
   const m=new THREE.Mesh(new THREE.SphereGeometry(r,72,36,0,Math.PI*2,0,Math.PI/2),new THREE.ShaderMaterial({uniforms:u,vertexShader:barVS,fragmentShader:barFS,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));
   m.scale.y=.72;m.position.set(x,y-2,z);m.renderOrder=4;scene.add(m);const B={ci,x,z,y,r,max:BAR_MAX[DIFF],hp:BAR_MAX[DIFF],down:0,hitT:-99,m,u,fxT:0};BARRIERS.push(B);return B;}
-function barrierFor(b){for(const B of BARRIERS)if(B.ci===b.country&&B.hp>0)return B;return null;}
+function barrierFor(b){for(const B of BARRIERS)if(B.ci===b.country&&B.hp>0&&Math.hypot(b.x-B.x,b.z-B.z)<B.r+b.rad)return B;return null;}
 function barrierAt(x,z){for(const B of BARRIERS)if(B.hp>0&&Math.hypot(x-B.x,z-B.z)<B.r)return B;return null;}
 function hitBarrier(B,b,dmg){
   // 1フレームで最も強い一撃だけを結界の損耗とする（巻き込んだ建物の数では増えない）
@@ -1569,7 +1576,7 @@ function updBarriers(dt){for(const B of BARRIERS){B.u.t.value=gameTime;B.u.hit.v
 mkBarrier(4,EMX,EMZ,EMH,ER+28,lin(1.2,1.1,.6));mkBarrier(5,DMX,DMZ,DMH,DR+28,lin(1.4,.2,.45));
 let cullT=0;
 function cullWorld(){const px=VIEW.x,pz=VIEW.z;
-  for(const b of buildings){if(b.collapse>=2)continue;const d=Math.hypot(b.x-px,b.z-pz);const v=d<(b.height>45?3400:1800);if(b.mesh.visible!==v&&!b.hidden){b.mesh.visible=v;if(b.orn)b.orn.visible=v;}}}
+  for(const b of buildings){if(b.collapse>=2)continue;const d=Math.hypot(b.x-px,b.z-pz);const v=d<(b.height>45?3400:IS_MOBILE?1400:1800);if(b.mesh.visible!==v&&!b.hidden){b.mesh.visible=v;if(b.orn)b.orn.visible=v;}}}
 function makeRubble(b){const parts=[];const n=4+Math.floor(b.rad/2);
   for(let i=0;i<n;i++){const s=R(.3,.6)*b.rad;parts.push(new THREE.DodecahedronGeometry(s*.6,0).scale(1,R(.35,.6),1).translate(R(-b.rad*.5,b.rad*.5),s*.12,R(-b.rad*.5,b.rad*.5)));}
   const rub=new THREE.Mesh(THREE.BufferGeometryUtils.mergeBufferGeometries(parts),rubbleMat);b.rub=rub;rub.position.set(b.x,b.y,b.z);rub.receiveShadow=true;rub.castShadow=true;scene.add(rub);}
@@ -1679,7 +1686,7 @@ class Enemy{
     if(dmg>0&&type!=='fall'&&!npc)dmgText(this.pos.clone().setY(this.pos.y+this.h),Math.round(dmg));
     if(this.hp<=0){this.alive=false;this.dying=0;this.deathType=type;this.air=true;if(!this.fly&&this.vel.y<8)this.vel.y+=10;
       if(this.frozen>0&&!this.big&&(type==='earth'||type==='slash'||this.cutN))iceBreak(this,type==='earth'&&!this.cutN?'crumble':'split');
-      if(!npc){kills++;countKill(this);}if((this.kind==='mage'||this.kind==='brute')&&!this.quietDie)sayMage(this,'die',{dead:true,dur:4.5});if((this.kind==='mage'||this.kind==='brute')&&this.rank!=='soldier'&&!this.quietDie){const nm=this.nm,rk=this.rank;later(1,()=>showBanner(nm+'、敗れる',rk==='king'?'魔王 討滅':rk==='majin'?'魔人 討滅':rk==='elite'?'強敵 撃破':'宮廷魔導士 撃破'));}if(this.onDeath)this.onDeath(this);if(this.kind==='boss')later(1.2,()=>showBanner('黒鋼の古竜、討滅','この世界に、もはや敵はいない'));}
+      if(!npc){kills++;countKill(this);}if((this.kind==='mage'||this.kind==='brute')&&!this.quietDie)sayMage(this,'die',{dead:true,dur:4.5});if((this.kind==='mage'||this.kind==='brute')&&this.rank!=='soldier'&&!this.quietDie){const nm=this.nm,rk=this.rank;later(1,()=>showBanner(nm+'、敗れる',rk==='king'?'魔王 討滅':rk==='majin'?'魔人 討滅':rk==='star'?'宇宙の帝王 討滅':rk==='elite'?'強敵 撃破':'宮廷魔導士 撃破'));}if(this.onDeath)this.onDeath(this);if(this.kind==='boss')later(1.2,()=>showBanner('黒鋼の古竜、討滅','この世界に、もはや敵はいない'));}
   }
   finish(){
     const c=this.pos.clone();c.y+=this.h*.5;
@@ -1727,7 +1734,7 @@ class Enemy{
     const d=V3(target.x-this.pos.x,0,target.z-this.pos.z);const L=d.length();
     if(L>.5){d.multiplyScalar(1/L);this.pos.addScaledVector(d,Math.min(speed*dt,L));this.g.rotation.y=Math.atan2(d.x,d.z);}
     this.pos.y=groundAt(this.pos.x,this.pos.z);
-    if(nearTown(this.pos.x,this.pos.z))for(const b of buildings){if(b.destroyed||b.wall)continue;const dx=this.pos.x-b.x,dz=this.pos.z-b.z,dl=Math.hypot(dx,dz);if(dl<b.rad+1&&dl>.01){this.pos.x=b.x+dx/dl*(b.rad+1);this.pos.z=b.z+dz/dl*(b.rad+1);}}
+    if(nearTown(this.pos.x,this.pos.z))bNear(this.pos.x,this.pos.z,b=>{if(b.destroyed||b.wall)return false;const dx=this.pos.x-b.x,dz=this.pos.z-b.z;if(Math.abs(dx)>b.rad+1||Math.abs(dz)>b.rad+1)return false;const dl=Math.hypot(dx,dz);if(dl<b.rad+1&&dl>.01){this.pos.x=b.x+dx/dl*(b.rad+1);this.pos.z=b.z+dz/dl*(b.rad+1);}return false;});
     if(this.inTown&&this.pos.x*this.pos.x+this.pos.z*this.pos.z<(TOWN_R+30)*(TOWN_R+30))this.pos.y=Math.max(this.pos.y,TOWN_H);
     return L;
   }
@@ -2360,6 +2367,7 @@ const SPELLS=[
   {id:'raincall',k:'嵐',name:'天候支配・雷雨',read:'てんこうしはい・らいう',col:'#8898c8',c3:lin(3,4,9),cd:40,r:500},
   {id:'tsunami',k:'濤',name:'大津波',read:'おおつなみ',col:'#2a8ac8',c3:lin(1,3.5,7),cd:24,r:300},
   {id:'proton',k:'砲',name:'巨神の咆哮',read:'プロトンビーム',col:'#ffb070',c3:lin(10,6,2.5),cd:45,r:60},
+  {id:'kurobako',k:'棺',name:'黒箱',read:'くろばこ',col:'#8a5ac8',c3:lin(3,1,6),cd:6,r:40},
   {id:'atf',k:'壁',name:'絶対障壁',read:'ぜったいしょうへき',col:'#ff9a3a',c3:lin(8,4,1),cd:16,r:12},
   {id:'mirror',k:'返',name:'魔法返し',read:'まほうがえし',col:'#c8a8ff',c3:lin(5,3.5,9),cd:18,r:12},
   {id:'a_sun',k:'陽',name:'古代魔法・太陽',read:'こだいまほう・たいよう',col:'#ffb040',c3:lin(10,6,1.5),cd:60,r:120,anc:1},
@@ -2376,7 +2384,7 @@ const SPELLS=[
   {id:'s_thun',k:'霆',name:'雷の精霊',read:'いかずちのせいれい',col:'#b8c8ff',c3:lin(5,6,12),cd:18,r:40},
   {id:'dragon',k:'龍',name:'神龍降臨',read:'しんりゅうこうりん',col:'#ffe28a',c3:lin(9,7,2.5),cd:80,r:300},
 ];
-const SPELL_DESC={"a_sakura":"無数の桜の花びらが奔流となって大地を舞う。触れたものは、人も建物も、山も木々も、天空の浮島さえも、すべて細かく切り刻まれる。凍った敵は真っ二つに割れる。","a_sun":"空に第二の太陽を呼び、大陸のすべてを焼き払う。建物も森も軍勢も、灰になる。","a_moon":"青白い月を呼び、大陸のすべてを凍らせる。海は氷原となり、兵は氷像となって砕ける（約2分で解ける）。","a_jup":"木星ほどもある星を大陸に墜とす。すべてが無に帰し、巨大な穿孔が残る。","a_nep":"海を呼び、大陸を海の底に沈める。水面より低いものはすべて呑まれ、やがて潮は引く。","a_black":"照準に黒い穴を開き、敵も建物も山々も吸い込んで無に帰す。あとには深い渦の跡が残る。","a_fall":"見えない圧力が天から降り、照準の一帯を押し潰す。建物も山々も、まったいらになる。","a_love":"世界への愛。この大陸のあらゆる破壊を元に戻す。建物・森・大地・凍りや水没も、すべて。","atf":"八角形の光の壁を張り巡らせる。その間はどんな攻撃も通さず、近づく敵を弾き飛ばす。攻撃を受けるたび、その方向に障壁が浮かび上がる。","mirror":"受けた攻撃をそのまま何十倍にもして、撃ってきた近くの敵へ跳ね返す。その間は傷を負わない。","proton":"巨神兵と同じ破壊の光。力を溜めて照準へ光線を放つと、着弾点から先へ爆発が大地を這うように連なり、一帯を焼き払う。","inferno":"自分を中心に、極なら直径2kmを業火で焼き尽くす。建物も森も大地も黒く焦げる。自分は焼かれない。","rift":"照準の方向へ光の一閃を放ち、大地を一刀両断する。極なら大陸を割るほどの裂け目が走る。","raincall":"天候を支配して雷雨を呼ぶ。空が暗くなり雨が降り、周りの敵へ雷が落ち続ける。","tsunami":"照準の方向へ巨大な津波を押し出す。津波に氷の魔法をかけると凍りつき、その上を歩ける氷の丘になる。","fire": "火球を放ち、着弾点で爆発する。建物や木を燃やす。威力を上げると火球の数が増える。", "thunder": "近くの敵へ次々と雷を落とす。当たった敵は一瞬しびれる。極では天から巨大な雷柱。", "ice": "一帯を凍らせ、氷柱で貫く。凍った敵は動けない。極では巨大な氷山が長く残り、周りを凍らせ続ける。", "water": "前方へ大津波を押し出し、敵も建物も押し流す。雷を重ねると連鎖魔法「雷水陣」。", "wind": "竜巻を起こし、敵を巻き上げながらさまよう。炎を重ねると「焔旋風」。", "earth": "大地を割り、岩の槍を突き上げて敵を打ち上げる。氷を重ねると「砕氷崩山」。", "ultima": "溜めてから放つ極光の大爆発。広い範囲のすべてを消し飛ばす、大魔導士の奥の手。", "meteor": "空から隕石の雨を降らせる。建物を壊すのが得意。", "pierce": "光の槍を撃ち抜く。まっすぐ遠くまで貫き、強敵との一騎打ちに向く。", "gold": "一帯の地面・木・建物・敵を黄金に変える。黄金になった建物は壊れた扱いになる。", "restore": "壊れた建物・燃えた木・えぐれた地面を元に戻す。国を復興させると喜ばれる。", "bloom": "花と木を芽吹かせ、地面を豊かにする。強以上で大樹（世界樹）が生える。", "people": "住人を呼び寄せ、その国の人口を増やす。", "build": "家や塔を建てる。国の外で唱えると新しい町ができる。", "flowers": "花畑を広げる。近くの国の幸福度が上がる。", "wheat": "麦畑を作る。実ると収穫され、近くの国の食料になる。", "paddy": "水田を作る。稲が黄金色に実ると収穫され、食料になる。", "veg": "野菜畑（キャベツ・南瓜・トマト・茄子）を作る。育つのが早い。", "port": "岸辺に港を築く。交易船が行き来して、資源と魔晶を持ち帰る。岸辺を狙って唱える。", "crow": "体を烏の群れに変える。その間はどんな攻撃も受け付けず、移動も速くなる。いざという時の守りに。", "s_fire": "炎の精霊を呼ぶ。頭上に控え、敵対している相手へ火球を撃つ。住人や平時の衛兵は狙わない。", "s_ice": "氷の精霊を呼ぶ。敵対している相手を凍らせ、氷柱で縫い止める。", "s_thun": "雷の精霊を呼ぶ。敵対している相手へ、次々と跳ねる稲妻を放つ。", "dragon": "天から神龍を呼ぶ。一帯を息吹で薙ぎ払い、最後にすべてを無に帰す。大結界も大きく削る。"};
+const SPELL_DESC={"kurobako":"黒い霊子が迸り、黒い箱が標的を閉じ込める。内側では重力の奔流が渦巻き、中のものをすべて押し潰して、大地をまったいらにする。凍った敵は砕け散る。","a_sakura":"無数の桜の花びらが奔流となって大地を舞う。触れたものは、人も建物も、山も木々も、天空の浮島さえも、すべて細かく切り刻まれる。凍った敵は真っ二つに割れる。","a_sun":"空に第二の太陽を呼び、大陸のすべてを焼き払う。建物も森も軍勢も、灰になる。","a_moon":"青白い月を呼び、大陸のすべてを凍らせる。海は氷原となり、兵は氷像となって砕ける（約2分で解ける）。","a_jup":"木星ほどもある星を大陸に墜とす。すべてが無に帰し、巨大な穿孔が残る。","a_nep":"海を呼び、大陸を海の底に沈める。水面より低いものはすべて呑まれ、やがて潮は引く。","a_black":"照準に黒い穴を開き、敵も建物も山々も吸い込んで無に帰す。あとには深い渦の跡が残る。","a_fall":"見えない圧力が天から降り、照準の一帯を押し潰す。建物も山々も、まったいらになる。","a_love":"世界への愛。この大陸のあらゆる破壊を元に戻す。建物・森・大地・凍りや水没も、すべて。","atf":"八角形の光の壁を張り巡らせる。その間はどんな攻撃も通さず、近づく敵を弾き飛ばす。攻撃を受けるたび、その方向に障壁が浮かび上がる。","mirror":"受けた攻撃をそのまま何十倍にもして、撃ってきた近くの敵へ跳ね返す。その間は傷を負わない。","proton":"巨神兵と同じ破壊の光。力を溜めて照準へ光線を放つと、着弾点から先へ爆発が大地を這うように連なり、一帯を焼き払う。","inferno":"自分を中心に、極なら直径2kmを業火で焼き尽くす。建物も森も大地も黒く焦げる。自分は焼かれない。","rift":"照準の方向へ光の一閃を放ち、大地を一刀両断する。極なら大陸を割るほどの裂け目が走る。","raincall":"天候を支配して雷雨を呼ぶ。空が暗くなり雨が降り、周りの敵へ雷が落ち続ける。","tsunami":"照準の方向へ巨大な津波を押し出す。津波に氷の魔法をかけると凍りつき、その上を歩ける氷の丘になる。","fire": "火球を放ち、着弾点で爆発する。建物や木を燃やす。威力を上げると火球の数が増える。", "thunder": "近くの敵へ次々と雷を落とす。当たった敵は一瞬しびれる。極では天から巨大な雷柱。", "ice": "一帯を凍らせ、氷柱で貫く。凍った敵は動けない。極では巨大な氷山が長く残り、周りを凍らせ続ける。", "water": "前方へ大津波を押し出し、敵も建物も押し流す。雷を重ねると連鎖魔法「雷水陣」。", "wind": "竜巻を起こし、敵を巻き上げながらさまよう。炎を重ねると「焔旋風」。", "earth": "大地を割り、岩の槍を突き上げて敵を打ち上げる。氷を重ねると「砕氷崩山」。", "ultima": "溜めてから放つ極光の大爆発。広い範囲のすべてを消し飛ばす、大魔導士の奥の手。", "meteor": "空から隕石の雨を降らせる。建物を壊すのが得意。", "pierce": "光の槍を撃ち抜く。まっすぐ遠くまで貫き、強敵との一騎打ちに向く。", "gold": "一帯の地面・木・建物・敵を黄金に変える。黄金になった建物は壊れた扱いになる。", "restore": "壊れた建物・燃えた木・えぐれた地面を元に戻す。国を復興させると喜ばれる。", "bloom": "花と木を芽吹かせ、地面を豊かにする。強以上で大樹（世界樹）が生える。", "people": "住人を呼び寄せ、その国の人口を増やす。", "build": "家や塔を建てる。国の外で唱えると新しい町ができる。", "flowers": "花畑を広げる。近くの国の幸福度が上がる。", "wheat": "麦畑を作る。実ると収穫され、近くの国の食料になる。", "paddy": "水田を作る。稲が黄金色に実ると収穫され、食料になる。", "veg": "野菜畑（キャベツ・南瓜・トマト・茄子）を作る。育つのが早い。", "port": "岸辺に港を築く。交易船が行き来して、資源と魔晶を持ち帰る。岸辺を狙って唱える。", "crow": "体を烏の群れに変える。その間はどんな攻撃も受け付けず、移動も速くなる。いざという時の守りに。", "s_fire": "炎の精霊を呼ぶ。頭上に控え、敵対している相手へ火球を撃つ。住人や平時の衛兵は狙わない。", "s_ice": "氷の精霊を呼ぶ。敵対している相手を凍らせ、氷柱で縫い止める。", "s_thun": "雷の精霊を呼ぶ。敵対している相手へ、次々と跳ねる稲妻を放つ。", "dragon": "天から神龍を呼ぶ。一帯を息吹で薙ぎ払い、最後にすべてを無に帰す。大結界も大きく削る。"};
 const cds=SPELLS.map(()=>0);let selSpell=0;
 function announce(s){const el=$('#spellName');el.innerHTML=`${s.name}<small>${s.read}</small>`;el.style.setProperty('--sc',s.col);el.classList.remove('show');void el.offsetWidth;el.classList.add('show');}
 
@@ -2902,8 +2910,9 @@ function freezeWaves(P){let any=false;for(const w of WAVES){if(w.frozen)continue
 Object.assign(SP,{inferno(P,s,K){inferno(K);},rift(P,s,K){rift(P,K);},raincall(P,s,K){raincall(K);},tsunami(P,s,K){tsunami(P,K);}});
 // ================= プロトンビーム =================
 // 着弾点から先へ、爆発が大地を這うように連なって一帯を焼き払う。巨神兵と大魔導士のどちらも使う
+let NPC_SKIP_STAR=false;
 function npcBlast(p,r,dmg,pdmg){const imp=v=>{const d=v.clone().sub(p);d.y=0;if(d.lengthSq()<.01)d.set(1,0,0);return d.normalize().multiplyScalar(40).setY(26);};
-  for(const e of enemies){if(!e.alive||e.isTitan)continue;if(e.pos.distanceTo(p)<r+e.radius)e.hit(dmg,e.kind==='mage'||e.kind==='brute'?null:imp(e.pos),'npc');}
+  for(const e of enemies){if(!e.alive||e.isTitan||NPC_SKIP_STAR&&e.star)continue;if(e.pos.distanceTo(p)<r+e.radius)e.hit(dmg,e.kind==='mage'||e.kind==='brute'?null:imp(e.pos),'npc');}
   for(const u of CRW)if(u.st===1&&Math.hypot(u.x-p.x,u.z-p.z)<r)crowdDamage(u,dmg,V3(rr(-20,20),24,rr(-20,20)),'npc');
   for(const b of buildings){if(b.destroyed)continue;if(Math.hypot(b.x-p.x,b.z-p.z)<r+b.rad)damageBuilding(b,dmg*1.5,.8,true);}
   if(started&&!pDead&&player.pos.distanceTo(p)<r+4)hurtPlayer(pdmg);}
@@ -3265,7 +3274,7 @@ function fallRock1(m,r){const v=V3(rr(-10,10),rr(-4,4),rr(-10,10)),w=V3(rr(-1,1)
   const gy=groundAt(m.position.x,m.position.z);if(m.position.y-r<=gy){m.position.y=gy-r*.3;ROCKS.push(m);if(ROCKS.length>60)scene.remove(ROCKS.shift());if((m.position.x-camera.position.x)**2+(m.position.z-camera.position.z)**2<1500*1500){burst(m.position,20,r,1.5,4,10,PC.dust,PC.dustB,.7,.8,-1,smoke,r,4);snd('boom',.5,m.position);}
     npcBlast(m.position,r*1.6,2e5,400);return false;}return true;}});}
 // ---- 飛行機械兵 ----
-const ROB=[],ROB_MAX=IS_MOBILE?90:320;let robBody=null,robWing=null;const robFree=[];let robTop=0;
+const ROB=[],ROB_MAX=IS_MOBILE?120:440;let robBody=null,robWing=null;const robFree=[];let robTop=0;
 function robotGeo(){const P=[];const c=(g,col)=>colGeo(g,col);const BR=[.46,.37,.25],DK=[.3,.24,.17],MS=[.3,.42,.2];
   P.push(c(new THREE.CylinderGeometry(.85,1.15,3.2,8).translate(0,3.3,0),BR),c(new THREE.SphereGeometry(1.15,10,8).scale(1,.85,1).translate(0,5.4,0),BR),
     c(new THREE.CylinderGeometry(.55,.55,.35,10).rotateX(Math.PI/2).translate(0,5.45,.95),DK),c(new THREE.SphereGeometry(.34,8,6).translate(0,5.45,1.12),[6,1.2,.4]),
@@ -3282,29 +3291,29 @@ function initRobots(){robBody=new THREE.InstancedMesh(robotGeo(),new THREE.MeshS
   initRobBeams();}
 function robSlot(){if(robFree.length)return robFree.pop();if(robTop<ROB_MAX){const i=robTop++;robBody.count=robTop;robWing.count=robTop*2;return i;}return -1;}
 function robAlive(){let n=0;for(const u of ROB)if(u.st===1)n++;return n;}
-function spawnRobot(x,y,z,mode,ci,side='sky'){const i=robSlot();if(i<0)return null;const hp=(side==='gnd'?1300:900)*EHP[DIFF]*(APP?.5:1);
-  const c=side==='gnd'?tmpC.setRGB(.85,1.25,2.1):tmpC.setRGB(1,1,1);robBody.setColorAt(i,c);robWing.setColorAt(i*2,c);robWing.setColorAt(i*2+1,c);robBody.instanceColor.needsUpdate=robWing.instanceColor.needsUpdate=true;
-  const u={i,pos:V3(x,y,z),vel:V3(),yaw:Math.random()*6.28,alive:true,st:1,hp,maxHp:hp,radius:3,h:8,isRobot:true,side,nm:side==='gnd'?'地上の守護機兵':'天空の機械兵',mode,ci,tgt:null,tt:rr(0,.6),cd:rr(1.5,3.5),orb:Math.random()*6.28,orbR:rr(45,95),
+function spawnRobot(x,y,z,mode,ci,side='sky'){const i=robSlot();if(i<0)return null;const hp=(side==='gnd'?1300:side==='sky'?900:1800)*EHP[DIFF]*(APP?.5:1);
+  const c=side==='gnd'?tmpC.setRGB(.85,1.25,2.1):side==='emp'?tmpC.setRGB(2,1.9,1.5):side==='dem'?tmpC.setRGB(1.1,.35,.45):tmpC.setRGB(1,1,1);robBody.setColorAt(i,c);robWing.setColorAt(i*2,c);robWing.setColorAt(i*2+1,c);robBody.instanceColor.needsUpdate=robWing.instanceColor.needsUpdate=true;
+  const u={i,pos:V3(x,y,z),vel:V3(),yaw:Math.random()*6.28,alive:true,st:1,hp,maxHp:hp,radius:3,h:8,isRobot:true,side,nm:side==='gnd'?'地上の守護機兵':side==='emp'?'帝国の魔導機兵':side==='dem'?'魔王軍の魔骸兵':'天空の機械兵',mode,ci,tgt:null,tt:rr(0,.6),cd:rr(1.5,3.5),orb:Math.random()*6.28,orbR:rr(45,95),
     alt:rr(24,48),flap:Math.random()*6,frz:0,flash:0,t:0,fall:0,life:mode==='strike'?rr(100,160):1e9,hit(d,imp,type){robotDamage(this,d,type==='npc'?'npc':'p',type);}};
   ROB.push(u);return u;}
 function robotDamage(u,dmg,src,type){if(u.st!==1||!(dmg>0))return;if(src==='p'){dmg*=P_MUL;LG.angerP=Math.max(LG.angerP,40);}u.hp-=dmg;u.flash=.1;
   if(type==='ice')u.frz=Math.max(u.frz,4);
   if(u.hp>0)return;u.st=2;u.alive=false;u.t=0;u.vel.set(rr(-8,8),rr(0,6),rr(-8,8));u.spin=rr(-4,4);
-  if(src==='p'&&u.side!=='gnd'){kills++;gainExp(60);KB.robot=(KB.robot||0)+1;}}
+  if(src==='p'&&u.side==='sky'){kills++;gainExp(60);KB.robot=(KB.robot||0)+1;}}
 function robotsArea(p,r,dmg,src,type){for(const u of ROB){if(u.st!==1||(src==='p'&&u.side==='gnd'))continue;if(u.pos.distanceTo(p)<r+u.radius)robotDamage(u,dmg*rr(.9,1.1),src,type);}}
 function robotSeg(a,b,w,dmg,src){for(const u of ROB){if(u.st!==1||(src==='p'&&u.side==='gnd'))continue;if(distSeg(u.pos.clone().setY(u.pos.y+4),a,b)<w+3)robotDamage(u,dmg,src,'pierce');}}
-function robotNear(x,z,r,y){let best=null,bd=r*r;for(const u of ROB){if(u.st!==1||u.side==='gnd')continue;const d=(u.pos.x-x)**2+(u.pos.z-z)**2;if(d<bd&&(y===undefined||Math.abs(u.pos.y-y)<60)){bd=d;best=u;}}return best;}
+function robotNear(x,z,r,y){let best=null,bd=r*r;for(const u of ROB){if(u.st!==1||u.side!=='sky')continue;const d=(u.pos.x-x)**2+(u.pos.z-z)**2;if(d<bd&&(y===undefined||Math.abs(u.pos.y-y)<60)){bd=d;best=u;}}return best;}
 const FIGHTER={knight:1,archer:1,demon:1,mage:1,brute:1,golem:1};
 function robTgtOk(T){if(!T)return false;if(T.isSky)return T.alive;if(T===player)return started&&!pDead&&!SPEC;if(T.building)return !T.building.destroyed;if(T.isCrowd)return T.st===1;return T.alive&&!T.statue;}
 function robTgtPos(T,out){if(T.isSky)return T.isIsle?out.copy(T.pos):out.copy(T.pos).setY(T.pos.y-160);if(T===player)return out.copy(player.pos).setY(player.pos.y+1.4);if(T.building)return out.set(T.building.x,T.building.y+T.building.height*.5,T.building.z);if(T.isCrowd)return out.set(T.x,T.y+1.4,T.z);return out.copy(T.pos).setY(T.pos.y+(T.h||2)*.5);}
-function gndPick(u){const x=u.pos.x,z=u.pos.z;let best=null,bd=320;for(const o of ROB){if(o.st!==1||o.side==='gnd')continue;const d=Math.hypot(o.pos.x-x,o.pos.z-z);if(d<bd){bd=d;best=o;}}if(best)return best;
+function gndPick(u){const x=u.pos.x,z=u.pos.z,H=COUNTRIES[u.ci]||{x,z},big=u.side!=='gnd';let best=null,bd=big?480:320;for(const o of ROB){if(o.st!==1||o.side!=='sky')continue;const d=Math.hypot(o.pos.x-x,o.pos.z-z);if(d<bd||big&&Math.hypot(o.pos.x-H.x,o.pos.z-H.z)<1600&&d<bd+900){bd=d;best=o;}}if(best)return best;
   if(LG.alive){const C=COUNTRIES[u.ci];if(LG.ci===u.ci||Math.hypot(LG.pos.x-C.x,LG.pos.z-C.z)<1800){let bi=null,bb=1e9;for(const I of LG.isles){if(!I.alive)continue;const d=I.pos.distanceTo(u.pos);if(d<bb){bb=d;bi=I;}}return bi||LG;}}return null;}
-function robotPick(u){const x=u.pos.x,z=u.pos.z;if(u.side==='gnd')return gndPick(u);
+function robotPick(u){const x=u.pos.x,z=u.pos.z;if(u.side!=='sky')return gndPick(u);
   if(started&&!pDead&&!SPEC&&!CROW){const pd=Math.hypot(player.pos.x-x,player.pos.z-z);if(pd<(LG.angerP>0?(u.mode==='guard'?700:420):120))return player;}
   if(u.mode==='guard')return null;
   if(Math.random()<.55){let best=null,bd=150;
     for(const sd of[0,1]){const c=crNear(x,z,sd,150);if(c){const d=Math.hypot(c.x-x,c.z-z);if(d<bd){bd=d;best=c;}}}
-    for(const o of ROB){if(o.st!==1||o.side!=='gnd')continue;const d=Math.hypot(o.pos.x-x,o.pos.z-z);if(d<bd+60){bd=d-60;best=o;}}
+    for(const o of ROB){if(o.st!==1||o.side==='sky')continue;const d=Math.hypot(o.pos.x-x,o.pos.z-z);if(d<bd+60){bd=d-60;best=o;}}
     for(const e of enemies){if(!e.alive||e.statue||!FIGHTER[e.kind])continue;const d=Math.abs(e.pos.x-x)+Math.abs(e.pos.z-z);if(d<bd){bd=d;best=e;}}
     for(const t of TITANS){if(!t.alive)continue;const d=Math.hypot(t.pos.x-x,t.pos.z-z);if(d<260){best=t;break;}}
     if(best)return best;}
@@ -3320,9 +3329,9 @@ function robotFire(u,T){const a=_rq.copy(u.pos);a.y+=u.h*.68;const b=robTgtPos(T
   if(T===player){PL_THREAT.sky=gameTime;hurtPlayer(160);}
   else if(T.building){const w=T.building.destroyed;damageBuilding(T.building,320*BHP[DIFF],.9,true);if(!w&&T.building.destroyed)LG.razed++;}
   else if(T.isCrowd)crowdDamage(T,500*dm,V3(rr(-6,6),10,rr(-6,6)),'npc');
-  else if(T.isSky){if(T.isIsle)isleHit(T,2500*dm,'npc');else castleHit(2500*dm,'npc');}
+  else if(T.isSky){const k=u.side==='gnd'?2500:600;if(T.isIsle)isleHit(T,k*dm,'npc');else castleHit(k*dm,'npc');}
   else if(T.isTitan)titanHitNpc(T,4000*dm);
-  else if(T.hit)T.hit(380*dm*rr(.8,1.2),null,'npc');
+  else if(T.hit)T.hit(380*dm*rr(.8,1.2)*(T.isRobot&&u.side!=='sky'?2:1),null,'npc');
   // 着弾点の周りも焼く
   const L=CR_GRID.get(crKey(b.x,b.z));if(L)for(const c of L){if(c!==T&&c.st===1&&(c.x-b.x)**2+(c.z-b.z)**2<30)crowdDamage(c,300*dm,null,'npc');}
   if(Math.random()<.2)scorchTrees(b.x,b.z,7);}
@@ -3343,7 +3352,7 @@ function updRobots(dt){if(!robBody)return;robFrame++;let ch=false;const cx=camer
         const T=robTgtOk(u.tgt)?u.tgt:null;let gx,gy,gz,sp=34;
         if(T){robTgtPos(T,_rp);u.orb+=dt*(.35+30/u.orbR*.3);const R=T.isSky?(T.isIsle?T.sz+60+u.orbR*.5:230+u.orbR*.5):T===player?u.orbR*.8:T.building?u.orbR*.7:u.orbR*.4;gx=_rp.x+Math.cos(u.orb)*R;gz=_rp.z+Math.sin(u.orb)*R;gy=T.isSky?_rp.y+(u.alt-30):Math.max(groundAt(gx,gz),_rp.y-8)+u.alt;
           if(T.isTitan)gy=Math.max(gy,_rp.y+140);}
-        else if(u.side==='gnd'){const C=COUNTRIES[u.ci]||{x:u.pos.x,z:u.pos.z};u.orb+=dt*.2;gx=C.x+Math.cos(u.orb)*(60+u.orbR);gz=C.z+Math.sin(u.orb)*(60+u.orbR);gy=groundAt(gx,gz)+50+u.alt;}
+        else if(u.side!=='sky'){const C=COUNTRIES[u.ci]||{x:u.pos.x,z:u.pos.z};u.orb+=dt*.2;gx=C.x+Math.cos(u.orb)*(60+u.orbR);gz=C.z+Math.sin(u.orb)*(60+u.orbR);gy=groundAt(gx,gz)+50+u.alt;}
         else if(LG.alive&&u.mode==='return'){gx=LG.pos.x;gz=LG.pos.z;gy=LG.pos.y-150;}
         else if(LG.alive){u.orb+=dt*.25;const R=u.mode==='guard'?180+u.orbR:260+u.orbR;gx=LG.pos.x+Math.cos(u.orb)*R;gz=LG.pos.z+Math.sin(u.orb)*R;gy=LG.pos.y-(u.mode==='guard'?60:180);}
         else{gx=u.pos.x;gz=u.pos.z;gy=groundAt(gx,gz)+u.alt;}
@@ -3433,6 +3442,7 @@ const VC={// 住人
     sakura:['花びらが舞うと、心まで晴れますね','石舟斎さまの剣、一度見てみたい','お茶を点てましょうか','東雲の朝焼けは格別です','道場から掛け声が聞こえますね'],
     vil:['今年の麦はよく実ったなあ','村に大魔導士さまが来たぞ！','牛の世話は朝が早いんだ','粉挽き小屋の風車、また止まっちゃった','町に出るのは祭りの日だけさ','畑仕事のあとの一杯がうまい']},
   sky:['空が……空に城が浮かんでる……！','機械の兵が火を吐いてる、逃げて！','家が燃えてる！誰か、水を！','天空の城なんて、おとぎ話じゃなかったの……','子どもたちを地下へ！早く！','あの光が落ちたら、みんな消えてしまう……','神さま、どうか……'],
+  star:['宇宙の帝王だ……！','指先ひとつで、家が消えた……','空から来た化け物が、町を焼いてる！','あの炎の球が落ちたら……おしまいだ','逃げて！ 帝王が来る！'],
   indra:['空が、白く光ってる……','あれがインドラの矢……？','伏せろ！光が来るぞ！'],
   raid:['魔王軍だ！門を閉めろ！','騎士さまたちはまだなの！？','魔族が来た……家に隠れて！'],
   titan:['地面が揺れてる……巨人の足音？','北の海から、巨神兵が……','あんな大きなもの、どうやって止めるの'],
@@ -3481,6 +3491,7 @@ function voiceLine(o,ci){const C=COUNTRIES[ci];const T=THREAT[ci]||{};const now=
   if(o.kind==='demon')return pick(VS.dem);
   if(LG.charge>0&&LG.ci===ci)return pick(VC.indra);
   if(T.sky>now-30)return pick(VC.sky);
+  if(T.star>now-30)return pick(VC.star);
   if(AIDS.some(g=>!g.over&&g.ci===ci)&&Math.random()<.5)return pick(VC.aid);
   if(T.dem>now-30)return pick(VC.raid);
   if(T.titan>now-40)return pick(VC.titan);
@@ -3538,7 +3549,7 @@ function updTech(dt){const now=gameTime;
   techT-=dt;if(techT>0)return;techT=rr(50,80);
   const L=techCands();for(const [ci,w] of L){const T=THREAT[ci]||{};const k=.035*w*((T.sky>now-120)?2:1);if(Math.random()<k){const t=techOf(ci);techDevelop(ci,!t.shield&&(t.mech||Math.random()<.5)?'shield':'mech');break;}}}
 function techSave(){const o={};for(const ci in TECH){const T=TECH[ci];o[ci]=[T.shield,T.mech,T.ch];}return o;}
-function techLoad(o){if(!o||typeof o!=='object')return;for(const k in o){const ci=+k,a=o[k];if(!COUNTRIES[ci]||!Array.isArray(a))continue;if(a[0])techDevelop(ci,'shield',true);if(a[1])techDevelop(ci,'mech',true);if(TECH[ci])TECH[ci].ch=clamp(+a[2]||0,0,2);}}
+function techLoad(o){if(!o||typeof o!=='object')return;for(const k in o){const ci=CMAP(+k),a=o[k];if(!COUNTRIES[ci]||!Array.isArray(a))continue;if(a[0])techDevelop(ci,'shield',true);if(a[1])techDevelop(ci,'mech',true);if(TECH[ci])TECH[ci].ch=clamp(+a[2]||0,0,2);}}
 // ================= 禁呪バロス =================
 // 天空の城に国を焼かれ、崩壊率が8割を超えた国には、ごくまれに大魔導士と同じ域の古代魔法の継承者が生まれている。
 // その国は国家非常事態を宣言し、術者と国民が集まって、天空の城もろとも世界を滅ぼす禁呪「バロス」を唱える。
@@ -3547,7 +3558,8 @@ const BARROS={st:'none',ci:-1,t:0,sage:null,done:false,rolled:{},chk:0,ring:null
 const SAGE_N={0:'最後の賢者 リュミエール',1:'月詠ノ巫女 かぐや',2:'潮詠みの老師 ナディール',3:'天律の魔女 エルシア',4:'帝国宮廷魔導卿 アウグスト',5:'冥府の大祭司 イシュタール',6:'桜守の大巫女 小夜'};
 const VB={ppl:['この国に生まれて、よかった','怖くないよ。みんな一緒だから','誇りを胸に','母さん、手を握ってて','天空の城に、一矢報いてやる','さようなら、私たちの国','大魔導士さま……ごめんなさい。あなたの世界まで','最後まで、胸を張って'],
   sage:['集まってくれて、ありがとう','皆の命、確かに預かります','天空の民よ、地上の誇りを知りなさい','大魔導士さま……あなたなら、きっと生き残る。どうか、この世界を覚えていて','……唱えます']};
-function sageName(ci){return SAGE_N[ci]||('古代魔法の継承者 '+(COUNTRIES[ci].label.replace(/^.* /,''))+'の遺児');}
+const SAGE_X=['最後の魔導師 エリシア','星詠みの賢者 ノア','封印の巫女 すず','古の術師 ヴァルク','灰の魔女 リリス','月守の神子 しずく','黎明の賢者 アルヴィン','雪原の魔女 フレイア'];
+function sageName(ci){return SAGE_N[ci]||SAGE_X[ci%SAGE_X.length];}
 function updBarros(dt){if(BARROS.done||!started)return;const B=BARROS;
   if(B.st==='none'){if(!LG.alive||APP_EARLY())return;B.chk-=dt;if(B.chk>0)return;B.chk=2;
     COUNTRIES.forEach((C,ci)=>{if(B.st!=='none'||C.outer||!C.total||C.settle||B.rolled[ci])return;if(C.dest/C.total<.8)return;B.rolled[ci]=1;if(Math.random()<BARROS_P)barrosStart(ci);});return;}
@@ -3563,7 +3575,7 @@ function updBarros(dt){if(BARROS.done||!started)return;const B=BARROS;
   else if(B.st==='fire'){if(B.t>16){B.st='done';B.done=true;saveGame();}}}
 function barrosStart(ci,forced){const B=BARROS,C=COUNTRIES[ci];B.st='decl';B.ci=ci;B.t=0;B.forced=!!forced;B.sayI=0;B.center=V3(C.x,groundAt(C.x,C.z),C.z);const nm=sageName(ci);B.nm=nm;
   const el=$('#emerg');el.querySelector('.ec').textContent=C.label;
-  const lines=[`${C.label}の民に告ぐ。`,'我が国は、天空の城ラグナの攻撃により、存亡の危機にある。',`これより、古代魔法の継承者〈${nm}〉が、禁呪〈バロス〉をもって天空の城に対抗する。`,
+  const lines=[`${C.label}の民に告ぐ。`,`我が国は、${(THREAT[ci]&&THREAT[ci].star>gameTime-120)?'宇宙帝王ギルザード':'天空の城ラグナ'}の攻撃により、存亡の危機にある。`,`これより、古代魔法の継承者〈${nm}〉が、禁呪〈バロス〉をもって天空の城に対抗する。`,
     'この魔法は、天空の城も、この世界のすべても、道連れにする。','どうか、道連れにすることを許して欲しい。','我らは最後まで、誇りに準じよう。'];
   el.querySelector('.et').innerHTML=lines.map((t,i)=>`<p style="animation-delay:${(.8+i*1.1).toFixed(1)}s">${t}</p>`).join('');
   el.classList.remove('on');void el.offsetWidth;el.classList.add('on');if(document.pointerLockElement)document.exitPointerLock();
@@ -3606,6 +3618,270 @@ function barrosFire(){const B=BARROS,p=B.center;pIfr=40;
   later(9,()=>{tintTarget=0;});}
 function barrosCancel(a,b){const B=BARROS;if(B.st==='none'||B.st==='fire'||B.done)return;B.st='none';$('#emerg').classList.remove('on');showBanner(a,b);
   if(B.sage&&B.sage.alive){const s=B.sage;s.alive=false;s.dead=true;scene.remove(s.g);}B.sage=null;}
+// ================= 魔力のオーラ =================
+// 魔法使いは力の大きさに応じたオーラをまとう（大きいほど強い）。大魔導士はオーラを展開・秘匿でき、
+// 展開すると、自分より弱い者はひるみ、怯え、驚愕する
+const auraGeo=new THREE.CylinderGeometry(.62,1,1,24,1,true).translate(0,.5,0);
+const auraVS='varying vec2 vUv;varying vec3 vN,vV;void main(){vUv=uv;vec4 mv=modelViewMatrix*vec4(position,1.);vN=normalize(normalMatrix*normal);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}';
+const auraFS='uniform vec3 col;uniform float t,op;varying vec2 vUv;varying vec3 vN,vV;float h1(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}'+
+ 'float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h1(i),h1(i+vec2(1,0)),f.x),mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),f.x),f.y);}'+
+ 'void main(){vec2 q=vec2(vUv.x*9.,vUv.y*2.6-t*1.7);float f=n2(q)*.62+n2(q*2.1+vec2(3.,t*.7))*.38;float y=vUv.y;'+
+ 'float a=smoothstep(1.,.15,y+f*.35)*smoothstep(0.,.1,y);float rim=pow(1.-abs(dot(vN,vV)),1.4);float k=a*smoothstep(.38,.82,f)*1.7*(.35+rim*1.1);gl_FragColor=vec4(col*max(k,0.)*op,1.);}';
+function auraMesh(col){const u={col:{value:col.clone()},t:{value:0},op:{value:1}};const m=new THREE.Mesh(auraGeo,new THREE.ShaderMaterial({uniforms:u,vertexShader:auraVS,fragmentShader:auraFS,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));
+  m.renderOrder=5;m.frustumCulled=false;m.u=u;scene.add(m);return m;}
+function magePower(e){return (e.maxHp||1)*(e.dm||1)*(e.shMax>1?1.25:1);}
+function auraScale(e){return clamp(1+(Math.log10(magePower(e))-4.6)*1.25,.55,6);}
+const AURA_EN=[];
+let AURA_ON=false,auraMine=null,auraPulseT=0;
+function auraCol(e){const c=(e.col3||lin(3,3,6)).clone();const m=Math.max(c.r,c.g,c.b,.01);return c.multiplyScalar(1.1/m);}
+function updAuras(dt){const t=gameTime,cp=camera.position;
+  // 敵の魔法使いのオーラ
+  for(const e of MAGES){if(!e.alive||e.statue){if(e.aura){scene.remove(e.aura);e.aura.material.dispose();e.aura=null;}continue;}
+    const d2=(e.pos.x-cp.x)**2+(e.pos.z-cp.z)**2;const vis=d2<(e.rank==='king'||e.rank==='majin'||e.star?900:420)**2;
+    if(!vis){if(e.aura)e.aura.visible=false;continue;}
+    if(!e.aura){e.aura=auraMesh(auraCol(e));e.auraS=auraScale(e);}
+    const s=e.auraS*(e.active?1.15:1),a=e.aura;a.visible=true;a.position.set(e.pos.x,e.pos.y-.4*s,e.pos.z);a.scale.set(1.25*s,4.2*s,1.25*s);
+    a.u.t.value=t*(e.active?1.4:1);a.u.op.value=(e.active?.95:.6)*(1+.08*Math.sin(t*9+e.orb));}
+  // 大魔導士のオーラ
+  if(AURA_ON||auraMine&&auraMine.u.op.value>.01){if(!auraMine){auraMine=auraMesh(lin(1.2,.9,1.5));}
+    const k=AURA_ON?Math.min(1,auraMine.u.op.value+dt*2.5):Math.max(0,auraMine.u.op.value-dt*3);auraMine.u.op.value=k;auraMine.visible=k>.01;
+    const s=9*(.7+.3*k);auraMine.position.set(player.pos.x,player.pos.y-.6,player.pos.z);auraMine.scale.set(s*.3,s*1.25,s*.3);auraMine.u.t.value=t*1.8;
+    auraMine.u.col.value.setRGB(1.7+.3*Math.sin(t*3),1.05,2.2);
+    if(AURA_ON&&Math.random()<dt*(IS_MOBILE?14:30)){const a=Math.random()*6.28,r=rr(1,4);glow.emit(player.pos.x+Math.cos(a)*r,player.pos.y+rr(0,3),player.pos.z+Math.sin(a)*r,0,rr(6,16),0,rr(.5,1),rr(.4,.9),.1,PC.gold,PC.violetB,1,.3,-2);}
+    if(AURA_ON&&Math.random()<dt*2)for(let i=0;i<3;i++){const a=Math.random()*6.28,r=rr(3,9);const p=V3(player.pos.x+Math.cos(a)*r,groundAt(player.pos.x+Math.cos(a)*r,player.pos.z+Math.sin(a)*r),player.pos.z+Math.sin(a)*r);if(player.pos.y-p.y<12)spawnDebris(p,0x6a5e52,rr(.2,.5),rr(3,8));}}
+  if(AURA_ON&&started&&!SPEC){auraPulseT-=dt;if(auraPulseT<=0){auraPulseT=.6;auraPress();}}}
+const FEAR_L=['な、なんだこの魔力は……！','ば、化け物だ……','う、動けない……','こんな気、感じたことがない……','勝てるわけがない……！','ひっ……！','足が、震えて……','に、逃げろ……！','これが……人間の魔力だと……？','お、お許しを……！'];
+const FEAR_S=['……この気、ただ者ではないな','ほう……これほどの力を隠していたか','馬鹿な……この私が、震えているだと……？','底が……見えない……'];
+function auraPress(){const p=player.pos,R=IS_MOBILE?150:180;
+  for(const e of enemies){if(!e.alive||e.statue||e.kind==='citizen'&&!e.barros)continue;const dx=e.pos.x-p.x,dz=e.pos.z-p.z,d2=dx*dx+dz*dz;if(d2>R*R)continue;
+    const strong=e.rank==='king'||e.rank==='majin'||e.star;
+    if(e.kind==='citizen'){e.scared=4;continue;}
+    if(!strong){e.stun=Math.max(e.stun||0,.9);if(!e.big&&!e.fly&&e.vel){const d=Math.sqrt(d2)||1;e.vel.x+=dx/d*4;e.vel.z+=dz/d*4;}}
+    if(gameTime>(e.fearT||0)&&(e.kind==='mage'||e.kind==='brute'||Math.random()<.18)){e.fearT=gameTime+rr(14,24);
+      const L=(e.kind==='mage'||e.kind==='brute')&&VM[e.nm]&&VM[e.nm].aura?VM[e.nm].aura:strong?FEAR_S:FEAR_L;say(e,pick(L),{who:e.kind==='mage'||e.kind==='brute'?e.nm.replace(/^(帝国特務隊|魔王軍六魔将) /,''):null,cls:e.kind==='mage'||e.kind==='brute'?'mg'+(e.fac==='dem'?' dm':''):'',far:320});}}
+  for(const u of CRW){if(u.st!==1)continue;const dx=u.x-p.x,dz=u.z-p.z;if(dx*dx+dz*dz>R*R*.7)continue;u.fr=Math.max(u.fr,.7);if(Math.random()<.02)say(u,pick(FEAR_L),{low:true});}}
+function toggleAura(v){AURA_ON=v===undefined?!AURA_ON:v;$('#auraBtn').classList.toggle('on',AURA_ON);const ab=document.querySelector('[data-a="aura"]');if(ab)ab.classList.toggle('on',AURA_ON);
+  if(AURA_ON){shockwave(player.pos,60,lin(3,2.2,4),.8,1.2);shake(.6);snd('growl',.6);snd('chime',.7);screenFlash(lin(1.2,1,1.5),.25);toast('オーラを展開した ─ 弱い者は怯えてひるむ');auraPulseT=0;}
+  else{snd('null',.5);toast('オーラを隠した');}}
+// ================= 黒箱：黒い重力の奔流を閉じ込める箱 =================
+// 黒い霊子が迸り、壁と天井が組み上がって標的を閉じ込める。内側では重力の奔流が渦巻き、すべてを押し潰し、大地をまったいらにする。最後は箱が砕け散る
+const kbVS='varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}';
+const kbFS='uniform float t,op;uniform vec3 edge;varying vec2 vUv;float h1(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}'+
+ 'void main(){vec2 d=min(vUv,1.-vUv);float e=min(d.x,d.y);float glow=smoothstep(.07,0.,e);'+
+ 'float s=fract(vUv.y*7.+sin(vUv.x*23.+t*5.)*.18-t*1.1);float streak=smoothstep(0.,.03,s)*smoothstep(.09,.03,s);'+
+ 'float crack=step(.985,h1(floor(vUv*vec2(40.,40.))+floor(t*12.)));'+
+ 'vec3 c=vec3(.012,.004,.02)+edge*(glow*1.5+streak*.45+crack*1.2);gl_FragColor=vec4(c,op);}';
+const kbGeo=new THREE.PlaneGeometry(1,1);const spikeGeo=new THREE.ConeGeometry(.5,1,4);const spikeMat=new THREE.MeshStandardMaterial({color:0x08040c,roughness:.25,metalness:.6,emissive:lin(.12,.02,.25)});
+function kurobako(P,K){const G=P.clone();G.y=groundAt(G.x,G.z);const L=[26,52,100,190][K.t],H=L*.85,half=L/2;
+  const u={t:{value:0},op:{value:0},edge:{value:lin(1.6,.5,3.2)}};const mat=new THREE.ShaderMaterial({uniforms:u,vertexShader:kbVS,fragmentShader:kbFS,transparent:true,side:THREE.DoubleSide,depthWrite:true});
+  const box=new THREE.Group();box.position.copy(G);scene.add(box);
+  const faces=[];const mk=(px,py,pz,rx,ry,sx,sy,ox,oy,oz)=>{const m=new THREE.Mesh(kbGeo,mat);m.scale.set(sx,sy,1);m.rotation.set(rx,ry,0);box.add(m);faces.push({m,to:V3(px,py,pz),from:V3(px+ox,py+oy,pz+oz),rx,ry});m.position.set(px+ox,py+oy,pz+oz);};
+  const o=L*.9;mk(0,H/2,half,0,0,L,H,0,0,o);mk(0,H/2,-half,0,Math.PI,L,H,0,0,-o);mk(half,H/2,0,0,Math.PI/2,L,H,o,0,0);mk(-half,H/2,0,0,-Math.PI/2,L,H,-o,0,0);mk(0,H,0,-Math.PI/2,0,L,L,0,o,0);
+  // 箱から突き出す黒い棘
+  const spikes=[];const NS=IS_MOBILE?22:56;for(let i=0;i<NS;i++){const s=new THREE.Mesh(spikeGeo,spikeMat);const f=i%5;let p,n;const a=rr(-.45,.45)*L,b=rr(.05,.95)*H;
+    if(f===0){p=V3(a,b,half);n=V3(0,0,1);}else if(f===1){p=V3(a,b,-half);n=V3(0,0,-1);}else if(f===2){p=V3(half,b,a);n=V3(1,0,0);}else if(f===3){p=V3(-half,b,a);n=V3(-1,0,0);}else{p=V3(a,H,rr(-.45,.45)*L);n=V3(0,1,0);}
+    s.position.copy(p);s.quaternion.setFromUnitVectors(V3(0,1,0),n);s.visible=false;box.add(s);spikes.push({s,len:L*rr(.15,.45),w:L*rr(.025,.055),t0:rr(.45,1.8),n});}
+  snd('whoosh',1,G);later(.1,()=>snd('growl',.7,G));
+  const cx=G.x,cz=G.z;let t=0,crushed=false,broke=false;
+  addFx({update(dt){t+=dt;u.t.value=t;
+    // 組み上がり（0〜0.55秒）
+    const k=Math.min(1,t/.55),e=1-Math.pow(1-k,3);u.op.value=Math.min(.97,t*3);
+    for(const F of faces)F.m.position.copy(F.from).lerp(F.to,e);
+    // ほとばしる黒い霊子と紫の稲妻
+    if(t<2.6){for(let q=0;q<(IS_MOBILE?4:10);q++){const a=Math.random()*6.28,r=L*rr(.55,1.2);const x=cx+Math.cos(a)*r,z=cz+Math.sin(a)*r,y=G.y+rr(0,H*1.2);
+        smoke.emit(x,y,z,(cx-x)*rr(.5,1.5),rr(-4,4),(cz-z)*rr(.5,1.5),rr(.3,.7),L*.03,L*.08,lin(.02,.01,.03),lin(.05,.02,.08),.85,.3,0);}
+      if(Math.random()<dt*(IS_MOBILE?6:14)){const a=V3(cx+rr(-half,half),G.y+rr(0,H),cz+(Math.random()<.5?-half:half)),b=a.clone().add(V3(rr(-L,L)*.4,rr(-H,H)*.4,rr(-L,L)*.4));beamFx(a,b,L*.012,lin(1.6,.4,3.4),.12);}
+      if(Math.random()<dt*8)glow.emit(cx+rr(-half,half),G.y+rr(0,H),cz+rr(-half,half),rr(-20,20),rr(-10,20),rr(-20,20),rr(.2,.5),L*.02,.1,PC.violetA,PC.violetB,1,.5,0);}
+    for(const S of spikes){if(t<S.t0||broke){continue;}const g=Math.min(1,(t-S.t0)/.12);S.s.visible=true;S.s.scale.set(S.w,S.len*g*(1+.15*Math.sin(t*30+S.t0*9)),S.w);S.s.position.addScaledVector(S.n,0);}
+    if(t>.5&&t<2.6)box.position.set(cx+rr(-1,1)*L*.004,G.y,cz+rr(-1,1)*L*.004);
+    // 重力の奔流で押し潰す
+    if(!crushed&&t>.8){crushed=true;kuroCrush(G,L,H,K);}
+    if(t>1.2&&t<2.5&&Math.random()<dt*6)snd('quake',.5,G);
+    // 砕け散る
+    if(!broke&&t>2.6){broke=true;snd('shatter',1.4,G);snd('bigboom',.8,G);shockwave(G,L*1.4,lin(1.2,.3,2.4),.8,1.5);screenFlash(lin(.6,.3,1),.35);
+      for(const S of spikes)S.s.visible=false;
+      for(let i=0;i<(IS_MOBILE?24:60);i++){const f=faces[i%5];const p=f.m.getWorldPosition(V3()).add(V3(rr(-half,half)*.8,rr(-H,H)*.4,rr(-half,half)*.8));spawnDebris(p,i%4?0x0a0610:0x3a1a5a,L*rr(.02,.06),rr(18,40));}
+      burst(G.clone().setY(G.y+H*.5),IS_MOBILE?30:80,L*.8,1,L*.03,L*.01,PC.violetA,PC.violetB,1,1,0,glow,half,H*.4);}
+    if(broke){u.op.value=Math.max(0,.97-(t-2.6)*4);for(const F of faces){F.m.scale.x*=1+dt*1.5;F.m.scale.y*=1+dt*1.5;}}
+    if(t>2.9){scene.remove(box);mat.dispose();return false;}return true;}});}
+function kuroCrush(G,L,H,K){const half=L/2,inBox=(x,z,pad=0)=>Math.abs(x-G.x)<half+pad&&Math.abs(z-G.z)<half+pad;
+  // 大地をまったいらに
+  const base=G.y;terrainEdit(G.x,G.z,L*.72,(h,q,x,z)=>inBox(x,z)?Math.min(h,base):undefined);
+  for(const e of enemies){if(!e.alive||e.statue||!inBox(e.pos.x,e.pos.z,e.radius)||e.pos.y>base+H+10)continue;e.hit(9000*TD[TIER]*(e.big?1:1.5),V3(0,-30,0),'earth');}
+  for(const u of CRW){if(u.st===1&&inBox(u.x,u.z))crowdDamage(u,9000*TD[TIER],V3(0,-10,0),'p','earth');}
+  for(const r of ROB)if(r.st===1&&inBox(r.pos.x,r.pos.z)&&r.pos.y<base+H+20)robotDamage(r,9000*TD[TIER],'p','earth');
+  if(typeof titanArea==='function')titanArea(V3(G.x,base,G.z),half,9000*TD[TIER]*3);
+  for(const b of buildings){if(b.destroyed||!inBox(b.x,b.z,b.rad*.5))continue;const B=barrierFor(b);if(B){hitBarrier(B,b,b.maxHp*TD[TIER]);continue;}
+    if(K.t>=2)quickRuin(b);else damageBuilding(b,b.maxHp*.6*TD[TIER],0);if(b.destroyed&&b.rub){b.rub.scale.y=.12;b.rub.position.y=base;}}
+  treesIn(G.x,G.z,L*.72,t=>{if(inBox(t.x,t.z)){if(t.ice)iceTreeBreak(t);else removeTree(t,false);}});
+  shake(1+K.t*.4,G);snd('bigboom',.9,G);
+  worldTint([.1,.08,.1],.6,(x,z)=>inBox(x,z)?1:0);}
+// ================= 宇宙の帝王と側近（滅星球） =================
+// 星々を滅ぼしてきた宇宙の帝王ギルザードが、二人の側近と兵を連れて宇宙船で降り立つ。国々を焼き、ときおり星そのものを滅ぼす炎の球「滅星球」を放つ。
+// 地上のすべて（帝国・魔王軍・天空王国・大魔導士）と敵対する
+const ST={st:'away',t:0,arrT:IS_MOBILE?170:150,ship:null,emp:null,aides:[],troops:[],ci:-1,novaT:70,nova:null,rage:false,dead:false,seen:false,stay:0,land:V3(),warned:false};
+const STAR_N={emp:'宇宙帝王 ギルザード',a1:'美麗将 ルシェール',a2:'剛拳将 ボルドゴ'};
+Object.assign(VM,{[STAR_N.emp]:{act:['ほう……この星に、私に楯突く者がいるとは','よろしい。少しだけ遊んであげましょう'],hurt:['……よくも、この私の体に傷を……！','許さん……許さんぞ、虫ケラが……！'],die:['馬鹿な……この私が……宇宙の帝王が……！','こんな……辺境の星で……'],
+    idle:['この星の民は実に脆い。まとめて片付けて差し上げましょう','降伏すれば、苦しまずに済みますよ','星がひとつ消えたところで、宇宙は何も変わりません'],sky:['空に浮かぶ城？ おもちゃにしては、よくできていますね'],aura:['な……何ですか、この気は……！？ 私よりも……大きいだと……？','ば、馬鹿な……こんな辺境の星に、これほどの者が……！']},
+  [STAR_N.a1]:{act:['美しくないものは、消えてもらいます','帝王様の御前です。控えなさい'],hurt:['私の顔に……傷を……！'],die:['帝王様……申し訳……ありません……'],idle:['この星の景色は、まあまあ美しいですね'],sky:['見苦しい機械ですね'],aura:['な、なんという気……帝王様以上……？']},
+  [STAR_N.a2]:{act:['グハハ！ ひねり潰してやる！'],hurt:['グオッ……こ、こいつ……！'],die:['ぐ……帝王様ぁ……！'],idle:['腹が減ったなあ。星ごと食っちまうか'],sky:['ガラクタどもが、うるせえ！'],aura:['ひ、ひいっ！ な、なんだこいつの気は……！']}});
+Object.assign(VM['大賢者 オルヴェイン'],{aura:['これが……天穹楼の主の、真の魔力か……']});Object.assign(VM['魔王 冥皇ゼファルド'],{aura:['ク……これほどの気を、隠していたか……！','面白い……余が震えるなど、千年ぶりだ']});
+Object.assign(VM['大陰陽師 月読ノ白夜'],{aura:['……月が、怯えている……']});Object.assign(VM['天空の魔導卿 セラフィード'],{aura:['何、この魔力……空が軋んでいる……']});
+function starShip(){const g=new THREE.Group(),M3=THREE.BufferGeometryUtils.mergeBufferGeometries;
+  const hull=new THREE.MeshStandardMaterial({color:0xd8d4e0,metalness:.8,roughness:.25}),dark=new THREE.MeshStandardMaterial({color:0x3a2a4a,metalness:.7,roughness:.35}),lamp=new THREE.MeshBasicMaterial({color:lin(6,2,8)});
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(40,32,14).scale(1,.32,1),hull));g.add(new THREE.Mesh(new THREE.TorusGeometry(40,2.2,8,48).rotateX(Math.PI/2),dark));
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(14,20,10,0,Math.PI*2,0,Math.PI/2).translate(0,8,0),new THREE.MeshStandardMaterial({color:0x8a4ac8,metalness:.3,roughness:.1,transparent:true,opacity:.8,emissive:lin(.4,.1,.6)})));
+  const L=[];for(let i=0;i<16;i++){const a=i/16*6.28;L.push(new THREE.SphereGeometry(1.4,8,6).translate(Math.cos(a)*38,-2,Math.sin(a)*38));}g.add(new THREE.Mesh(M3(L),lamp));
+  for(let i=0;i<3;i++){const a=i/3*6.28;const leg=new THREE.Mesh(new THREE.CylinderGeometry(.8,1.4,16,6).translate(0,-12,0),dark);leg.position.set(Math.cos(a)*22,0,Math.sin(a)*22);g.add(leg);}
+  scene.add(g);return g;}
+function starDress(e,kind){const g=e.g;const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.3,metalness:.25});
+  if(kind==='emp'){const dome=new THREE.Mesh(new THREE.SphereGeometry(.62,14,10,0,Math.PI*2,0,Math.PI/2),mat(0x8a3ac8));dome.position.set(0,4.35,0);g.add(dome);
+    for(const s of[-1,1]){const h=new THREE.Mesh(new THREE.ConeGeometry(.16,1.1,8),mat(0xf4f0e8));h.position.set(s*.42,4.55,0);h.rotation.z=-s*.9;g.add(h);
+      const pad=new THREE.Mesh(new THREE.SphereGeometry(.34,10,8,0,Math.PI*2,0,Math.PI/2),mat(0x8a3ac8));pad.position.set(s*.62,3.25,0);g.add(pad);}
+    const tail=new THREE.Mesh(new THREE.TorusGeometry(1.1,.14,8,24,Math.PI*1.3),mat(0xf0ece8));tail.position.set(0,1.2,-.6);tail.rotation.y=Math.PI/2;g.add(tail);e.dress=[dome];}
+  else if(kind==='a1'){const hair=new THREE.Mesh(new THREE.CylinderGeometry(.12,.2,1.6,6),mat(0x1a3a2a));hair.position.set(0,3.4,-.45);hair.rotation.x=.3;g.add(hair);
+    const cape=new THREE.Mesh(new THREE.PlaneGeometry(1.5,2.4),new THREE.MeshStandardMaterial({color:0xd8d0f0,side:THREE.DoubleSide}));cape.position.set(0,2.2,-.55);cape.rotation.x=.12;g.add(cape);}
+  else{for(let i=0;i<7;i++){const s=new THREE.Mesh(new THREE.ConeGeometry(.16,.7,5),mat(0xf0e8d8));const a=i/7*6.28;s.position.set(Math.cos(a)*.6,3.6+Math.sin(i)*.3,Math.sin(a)*.6);s.lookAt(s.position.clone().multiplyScalar(2));s.rotateX(Math.PI/2);g.add(s);}}}
+function starPick(){const L=[];COUNTRIES.forEach((C,ci)=>{if(C.outer||!C.total||ci===ST.ci)return;const k=1-C.dest/C.total;if(k<.15)return;const d=ST.emp?Math.hypot(C.x-ST.emp.pos.x,C.z-ST.emp.pos.z):0;L.push([ci,k*(C.big?1.4:C.village?.3:1)/(1+d/2500)]);});
+  if(!L.length)return -1;let s=L.reduce((a,b)=>a+b[1],0)*Math.random();for(const [ci,w] of L){s-=w;if(s<=0)return ci;}return L[0][0];}
+function starArrive(silent){if(ST.emp)return;ST.seen=true;ST.st='roam';ST.ci=-1;ST.ci=starPick();const C=COUNTRIES[ST.ci]||COUNTRIES[0];
+  let lx=C.x,lz=C.z;for(let k=0;k<40;k++){const a=Math.random()*6.28,r=rr(C.r+220,C.r+480);const x=C.x+Math.cos(a)*r,z=C.z+Math.sin(a)*r;if(groundAt(x,z)>3&&!nearTown(x,z)){lx=x;lz=z;break;}}
+  const y=groundAt(lx,lz);ST.land.set(lx,y,lz);ST.ship=starShip();ST.ship.position.set(lx,silent?y+14:y+900,lz);
+  const mk=(nm,o,kind)=>{const m=makeMage(Object.assign({ci:-1,x:lx+o[0],z:lz+o[1],hy:y+26,nm,fac:'star'},kind==='emp'?{rank:'star',hpMul:50,shMul:10,dm:2.6,rate:1.6,range:70,scale:1.45,pats:['mFire','mBolt','mBeam','mOrbs','mMeteor','mTri','mChain','mNova'],robe:0xf2eef6,trim:0x7a2aa8,orb:lin(8,2,10),c3:lin(7,2,9),shot:lin(9,3,10)}
+      :kind==='a1'?{rank:'elite',hpMul:5,shMul:3,dm:1.9,rate:1.35,range:56,scale:1.6,pats:['mFire','mBolt','mBeam','mOrbs','mTri'],robe:0x3a7a8a,trim:0xe8e0c0,orb:lin(2,8,6),c3:lin(2,7,6),shot:lin(2,8,6)}
+      :{brute:true,rank:'elite',hpMul:6,shMul:0,dm:2,rate:1.3,robe:0xd87aa0,trim:0x6a2a4a,orb:lin(9,3,5),c3:lin(9,3,5),shot:lin(9,3,5)}));
+    m.star=true;m.engR=kind==='emp'?300:240;starDress(m,kind);MAGES.push(m);return m;};
+  ST.emp=mk(STAR_N.emp,[0,0],'emp');ST.aides=[mk(STAR_N.a1,[40,20],'a1'),mk(STAR_N.a2,[-40,20],'a2')];
+  for(const m of[ST.emp,...ST.aides])m.emp_off=V3(m.pos.x-lx,0,m.pos.z-lz);
+  const nT=IS_MOBILE?4:8;for(let i=0;i<nT;i++){const a=Math.random()*6.28,r=rr(30,70);const e=new Enemy('knight',lx+Math.cos(a)*r,lz+Math.sin(a)*r,{tc:{x:lx,z:lz,r:90}});e.fac='star';e.star=true;tintEnemy(e,0x6a2aa0,.6);ST.troops.push(e);}
+  ST.novaT=IS_MOBILE?80:70;ST.stay=30;
+  if(!silent){for(const m of[ST.emp,...ST.aides]){m.pos.y+=900;m.g.position.copy(m.pos);}
+    showBanner('空の彼方より、宇宙の帝王','ギルザードが、この星を滅ぼしに来た');toast(`⚠ 宇宙帝王ギルザードが側近を連れて${C.label}の近くに降り立った（N で地図・${IS_MOBILE?'「観戦」':'V'} で観戦）`);
+    snd('growl',1.3);later(1,()=>snd('bigboom',.6));later(4,()=>say(ST.emp,'はじめまして、この星の皆さん。今日からこの星は、私のものです……いえ、塵になるのでしたね',{who:ST.emp.nm,cls:'mg sk2',far:2000,dur:7}));saveGame();}}
+function updStar(dt){if(ST.dead)return;
+  if(ST.st==='away'){if(!started||SPEC||APP_EARLY())return;ST.arrT-=dt;if(!ST.warned&&ST.arrT<12){ST.warned=true;toast('⚠ 空の彼方から、見知らぬ船が降りてくる……');}if(ST.arrT<=0)starArrive(!!ST.pendingLoad);return;}
+  const E=ST.emp;if(!E)return;
+  // 宇宙船の降下
+  if(ST.ship){const ty=ST.land.y+14;if(ST.ship.position.y>ty)ST.ship.position.y=Math.max(ty,ST.ship.position.y-dt*140);ST.ship.rotation.y+=dt*.3;}
+  if(!E.alive){starDown();return;}
+  const al=ST.aides.filter(m=>m.alive);
+  if(!ST.rage&&ST.aides.length&&!al.length){ST.rage=true;starRage();}
+  // 国から国へ
+  const C=COUNTRIES[ST.ci];if(!C||(C.total&&C.dest/C.total>.85)){ST.ci=starPick();ST.stay=rr(60,100);}
+  const tgt=C?V3(C.x,0,C.z):ST.land.clone();
+  if(!E.active){const d=Math.hypot(tgt.x-E.home.x,tgt.z-E.home.z);const step=Math.min(d,dt*38);const hx=E.home.x+(d>1?(tgt.x-E.home.x)/d*step:0),hz=E.home.z+(d>1?(tgt.z-E.home.z)/d*step:0);
+    if(d<60){ST.stay-=dt;if(ST.stay<=0){ST.ci=starPick();ST.stay=rr(60,100);}}
+    E.home.set(hx,groundAt(hx,hz)+34,hz);}
+  for(const m of[E,...ST.aides]){if(!m.alive)continue;if(m!==E&&!m.active){const o=m.emp_off;m.home.set(E.home.x+o.x,groundAt(E.home.x+o.x,E.home.z+o.z)+(m.kind==='brute'?0:28),E.home.z+o.z);}
+    // 指先の光線で国を焼く
+    m.starT=(m.starT||rr(1,3))-dt;if(m.starT<=0&&!m.active&&C&&Math.hypot(C.x-m.pos.x,C.z-m.pos.z)<C.r+260){m.starT=rr(1.4,2.8)*(ST.rage?.6:1);starBeam(m,C);}}
+  // 滅星球
+  if(ST.nova)novaUpd(dt);else{ST.novaT-=dt;if(ST.novaT<=0&&C&&Math.hypot(C.x-E.pos.x,C.z-E.pos.z)<C.r+500)novaCharge();}}
+function starBeam(m,C){threat(ST.ci,'star');const L=[];for(const b of buildings){if(b.destroyed||b.country!==ST.ci)continue;if(Math.abs(b.x-m.pos.x)<320&&Math.abs(b.z-m.pos.z)<320)L.push(b);if(L.length>40)break;}
+  let T=null,tp=null;if(Math.random()<.3){const r=robotNear(m.pos.x,m.pos.z,220);if(r){T=r;tp=r.pos.clone();}}
+  if(!T&&Math.random()<.35){const c=crNear(m.pos.x,m.pos.z,Math.random()<.5?0:1,200);if(c){T=c;tp=V3(c.x,c.y+1.4,c.z);}}
+  if(!T&&L.length){const b=L[Math.random()*L.length|0];T={building:b};tp=V3(b.x,b.y+b.height*.5,b.z);}
+  if(!T)return;const a=m.pos.clone();a.y+=3.2*(m.sc||1);
+  if((a.x-camera.position.x)**2+(a.z-camera.position.z)**2<1400*1400){beamFx(a,tp,1.4,m.shotCol||lin(7,2,9),.22);burst(tp,IS_MOBILE?8:18,18,.8,2,6,PC.violetA,PC.fireB,1,1,-3,glow,3,2);if(Math.random()<.3)snd('crack',.35,tp);}
+  const dm=EHP[DIFF];if(T.building){damageBuilding(T.building,700*BHP[DIFF],.9,true);}else if(T.isCrowd)crowdDamage(T,1e6,V3(rr(-6,6),10,rr(-6,6)),'npc');else if(T.isRobot)robotDamage(T,2500*dm,'npc');}
+function novaCharge(){const E=ST.emp;threat(ST.ci,'star');const NR=IS_MOBILE?130:170;const core=new THREE.Mesh(geoSphere,new THREE.MeshBasicMaterial({color:lin(10,4.2,1.2),fog:false})),halo=new THREE.Mesh(geoSphere,new THREE.MeshBasicMaterial({color:lin(3,1,.2),transparent:true,opacity:.45,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}));
+  scene.add(core,halo);ST.nova={core,halo,t:0,T:IS_MOBILE?7:7.5,NR,st:'charge',hp0:E.hp,pos:E.pos.clone()};snd('growl',1.3,E.pos);
+  const d=Math.hypot(player.pos.x-E.pos.x,player.pos.z-E.pos.z);showBanner('滅星球',d<3000?'星を滅ぼす炎の球が、膨れ上がっていく ─ 帝王を討てば止められる':'宇宙の帝王が、星を滅ぼそうとしている');
+  say(E,'この星ごと、消えてなくなりなさい',{who:E.nm,cls:'mg sk2',far:3000,dur:6});toast('⚠ 宇宙帝王ギルザードが「滅星球」を掲げた');}
+function novaUpd(dt){const N=ST.nova,E=ST.emp;N.t+=dt;
+  if(N.st==='charge'){if(!E.alive||(N.hp0-E.hp)>E.maxHp*.05){novaFizzle();return;}const k=Math.min(1,N.t/N.T),R=8+N.NR*k*k;N.R=R;N.pos.set(E.pos.x,E.pos.y+R+14,E.pos.z);
+    N.core.position.copy(N.pos);N.halo.position.copy(N.pos);N.core.scale.setScalar(R);N.halo.scale.setScalar(R*1.35+Math.sin(N.t*9)*R*.04);shake(.1+k*.5,N.pos);
+    for(let q=0;q<(IS_MOBILE?4:10);q++){const a=Math.random()*6.28,b=Math.random()*3.14,r=R*rr(1.4,2.6);glow.emit(N.pos.x+Math.sin(b)*Math.cos(a)*r,N.pos.y+Math.cos(b)*r,N.pos.z+Math.sin(b)*Math.sin(a)*r,-Math.sin(b)*Math.cos(a)*r*.8,-Math.cos(b)*r*.8,-Math.sin(b)*Math.sin(a)*r*.8,1,rr(3,8),1,PC.fireA,PC.white,1,0,0);}
+    if(N.t>=N.T){N.st='fall';N.t=0;const C=COUNTRIES[ST.ci];let T=C?V3(C.x,0,C.z):E.pos.clone();if(E.active&&!pDead&&Math.random()<.5)T=player.pos.clone();T.y=groundAt(T.x,T.z);N.tgt=T;N.from=N.pos.clone();
+      say(E,'さようなら、この星',{who:E.nm,cls:'mg sk2',far:3000,dur:4});snd('whoosh',1.4,N.pos);}}
+  else{const d=N.from.distanceTo(N.tgt),k=Math.min(1,N.t*95/Math.max(1,d));N.pos.copy(N.from).lerp(N.tgt,k);N.core.position.copy(N.pos);N.halo.position.copy(N.pos);N.core.rotation.y+=dt;shake(.6,N.pos);
+    if(Math.random()<dt*30)glow.emit(N.pos.x+rr(-N.R,N.R),N.pos.y+rr(-N.R,N.R)*.5,N.pos.z+rr(-N.R,N.R),0,rr(10,40),0,rr(1,2),rr(6,14),1,PC.fireA,PC.fireB,1,.3,0);
+    if(k>=1||N.pos.y-groundAt(N.pos.x,N.pos.z)<N.R*.35){novaBoom(N.tgt,N.R);scene.remove(N.core,N.halo);N.core.material.dispose();N.halo.material.dispose();ST.nova=null;ST.novaT=(ST.rage?rr(35,50):rr(65,90))*(IS_MOBILE?1.15:1);}}}
+function novaFizzle(){const N=ST.nova;if(!N)return;scene.remove(N.core,N.halo);N.core.material.dispose();N.halo.material.dispose();glowSphere(N.pos,N.R,N.R*2,lin(6,3,1),.7);burst(N.pos,IS_MOBILE?40:100,N.R,1.2,4,12,PC.fireA,PC.fireB,1,1,0,glow,N.R*.5,N.R*.5);snd('shatter',1.1,N.pos);
+  ST.nova=null;ST.novaT=rr(40,60);showBanner('滅星球を阻止','溜めた炎が崩れ、霧散した');if(ST.emp.alive)say(ST.emp,'……っ！ よくも……',{who:ST.emp.nm,cls:'mg sk2',far:2000});}
+function novaBoom(T,R){const TS=typeof techShieldAt==='function'?techShieldAt(T):null;
+  if(TS){TS.ch-=1;TS.chT=0;TS.sh.u.hit.value=1.5;const q=Math.hypot(T.x-TS.sh.x,T.z-TS.sh.z)/TS.sh.r;const p=V3(T.x,TS.sh.y+TS.sh.r*.6*Math.sqrt(Math.max(0,1-q*q)),T.z);
+    fireDome(p,R*1.6);shockwave(p,R*6,lin(6,3,1),1.4,2);screenFlash(lin(1.6,1.2,.8),.8);snd('bigboom',1.6,p);showBanner('天盾、滅星球を防ぐ','国を覆う結界が、星を滅ぼす炎を受け止めた');KB.indraBlock=(KB.indraBlock||0)+1;return;}
+  const near=Math.hypot(player.pos.x-T.x,player.pos.z-T.z);screenFlash(lin(2.2,1.6,1),near<3500?1.6:.5);post.aberr=Math.max(post.aberr,near<1500?.05:0);shake(4,T);snd('bigboom',2,T);later(.2,()=>snd('quake',1.8,T));later(.6,()=>snd('bigboom',1.5,T));
+  flashLight(T.clone().setY(T.y+200),lin(1.4,.8,.3),900,4000,5);shockwave(T,3200,lin(7,3.5,1),2.8,2.5);later(.4,()=>shockwave(T,1600,lin(8,4,1.5),2,2));
+  crater(T.x,T.z,520,130,1.6);fireDome(T,380);firePillar(T,160,2000,.1);
+  for(let i=0;i<(IS_MOBILE?10:22);i++){const a=i/(IS_MOBILE?10:22)*6.28,r=rr(450,1100),p=V3(T.x+Math.cos(a)*r,0,T.z+Math.sin(a)*r);p.y=groundAt(p.x,p.z);later(rr(.3,2),()=>fireDome(p,rr(80,160)));}
+  burst(T.clone().setY(T.y+900),IS_MOBILE?80:200,260,6,90,200,PC.smokeA,PC.smokeB,.7,.4,-2,smoke,500,200);
+  later(.15,()=>{for(const b of buildings){if(b.destroyed)continue;const d=Math.hypot(b.x-T.x,b.z-T.z);if(d<700+b.rad)damageBuilding(b,1e9,1,true);else if(d<1300)damageBuilding(b,b.maxHp*.6,.8,true);}
+    NPC_SKIP_STAR=true;npcBlast(T,700,1e9,0);NPC_SKIP_STAR=false;robotsArea(T,700,1e12,'npc');for(const t2 of TITANS)if(t2.alive&&Math.hypot(t2.pos.x-T.x,t2.pos.z-T.z)<800)titanHitNpc(t2,t2.max*.4);
+    scorchTrees(T.x,T.z,1300);worldTint([.06,.04,.035],.9,(x,z)=>{const q=Math.hypot(x-T.x,z-T.z)/1200;return q<1?1-q*q:0;});
+    if(LG.alive&&Math.hypot(LG.pos.x-T.x,LG.pos.z-T.z)<900){for(const I of LG.isles)if(I.alive&&Math.hypot(I.pos.x-T.x,I.pos.z-T.z)<900)breakIsle(I);}
+    if(started&&!pDead&&near<900)hurtPlayer(1500+3500*(1-near/900));});
+  toast('☄ 滅星球が大地を焼き尽くした');KB.nova=(KB.nova||0)+1;}
+function starRage(){const E=ST.emp;if(!E.alive)return;showBanner('ギルザード、最終形態','「よくも……私の部下を……！ もう、手加減はしませんよ」');snd('growl',1.6,E.pos);
+  E.g.traverse(o=>{if(o.isMesh&&o.material&&o.material.color){o.material=o.material.clone();o.material.color.lerp(new THREE.Color(0xffffff),.6);if(o.material.emissive)o.material.emissive.setRGB(.2,.1,.35);}});
+  E.hp=Math.min(E.maxHp,E.hp+E.maxHp*.35);E.dm*=1.3;E.auraS=(E.auraS||3)*1.3;glowSphere(E.pos,4,60,lin(4,2,6),1);shockwave(E.pos,300,lin(4,2,6),1,2);ST.novaT=Math.min(ST.novaT,15);}
+function starDown(){if(ST.dead)return;ST.dead=true;ST.st='dead';KB.star=(KB.star||0)+1;gainExp(80000);MANA+=rw(10000);
+  if(ST.nova)novaFizzle();for(const m of ST.aides)if(m.alive)later(rr(.5,2),()=>{if(m.alive)m.hit(1e13,null,'npc');});for(const e of ST.troops)if(e.alive)later(rr(0,2),()=>{if(e.alive)e.hit(1e9,null,'npc');});
+  later(1.6,()=>showBanner('宇宙の帝王、この星に散る','ギルザードの野望は、辺境の星で潰えた'));
+  if(ST.ship){const s=ST.ship;let t=0;addFx({update(dt){t+=dt;s.position.y+=dt*(20+t*60);s.rotation.y+=dt*2;if(t>6){scene.remove(s);return false;}return true;}});ST.ship=null;}saveGame();}
+function starSave(){return ST.seen?{seen:1,dead:ST.dead?1:0}:null;}
+function starLoad(s){if(!s||!s.seen)return;if(s.dead){ST.seen=true;ST.dead=true;ST.st='dead';return;}ST.arrT=0;ST.pendingLoad=true;}
+// ================= 広がる世界：首都の外郭・小国・村 =================
+// 帝都と魔都は外郭の街区が広がり、昔の数倍の広さに。さらに小国20と村50が点在する。
+// 生成は固定の乱数で行い、毎回同じ世界になる（セーブの建物番号がずれないよう、既存の生成のあとに付け足す）
+let NFIX=0;
+function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function flatSite(x,z,r,h0){terrainEdit(x,z,r*1.5,(h,q,xx,zz,id)=>{const w=q<.66?1:Math.max(0,1-(q-.66)/.34),s=w*w*(3-2*w);const nh=lerp(h,h0,s);hOrig[id]=nh;return nh;});
+  treesIn(x,z,r*1.35,t=>removeTree(t,false));}
+function siteOk(x,z,r,pad,sites,slope=90){if(Math.abs(x)>HALF-r-80||z<-4000+r||z>HALF-r-80)return false;
+  for(const C of COUNTRIES){if(C.outer)continue;if(Math.hypot(C.x-x,C.z-z)<C.r+r+pad)return false;if(C.ext)for(const e of C.ext)if(Math.hypot(e.x-x,e.z-z)<e.r+r+pad)return false;}
+  for(const f of BFIELDS)if(Math.hypot(f.x-x,f.z-z)<230+r+pad*.5)return false;for(const f of[RUINS,SEAL])if(Math.hypot(f.x-x,f.z-z)<140+r+pad*.5)return false;
+  if(Math.hypot(HX-x,HZ-z)<r+220)return false;for(const s of sites)if(Math.hypot(s.x-x,s.z-z)<s.r+r+pad)return false;
+  let mn=1e9,mx=-1e9;for(let a=0;a<8;a++)for(const k of[0,.5,1]){const h=groundAt(x+Math.cos(a*.785)*r*k,z+Math.sin(a*.785)*r*k);mn=Math.min(mn,h);mx=Math.max(mx,h);}
+  return mn>3&&mx<(slope>900?999:175)&&mx-mn<slope;}
+const MINOR_N=[['リーベル公国',0],['カルデア王国',0],['ヴェルム辺境伯領',0],['アルトリア公国',0],['ノルデン王国',2],['セレス自由都市',0],['グラナート侯国',0],['フィオレ公国',0],['ロスヴァイン王国',0],['エルデ伯国',2],
+  ['紅葉国 朱雀京',1],['白鷺国 鷺ノ宮',1],['雪国 氷見',1],['霧島国 霞城',1],['松風国 浜松',1],['伊吹国 石動',1],['朝霧国 翠嶺',1],['蓬莱国 常世',1],['鳴海国 潮見',1],['八雲国 出雲原',1]];
+const VW=['アル','ベル','カル','ドル','フェン','グラ','ハル','イル','ヨル','ケル','リン','マル','ノル','オル','ペル','ロー','シル','トル','ウル','ヴァル','ウィン','テオ','ミラ','ソル','ブラン'],
+  VJ=['梅','桃','竹','杉','椿','萩','藤','楓','菖蒲','柚','栗','榎','樫','柊','葵','菫','蓮','芹','蕨','萱'],VJS=['ヶ原村','ノ里','沢村','ヶ丘村','川村','谷村'];
+function wardHouses(ci,X,Z,r,maxN,prng,tall){let n=0;for(let gz=-12;gz<=12;gz++)for(let gx=-12;gx<=12;gx++){if(n>=maxN)return n;const lx=gx*26+(prng()-.5)*6,lz=gz*26+(prng()-.5)*6,d=Math.hypot(lx,lz);
+  if(d>r-18||d<22||Math.abs(lx)<10||Math.abs(lz)<10)continue;if(prng()<.12)continue;const x=X+lx,z=Z+lz;if(groundAt(x,z)<2)continue;
+  const b=HOUSE_MK[ci](x,z);b.mesh.rotation.y=Math.atan2(lx,lz)+(prng()<.5?0:Math.PI/2);n++;}return n;}
+function initWorld2(){const prng=mulberry(20260926);const sites=[];const M3=THREE.BufferGeometryUtils.mergeBufferGeometries;
+  // ---- 帝都・魔都の外郭街区 ----
+  for(const [ci,base] of[[4,Math.PI],[5,0]]){const C=COUNTRIES[ci];C.ext=[];const want=IS_MOBILE?7:10,perW=IS_MOBILE?30:95;
+    for(let tries=0;tries<700&&C.ext.length<want;tries++){const ring=C.ext.length<4?rr0(prng,720,950):rr0(prng,1050,1450),a=base+(prng()-.5)*(tries<300?3.6:5.6);const x=C.x+Math.cos(a)*ring,z=C.z+Math.sin(a)*ring,r=rr0(prng,230,290);
+      if(!siteOk(x,z,r,60,sites,9999))continue;sites.push({x,z,r});C.ext.push({x,z,r});}
+    for(const w of C.ext){const h0=ci===4?EMH:DMH;flatSite(w.x,w.z,w.r,h0);CUR_C=ci;
+      const tw=towerGeo(7,46,10,18,10);addBuilding(tw,[stoneMat,roofMats[ci===4?1:3]],w.x,w.z,h0,8,64,5000,'tower');
+      for(let k=0;k<4;k++){const a=k*1.571+.785,x=w.x+Math.cos(a)*(w.r-14),z=w.z+Math.sin(a)*(w.r-14);addBuilding(towerGeo(4.5,26,6.5,10,8),[stoneMat,roofMats[ci===4?1:3]],x,z,groundAt(x,z),5,36,2200,'tower');}
+      CUR_C=0;wardHouses(ci,w.x,w.z,w.r,perW,prng);}}
+  // ---- 小国20 ----
+  let mi=0;for(let tries=0;tries<3000&&mi<MINOR_N.length;tries++){const r=rr0(prng,85,105),x=(prng()*2-1)*(HALF-300),z=(prng()*2-1)*(HALF-300);if(!siteOk(x,z,r,160,sites))continue;
+    const [label,sty]=MINOR_N[mi++];sites.push({x,z,r});const ci=COUNTRIES.length;COUNTRIES.push({label,x,z,r,total:0,dest:0,start:-1,done:false,doneAt:0,minor:true,sty});
+    let hs=0;for(let q=0;q<9;q++)hs+=groundAt(x+Math.cos(q)*r*.5,z+Math.sin(q)*r*.5);const h0=clamp(hs/9,5,110);flatSite(x,z,r,h0);const jp=sty===1;
+    HOUSE_MK[ci]=jp?(hx,hz)=>cottage(ci,hx,hz,true):(hx,hz)=>HOUSE_MK[0](hx,hz,ci);
+    CUR_C=ci;
+    if(jp){const P=[];for(let k=0;k<3;k++){const w=14-k*3.4;P.push(new THREE.BoxGeometry(w,5.5,w).translate(0,k*7+2.75,0),new THREE.ConeGeometry(1,1,4).rotateY(Math.PI/4).scale(w*.95,3,w*.95).translate(0,k*7+7,0));}P.push(new THREE.CylinderGeometry(.3,.3,6,6).translate(0,24,0));
+      addBuilding(M3(P,true),P.map((g,i)=>i%2?VMAT.jr:VMAT.jw),x,z,h0,9,27,4200,'keep');}
+    else{addBuilding(M3([new THREE.BoxGeometry(20,18,20).translate(0,9,0),new THREE.ConeGeometry(1,1,4).rotateY(Math.PI/4).scale(15,13,15).translate(0,24.5,0)],true),[stoneMat,roofMats[(mi*3)%4]],x,z,h0,13,31,4200,'keep');}
+    for(let k=0;k<4;k++){const a=k*1.571+.3,tx=x+Math.cos(a)*(r-10),tz=z+Math.sin(a)*(r-10);addBuilding(towerGeo(3.6,17,5,8,8),[jp?VMAT.jw:stoneMat,jp?VMAT.jr:roofMats[k%4]],tx,tz,groundAt(tx,tz),4.5,25,1600,'tower');}
+    CUR_C=0;let n=0;const maxN=IS_MOBILE?14:32,pl=[];for(let t=0;t<220&&n<maxN;t++){const a=prng()*6.28,rr_=rr0(prng,24,r-12),hx=x+Math.cos(a)*rr_,hz=z+Math.sin(a)*rr_;if(pl.some(b=>Math.hypot(b.x-hx,b.z-hz)<b.rad+7))continue;pl.push(HOUSE_MK[ci](hx,hz));n++;}}
+  // ---- 村50 ----
+  let vi=0;for(let tries=0;tries<5000&&vi<50;tries++){const r=60,x=(prng()*2-1)*(HALF-200),z=(prng()*2-1)*(HALF-200);if(!siteOk(x,z,r,120,sites))continue;
+    const jp=prng()<.45;const label=jp?VJ[vi%VJ.length]+VJS[(vi*7)%VJS.length]:VW[vi%VW.length]+['ベル','ヘイム','ドルフ','ブルク','ヴィル'][(vi*3)%5]+'村';vi++;
+    sites.push({x,z,r});const ci=COUNTRIES.length;COUNTRIES.push({label,x,z,r:70,total:0,dest:0,start:-1,done:false,doneAt:0,settle:true,village:true,minorV:true});
+    const h0=clamp(groundAt(x,z),4,95);flatSite(x,z,r,h0);HOUSE_MK[ci]=(hx,hz)=>cottage(ci,hx,hz,jp);
+    let n=0;const maxN=IS_MOBILE?3:8,pl=[];for(let t=0;t<90&&n<maxN;t++){const a=prng()*6.28,rr_=rr0(prng,10,r-8),hx=x+Math.cos(a)*rr_,hz=z+Math.sin(a)*rr_;if(pl.some(b=>Math.hypot(b.x-hx,b.z-hz)<b.rad+7))continue;pl.push(cottage(ci,hx,hz,jp));n++;}
+    {const g=new THREE.Group();g.position.set(x,h0,z);g.add(new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.5,1.2,12).translate(0,.6,0),stoneMat));scene.add(g);}}
+  NFIX=COUNTRIES.length;}
+function rr0(p,a,b){return a+(b-a)*p();}
+// 追加した国と村の住人・兵（セーブ読み込みのあとに置く）
+function populateWorld2(){for(let ci=TI+1;ci<NFIX;ci++){const C=COUNTRIES[ci];if(!C)continue;const minor=C.minor;
+    const nc=minor?(IS_MOBILE?2:5):(IS_MOBILE?1:2);for(let i=0;i<nc;i++){const a=Math.random()*6.28,r=Math.random()*C.r*.7;new Enemy('citizen',C.x+Math.cos(a)*r,C.z+Math.sin(a)*r,{tc:{x:C.x,z:C.z,r:C.r*.8},inTown:false});}
+    if(minor){const nk=IS_MOBILE?2:4;for(let i=0;i<nk;i++){const a=Math.random()*6.28,r=Math.random()*C.r*.6;const e=new Enemy('knight',C.x+Math.cos(a)*r,C.z+Math.sin(a)*r,{tc:{x:C.x,z:C.z,r:C.r}});if(C.sty===1)tintEnemy(e,0x7a1414,.45);}}}}
+// ---- 帝国軍・魔王軍の空の戦力（天空の機械兵と互角に戦う） ----
+let airT=3;
+function updAirForce(dt){airT-=dt;if(airT>0||!started)return;airT=IS_MOBILE?6:4;if(!LG.alive)return;
+  for(const [ci,side] of[[4,'emp'],[5,'dem']]){const C=COUNTRIES[ci];if(!C.total||C.dest/C.total>.7)continue;
+    const near=Math.hypot(LG.pos.x-C.x,LG.pos.z-C.z)<3000||ROB.some(u=>u.st===1&&u.side==='sky'&&Math.hypot(u.pos.x-C.x,u.pos.z-C.z)<1700);if(!near)continue;
+    const mine=ROB.filter(u=>u.st===1&&u.side===side).length,MAX=IS_MOBILE?12:40;
+    for(let k=0;k<(IS_MOBILE?3:7)&&mine+k<MAX;k++){const a=Math.random()*6.28,r=rr(40,C.r*.6);spawnRobot(C.x+Math.cos(a)*r,groundAt(C.x,C.z)+30,C.z+Math.sin(a)*r,'gguard',ci,side);}}}
 // ================= 絶対障壁・魔法返し =================
 let FIELD=null,MIRROR=null;
 const octGeo=(()=>{const g=new THREE.CircleGeometry(1,8);g.rotateZ(Math.PI/8);return g;})();
@@ -3815,7 +4091,7 @@ function sakuraCut(p,w,carve){
   treesIn(p.x,p.z,w,t=>{if(t.ice)iceTreeBreak(t);else removeTree(t,true);});
   if(carve){const th=Math.random()*3.14,cx=Math.cos(th),cz=Math.sin(th);
     terrainEdit(p.x,p.z,w*1.3,(h,q,x,z)=>{if(h<4)return;const stripe=Math.abs(Math.sin((x*cx+z*cz)*.35));return h-Math.max(0,1-q*q)*(1.5+stripe*5)*Math.min(1,h/30);});}}
-Object.assign(SP,{a_sakura(P){aSakura(P);},a_sun(P){aSun();},a_moon(P){aMoon();},a_jup(P){aJupiter(P);},a_nep(P){aNeptune();},a_black(P){aBlack(P);},a_fall(P){aFall(P);},a_love(P){aLove();}});
+Object.assign(SP,{kurobako(P,s,K){kurobako(P,K);},a_sakura(P){aSakura(P);},a_sun(P){aSun();},a_moon(P){aMoon();},a_jup(P){aJupiter(P);},a_nep(P){aNeptune();},a_black(P){aBlack(P);},a_fall(P){aFall(P);},a_love(P){aLove();}});
 function updAncient(dt){updSea(dt);if(MOON&&gameTime>MOON.end){moonThaw();toast('氷が解け、大地に色が戻った');}}
 // ================= 召喚魔法 =================
 // 精霊は大魔導士のそばに浮かび、敵対している相手だけを自動で攻撃する。神龍は一帯を無に帰す。
@@ -4201,6 +4477,7 @@ addEventListener('keydown',e=>{
   keys[e.code]=true;
   if(SPEC){if(e.code==='KeyV'||e.code==='Escape')toggleSpec();else if(e.code==='ArrowLeft'||e.code==='KeyA')specStep(-1);else if(e.code==='ArrowRight'||e.code==='KeyD')specStep(1);else if(e.code==='KeyT')specSpeed();
     if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();return;}
+  if(e.code==='KeyU'&&!e.repeat&&started){toggleAura();return;}
   if(e.code==='KeyV'&&!questOpen&&!mapOpen&&!bookOpen&&!warpOpen&&!realmOpen){toggleSpec();return;}
   if(e.code==='Tab'){e.preventDefault();lockCycle();return;}if(e.code==='KeyR'&&!questOpen&&!mapOpen&&!bookOpen&&!warpOpen){lockToggle();return;}
   const n=e.code.startsWith('Digit')?+e.code.slice(5):parseInt(e.key,10);if(questOpen){if(e.code==='KeyJ'||e.code==='Escape')toggleQuest();return;}if(mapOpen){if(e.code==='KeyN'||e.code==='Escape')toggleMap();return;}if(guideOpen){if(e.code==='Escape'||e.code==='Slash')toggleGuide();return;}if(e.code==='Slash'){toggleGuide();return;}if(saveOpen){if(e.code==='KeyP'||e.code==='Escape')toggleSaveM();return;}if(e.code==='KeyP'){toggleSaveM();return;}if(storyOpen){if(e.code==='KeyG'||e.code==='Escape')toggleStory();return;}if(e.code==='KeyG'){toggleStory();return;}if(achOpen){if(e.code==='KeyL'||e.code==='Escape')toggleAch();return;}if(e.code==='KeyL'){toggleAch();return;}if(realmOpen){if(e.code==='KeyK'||e.code==='Escape')toggleRealm();return;}if(e.code==='KeyK'){toggleRealm();return;}if(e.code==='KeyJ'){toggleQuest();return;}if(e.code==='KeyN'){toggleMap();return;}if(bookOpen){if(e.code==='KeyB'||e.code==='Escape')toggleBook();return;}if(warpOpen){if(n>=1&&n<=WARPS.length)travelTo(n-1);if(e.code==='Escape'||e.code==='KeyH')toggleWarp();return;}if(e.code==='KeyB'){toggleBook();return;}if(n>=1&&n<=9){if(SLOTS[n-1]!=null)cast(SLOTS[n-1]);}else if(n===0&&e.code==='Digit0'){if(SLOTS[9]!=null)cast(SLOTS[9]);}
@@ -4256,8 +4533,8 @@ tz.addEventListener('pointerup',endT);tz.addEventListener('pointercancel',endT);
 const actHeld={};
 document.querySelectorAll('.act').forEach(b=>{
   const a=b.dataset.a;
-  b.addEventListener('pointerdown',e=>{e.preventDefault();if(a==='fly')toggleFly();else if(a==='home')travel();else actHeld[a]=true;if(a!=='fly')b.classList.add('on');});
-  const up=()=>{if(a!=='fly'){actHeld[a]=false;b.classList.remove('on');}};
+  b.addEventListener('pointerdown',e=>{e.preventDefault();if(a==='aura'){toggleAura();return;}if(a==='fly')toggleFly();else if(a==='home')travel();else actHeld[a]=true;if(a!=='fly')b.classList.add('on');});
+  const up=()=>{if(a!=='fly'&&a!=='aura'){actHeld[a]=false;b.classList.remove('on');}};
   b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);b.addEventListener('pointerleave',up);
 });
 // spell bar
@@ -4293,8 +4570,8 @@ function renderBook(){const g=$('#book .bg'),g2=$('#book .ancg');if(!g)return;g.
   $('#book .cnt').textContent=`装備 ${SLOTS.length} / 10`;}
 rebuildBar();
 $('#controls').innerHTML=IS_MOBILE?
-  '<dt>移動</dt><dd>画面の左側をなぞる</dd><dt>視点</dt><dd>画面の右側をなぞる</dd><dt>魔法</dt><dd>下の紋章をタップ（照準は画面中央）。「魔法書」で並びを編成</dd><dt>飛翔</dt><dd>「飛」で切替、「昇」「降」で高度</dd><dt>威力</dt><dd>「弱・中・強・極」をタップ</dd><dt>照準</dt><dd>「狙」でロックオン、「替」で標的を切り替え</dd><dt>転移</dt><dd>「転」で転移先を選択</dd>':
-  '<dt>移動</dt><dd>WASD　疾走 Shift</dd><dt>視点</dt><dd>マウス（クリックで固定、Escで解除。固定できない時はドラッグ）</dd><dt>魔法</dt><dd>1〜9・0キー（B の魔法書で編成）、またはクリックで選択中の魔法</dd><dt>飛翔</dt><dd>F で切替　上昇 Space　下降 C</dd><dt>威力</dt><dd>Q／E で 弱・中・強・極 を切替</dd><dt>照準</dt><dd>R でロックオン（近くの敵に自動で照準）、Tab で標的を切り替え</dd><dt>転移</dt><dd>H で転移先を選択（天穹楼・各国）</dd><dt>説明</dt><dd>／（スラッシュ）で遊び方、B の魔法書で魔法の説明</dd><dt>世界</dt><dd>G 物語　J 依頼書　N 世界地図　K 国勢　V 観戦　L 実績</dd><dt>音</dt><dd>M で切替</dd><dt>記録</dt><dd>P でセーブ画面（3つの枠・オートセーブの切替）</dd>';
+  '<dt>移動</dt><dd>画面の左側をなぞる</dd><dt>視点</dt><dd>画面の右側をなぞる</dd><dt>魔法</dt><dd>下の紋章をタップ（照準は画面中央）。「魔法書」で並びを編成</dd><dt>飛翔</dt><dd>「飛」で切替、「昇」「降」で高度</dd><dt>威力</dt><dd>「弱・中・強・極」をタップ</dd><dt>照準</dt><dd>「狙」でロックオン、「替」で標的を切り替え</dd><dt>転移</dt><dd>「転」で転移先を選択</dd><dt>オーラ</dt><dd>「気」で展開／秘匿（弱い敵がひるむ）</dd>':
+  '<dt>移動</dt><dd>WASD　疾走 Shift</dd><dt>視点</dt><dd>マウス（クリックで固定、Escで解除。固定できない時はドラッグ）</dd><dt>魔法</dt><dd>1〜9・0キー（B の魔法書で編成）、またはクリックで選択中の魔法</dd><dt>飛翔</dt><dd>F で切替　上昇 Space　下降 C</dd><dt>威力</dt><dd>Q／E で 弱・中・強・極 を切替</dd><dt>照準</dt><dd>R でロックオン（近くの敵に自動で照準）、Tab で標的を切り替え</dd><dt>転移</dt><dd>H で転移先を選択（天穹楼・各国）</dd><dt>オーラ</dt><dd>U で展開／秘匿（弱い敵がひるむ）</dd><dt>説明</dt><dd>／（スラッシュ）で遊び方、B の魔法書で魔法の説明</dd><dt>世界</dt><dd>G 物語　J 依頼書　N 世界地図　K 国勢　V 観戦　L 実績</dd><dt>音</dt><dd>M で切替</dd><dt>記録</dt><dd>P でセーブ画面（3つの枠・オートセーブの切替）</dd>';
 
 // ================= aim =================
 const aimPoint=V3();const camDir=V3();
@@ -4309,7 +4586,7 @@ function updAim(){
   let t=camDist+2,hit=false;
   while(t<best){const x=o.x+camDir.x*t,y=o.y+camDir.y*t,z=o.z+camDir.z*t;const g=groundAt(x,z);
     if(y<=g){hit=true;break;}
-    if(nearTown(x,z))for(const b of buildings){if(b.destroyed)continue;if(Math.abs(x-b.x)<b.rad&&Math.abs(z-b.z)<b.rad&&y<b.y+b.height){hit=true;break;}}
+    if(nearTown(x,z)&&bNear(x,z,b=>!b.destroyed&&Math.abs(x-b.x)<b.rad&&Math.abs(z-b.z)<b.rad&&y<b.y+b.height))hit=true;
     if(hit)break;t+=Math.max(1,(y-g)*.35);}
   if(!hit&&!hitE)t=Math.min(t,600);
   aimPoint.copy(o).addScaledVector(camDir,Math.min(t,best));
@@ -4461,7 +4738,7 @@ function step(dt){
     if(!started&&e.kind!=='boss'&&!e.fly){e.animate(dt,false);continue;}e.update(dt);}
   for(let i=fx.length-1;i>=0;i--){if(!fx[i].update(dt))fx.splice(i,1);}
   cullT-=dt;if(cullT<=0){cullT=.3;cullWorld();}
-  updWorld(dt);updCrowd(dt);updSites(dt);updTitans(dt);updLagna(dt);updRobots(dt);updRel(dt);updTech(dt);updBarros(dt);updVoices(dt);updIceTrees();updSakura(dt);updSpirits(dt);updIceMts(dt);updCrow(dt);updShields(dt);updWeather(dt);updAncient(dt);updWaves(dt);updBarriers(dt);
+  updWorld(dt);updCrowd(dt);updSites(dt);updTitans(dt);updLagna(dt);updRobots(dt);updRel(dt);updTech(dt);updBarros(dt);updVoices(dt);updIceTrees();updSakura(dt);updAuras(dt);updStar(dt);updAirForce(dt);updSpirits(dt);updIceMts(dt);updCrow(dt);updShields(dt);updWeather(dt);updAncient(dt);updWaves(dt);updBarriers(dt);
   updBuildings(dt);updDebris(dt);updHome(dt);updFlora(dt);updSkyCity(dt);updFarm(dt);
   for(let i=burningTrees.length-1;i>=0;i--){const b=burningTrees[i];b.life-=dt;const t=b.t;
     if(Math.random()<dt*25)glow.emit(t.x+rr(-1,1)*t.s*.4,t.y+t.s*rr(1,2.6),t.z+rr(-1,1)*t.s*.4,0,rr(4,8),0,rr(.5,1),rr(2,4),.4,PC.fireA,PC.fireB,1,.5,-2);
@@ -4561,7 +4838,7 @@ function crowdMoveTo(u,x,z,sp,dt){const dx=x-u.x,dz=z-u.z,d=Math.hypot(dx,dz);if
 function crowdHitTarget(u,t){const dmgMul=(u.el?2.5:1)*EHP[DIFF];
   if(t.isCrowd){crowdDamage(t,(u.role?3:4.5)*EHP[DIFF]*rr(.8,1.2)*(u.el?2.5:1),null,'npc');}
   else if(t===player){PL_THREAT[powOfCrowd(u)]=gameTime;hurtPlayer((u.sd?ATK.demon:ATK.knight)*.45*(u.el?2:1));}
-  else if(t.hit){t.hit((u.role?60:110)*dmgMul*rr(.8,1.2),null,'npc');}
+  else if(t.hit){t.hit((u.role?60:110)*dmgMul*rr(.8,1.2)*(t.isRobot?3:1),null,'npc');}
   else if(t.building){damageBuilding(t.building,55*dmgMul,.04,true);}}
 function crowdShoot(u,tx,ty,tz){const sx=u.x,sy=u.y+2.4,sz=u.z,dx=tx-sx,dy=ty-sy,dz=tz-sz,d=Math.hypot(dx,dz)||1,t=Math.max(.25,d/60),G=30;
   if((sx-camera.position.x)**2+(sz-camera.position.z)**2<900*900)glow.emit(sx,sy,sz,dx/t,dy/t+.5*G*t,dz/t,t,.9,.6,u.sd?PC.fireA:PC.gold,u.sd?PC.ember:PC.white,1,0,G);}
@@ -4631,11 +4908,11 @@ function spawnRaidCrowd(raid,C,bx,bz,n){for(let i=0;i<n;i++)spawnCrowd(1,bx+rr(-
 // ================= 諸勢力の関係（兵は自ら考えて戦い、友には援軍を送る） =================
 // 勢力どうしの関係は -100（宿敵）〜 +100（盟友）。敵対していれば出会った兵は自ら戦い、友好が高ければ襲われた国へ援軍を送る。
 // 天空王国と巨神帝国は地上のすべてと敵対。共通の敵に襲われ続けると、帝国と魔王軍でさえ休戦し、やがて共闘する
-const POW_N={hum:'人間の諸国',emp:'神聖ヴァルガルド帝国',dem:'魔王軍',sky:'天空王国ラグナ',titan:'巨神帝国'};
+const POW_N={star:'宇宙帝王ギルザード',hum:'人間の諸国',emp:'神聖ヴァルガルド帝国',dem:'魔王軍',sky:'天空王国ラグナ',titan:'巨神帝国'};
 const REL0={'emp|hum':60,'dem|hum':-70,'dem|emp':-60};const REL=Object.assign({},REL0);
 const TRUCE=-25,ALLY=30;
 function rk(a,b){return a<b?a+'|'+b:b+'|'+a;}
-function rel(a,b){if(!a||!b)return 0;if(a===b)return 100;if(a==='sky'||b==='sky')return -100;if(a==='titan'||b==='titan')return -90;return REL[rk(a,b)]??0;}
+function rel(a,b){if(!a||!b)return 0;if(a===b)return 100;if(a==='sky'||b==='sky'||a==='star'||b==='star')return -100;if(a==='titan'||b==='titan')return -90;return REL[rk(a,b)]??0;}
 function relAdd(a,b,v){if(!a||!b||a===b||a==='sky'||b==='sky'||a==='titan'||b==='titan')return;const k=rk(a,b),o=REL[k]??0,n=clamp(o+v,-100,100);REL[k]=n;
   const who=k==='dem|emp'?'帝国と魔王軍':k==='dem|hum'?'魔王軍と人間の諸国':'帝国と人間の諸国';
   if(o<=TRUCE&&n>TRUCE){toast(`🕊 共通の敵を前に、${who}が休戦した`);if(k==='dem|emp')truceBattles();}
@@ -4645,7 +4922,7 @@ function relWord(v){return v>=ALLY?'同盟':v>=10?'友好':v>TRUCE?'休戦':v>-7
 function foe(a,b){return rel(a,b)<=TRUCE;}
 function powOfCi(ci){const C=COUNTRIES[ci];if(!C)return null;return C.faction==='emp'?'emp':C.faction==='dem'?'dem':C.faction==='titan'?'titan':'hum';}
 function powOfCrowd(u){return u.pow||CR_SIDE[u.sd];}
-function powOfEnemy(e){if(e.isRobot)return 'sky';if(e.isTitan)return 'titan';if(e.war)return e.war;if(e.raid!=null||e.kind==='demon')return 'dem';if(e.fac==='dem'||e.fac==='emp')return e.fac;return null;}
+function powOfEnemy(e){if(e.star||e.fac==='star')return 'star';if(e.isRobot)return e.side==='sky'?'sky':e.side==='gnd'?'hum':e.side;if(e.isTitan)return 'titan';if(e.war)return e.war;if(e.raid!=null||e.kind==='demon')return 'dem';if(e.fac==='dem'||e.fac==='emp')return e.fac;return null;}
 // 近くの「敵」を探す（機械兵・敵対する軍の兵・侵攻してきた魔族）
 function crowdFoe(u,r){const P=powOfCrowd(u);let best=null,bd=r;
   const rb=robotNear(u.x,u.z,r,u.y);if(rb){best=rb;bd=Math.hypot(rb.pos.x-u.x,rb.pos.z-u.z);}
@@ -4675,7 +4952,7 @@ function truceBattles(){for(const bt of BATTLES)if(!bt.over){bt.over=true;bt.win
 function updRel(dt){if(!started)return;relT-=dt;if(relT>0)return;relT=2;
   // 脅威を集める
   if(LG.alive&&LG.st==='siege')threat(LG.ci,'sky');
-  for(const u of ROB)if(u.st===1&&u.side!=='gnd'&&u.tgt){const t=u.tgt;const x=t.building?t.building.x:t.isCrowd?t.x:t.pos?t.pos.x:null;if(x==null)continue;const z=t.building?t.building.z:t.isCrowd?t.z:t.pos.z;const ci=countryAt(x,z);if(ci>=0)threat(ci,'sky');}
+  for(const u of ROB)if(u.st===1&&u.side==='sky'&&u.tgt){const t=u.tgt;const x=t.building?t.building.x:t.isCrowd?t.x:t.pos?t.pos.x:null;if(x==null)continue;const z=t.building?t.building.z:t.isCrowd?t.z:t.pos.z;const ci=countryAt(x,z);if(ci>=0)threat(ci,'sky');}
   for(const r of RAIDS)if(!r.cleared)threat(r.ci,'dem');
   for(const t of TITANS)if(t.alive&&t.st==='march')threat(t.tgtCi,'titan');
   // 共通の敵：天空王国が人間側と魔族側の両方を襲っていれば、休戦へ傾く
@@ -4720,6 +4997,7 @@ function specTargets(){const L=[];
   for(const r of RAIDS)if(r.units.some(u=>u.alive)||(r.n&&r.n[1]>0)){const C=COUNTRIES[r.ci];L.push({n:C.label+' ─ 魔王軍の侵攻',x:C.x,z:C.z,raid:r,d:220});}
   for(const t of TITANS)if(t.alive&&t.st!=='home')L.push({n:t.nm,x:t.pos.x,z:t.pos.z,titan:t,d:520});
   if(LG.alive)L.push({n:LG.nm,x:LG.pos.x,z:LG.pos.z,sky:1,d:900});
+  if(ST.emp&&ST.emp.alive)L.push({n:ST.emp.nm,x:ST.emp.pos.x,z:ST.emp.pos.z,star:1,d:260});
   for(const g of AIDS)if(!g.over)L.push({n:`${POW_N[g.pow]}の援軍 → ${g.ci>=0?COUNTRIES[g.ci].label:'大魔導士'}`,x:g.x,z:g.z,aid:g,d:220});
   for(const g of GARR)if(g.camps.length){const c=g.camps[Math.floor(g.camps.length/2)];L.push({n:g.ci===4?'帝国軍 城外陣営':'魔王軍 城外陣営',x:c.x,z:c.z,garr:g,d:230});}
   COUNTRIES.forEach((C,ci)=>L.push({n:C.label,x:C.x,z:C.z,ci,d:Math.max(160,C.r*1.6)}));
@@ -4743,6 +5021,7 @@ function specInfo(){const T=SPEC.L[SPEC.i],el=$('#spec .ss'),bar=$('#spec .sb');
   else if(T.garr){const g=T.garr;txt=`守備隊 ${g.n[g.ci===5?1:0]} / ${g.max}`+(COUNTRIES[g.ci].angered?'　臨戦態勢':'　平時');}
   else if(T.titan){const t=T.titan;txt=t.alive?`体力 ${(t.hp/t.max*100).toFixed(0)}%　${t.charge>0?'光線を溜めている':t.st==='march'?'進軍中':t.st==='leave'?'帰還中':''}`:'沈黙';}
   else if(T.sky){txt=LG.alive?`城の耐久 ${(LG.hp/LG.max*100).toFixed(0)}%　浮島 ${lgIslesAlive()}　機械兵 ${robAlive()}　${LG.charge>0?'インドラの矢を溜めている':LG.st==='siege'&&LG.ci>=0?COUNTRIES[LG.ci].label+'を攻撃中':'移動中'}`:'地に墜ちた';}
+  else if(T.star){const E=ST.emp;txt=E&&E.alive?`体力 ${(E.hp/E.maxHp*100).toFixed(0)}%　側近 ${ST.aides.filter(m=>m.alive).length}　${ST.nova?'滅星球を掲げている':ST.ci>=0?COUNTRIES[ST.ci].label+'を攻撃中':''}`:'討たれた';}
   else if(T.aid){const g=T.aid;txt=`援軍 ${g.n[0]+g.n[1]}　${g.over?'引き上げ中':'交戦中'}`;}
   else if(T.port){txt=`交易船 ${T.port.ships.length}隻　交易の上がり累計 ${TRADE}回`;}
   else if(T.ci!=null){const C=COUNTRIES[T.ci],E=C.eco;txt=E?`人口 ${fmtN(E.pop)}　幸福 ${Math.round(E.hap)}　戦力 ${fmtN(E.mil)}　壊滅率 ${(C.total?C.dest/C.total*100:0).toFixed(1)}%`:'';}
@@ -4754,6 +5033,7 @@ function specCam(dt){const T=SPEC.L[SPEC.i];
     else if(T.port){const sh=T.port.ships.find(o=>o.st!=='dock');if(sh){tx=sh.pos.x;tz=sh.pos.z;}}
     else if(T.titan){tx=T.titan.pos.x;tz=T.titan.pos.z;}
     else if(T.sky){tx=LG.pos.x;tz=LG.pos.z;}
+    else if(T.star&&ST.emp){tx=ST.emp.pos.x;tz=ST.emp.pos.z;}
     SPEC.tx=tx;SPEC.tz=tz;specInfo();if(T.bt&&T.bt.over&&!T.bt.watched){T.bt.watched=true;WATCHED++;}}
   const a=Math.min(1,dt*1.5);SPEC.fx=lerp(SPEC.fx,SPEC.tx??T.x,a);SPEC.fz=lerp(SPEC.fz,SPEC.tz??T.z,a);SPEC.fy=lerp(SPEC.fy,T.sky&&LG.g?LG.pos.y-150:Math.max(groundAt(SPEC.fx,SPEC.fz),0)+4,a);
   if(gameTime-SPEC.lastIn>4)camYaw+=dt*.07/SPEC.speed;
@@ -4817,7 +5097,7 @@ function worldPower(){let H=0,D=0;COUNTRIES.forEach((C,i)=>{if(!C.total||C.facti
 function toast(t){const el=$('#toast');el.textContent=t;el.classList.remove('on');void el.offsetWidth;el.classList.add('on');}
 const RAIDS=[];let raidT=170;
 function launchRaid(){if(COUNTRIES[5].dest/COUNTRIES[5].total>.7)return;if(rel('hum','dem')>TRUCE)return;
-  const cand=COUNTRIES.map((C,i)=>i).filter(i=>{const C=COUNTRIES[i];return !C.faction&&C.total>0&&C.dest/C.total<.6&&(i<4||C.settle);});if(!cand.length)return;
+  const cand=COUNTRIES.map((C,i)=>i).filter(i=>{const C=COUNTRIES[i];return !C.faction&&C.total>0&&C.dest/C.total<.6&&(i<4||C.settle||C.minor);});if(!cand.length)return;
   const ci=cand[Math.random()*cand.length|0],C=COUNTRIES[ci];const cr=[TOWN_R,C2R,C3R,C4R-14][ci]||C.r;const a=Math.random()*6.28;
   const bx=C.x+Math.cos(a)*(ci===3?cr-8:cr+30),bz=C.z+Math.sin(a)*(ci===3?cr-8:cr+30);const units=[];
   for(let k=0;k<(IS_MOBILE?5:8);k++){const e=new Enemy('demon',bx+rr(-8,8),bz+rr(-8,8),{raid:ci,raidGo:true,tc:{x:C.x,z:C.z,r:cr},aggroR:45,elite:k===0});units.push(e);}
@@ -4892,8 +5172,10 @@ function drawWorldMap(){const cv=$('#wmap canvas'),x=cv.getContext('2d'),W=cv.wi
   for(const t of TITANS)if(t.alive&&t.pos.z>-HALF){const [a,b]=P(t.pos.x,t.pos.z);x.fillStyle='#ff6a2a';x.beginPath();x.arc(a,b,6,0,7);x.fill();x.fillText('巨神兵',a,b-9);}
   if(LG.g&&LG.seen){const [a,b]=P(LG.pos.x,LG.pos.z);x.fillStyle=LG.dead?'#9a9080':'#8ff0e0';x.beginPath();x.arc(a,b,LG.dead?5:8,0,7);x.fill();x.fillText(LG.dead?'天空の城（廃墟）':'天空の城ラグナ',a,b-11);
     if(LG.alive){x.strokeStyle='#8ff0e0';x.lineWidth=1;x.beginPath();x.arc(a,b,420*sc,0,7);x.stroke();}}
-  {let n=0;for(const u of ROB)if(u.st===1&&(u.side==='gnd'||n++%6===0)){const [a,b]=P(u.pos.x,u.pos.z);x.fillStyle=u.side==='gnd'?'#9fd8ff':'#ffb070';x.fillRect(a-1,b-1,2,2);}}
+  {let n=0;for(const u of ROB)if(u.st===1&&(u.side!=='sky'||n++%6===0)){const [a,b]=P(u.pos.x,u.pos.z);x.fillStyle=u.side==='gnd'?'#9fd8ff':u.side==='emp'?'#fff0b0':u.side==='dem'?'#ff6080':'#ffb070';x.fillRect(a-1,b-1,2,2);}}
   for(const ci in TECH)if(TECH[ci].sh){const T=TECH[ci];const [a,b]=P(T.sh.x,T.sh.z);x.strokeStyle=T.ch>=1?'#9fe8ff':'#607080';x.lineWidth=1.5;x.beginPath();x.arc(a,b,T.sh.r*sc,0,7);x.stroke();}
+  if(ST.emp&&ST.emp.alive){const [a,b]=P(ST.emp.pos.x,ST.emp.pos.z);x.fillStyle='#d890ff';x.beginPath();x.arc(a,b,6,0,7);x.fill();x.fillText('宇宙帝王',a,b-9);}
+  for(const C of COUNTRIES)if(C.ext)for(const e of C.ext){const [a,b]=P(e.x,e.z);x.strokeStyle=C.faction==='dem'?'rgba(255,90,90,.6)':'rgba(255,224,138,.6)';x.lineWidth=1;x.beginPath();x.arc(a,b,e.r*sc,0,7);x.stroke();}
   for(const g of AIDS)if(!g.over){const [a,b]=P(g.x,g.z);x.fillStyle=g.pow==='dem'?'#ff8080':'#9fd0ff';x.fillText('🛡',a-12,b+4);}
   for(const r of RAIDS)if(r.units.some(u=>u.alive)){const C=COUNTRIES[r.ci];const [a,b]=P(C.x,C.z);x.fillStyle='#ff3030';x.fillText('⚔',a+12,b+4);}
   const [px,pz]=P(player.pos.x,player.pos.z);x.save();x.translate(px,pz);x.rotate(-camYaw+Math.PI);x.fillStyle='#ffd24a';x.beginPath();x.moveTo(0,-8);x.lineTo(5,6);x.lineTo(-5,6);x.closePath();x.fill();x.restore();}
@@ -4906,6 +5188,7 @@ function setDiff(d){DIFF=d;later(0,titansReset);later(0,lagnaReset);for(const B 
 document.querySelectorAll('#diffSel .diffb').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setDiff(+b.dataset.d);}));
 $('#diffBtn').addEventListener('click',e=>{e.stopPropagation();setDiff((DIFF+1)%3);showBanner('難易度 '+DN[DIFF],'');});
 $('#bookBtn').addEventListener('click',e=>{e.stopPropagation();toggleBook();});
+$('#auraBtn').addEventListener('click',e=>{e.stopPropagation();toggleAura();});
 $('#gfxBtn').addEventListener('click',e=>{e.stopPropagation();setGfx((GFX+1)%3,true);});
 document.querySelectorAll('#gfxSel [data-g]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setGfx(+b.dataset.g);}));
 setGfx(GFX);
@@ -5160,6 +5443,7 @@ const ACHS=[
   {id:'robot100',n:'機械仕掛けの雨',d:'天空の機械兵を100体倒す',t:'鉄の雨を降らす者',col:'#e0a060',c:()=>(KB.robot||0)>=100},
   {id:'barros',n:'誇りの果て',d:'禁呪バロスを見届ける',t:'終わりを見届けた者',col:'#ff7a5a',c:()=>(KB.barros||0)>=1},
   {id:'tenjun',n:'天盾',d:'地上の天盾がインドラの矢を防ぐのを見届ける',t:'地上の希望',col:'#9fe8ff',c:()=>(KB.indraBlock||0)>=1},
+  {id:'star1',n:'帝王殺し',d:'宇宙帝王ギルザードを討つ',t:'星を護る者',col:'#d890ff',c:()=>(KB.star||0)>=1},
   {id:'skyfall',n:'天空の城、墜つ',d:'天空の城ラグナを地に墜とす',t:'天を墜とす者',col:'#5ae0d0',c:()=>(KB.skyfall||0)>=1},
   {id:'ura',n:'真なる最強',d:'裏章を終え、虚ろの魔人を討つ',t:'最強を超えし者',col:'#b070ff',c:()=>QDONE.has('u10')},
 ];
@@ -5202,12 +5486,12 @@ function ruinQuiet(b){if(b.destroyed)return;b.destroyed=true;b.hp=0;b.collapse=2
 function goldQuiet(b){if(b.gold)return;b.gold=true;b.origMat=b.mesh.material;if(b.orn&&!b.ornMats){b.ornMats=[];b.orn.traverse(o=>{if(o.isMesh)b.ornMats.push([o,o.material]);});}
   b.mesh.material=Array.isArray(b.mesh.material)?b.mesh.material.map(()=>GOLDM):GOLDM;if(b.orn)b.orn.traverse(o=>{if(o.isMesh)o.material=GOLDM;});b.destroyed=true;b.hp=0;b.burn=0;
   for(const a of b.archers)if(a.alive){a.alive=false;a.dead=true;scene.remove(a.g);}}
-function worldSave(){return {v:2,nFix:TI+1,n0:BN0,mob:IS_MOBILE?1:0,log:WLOG,sr:COUNTRIES.map(C=>C.settle&&!C.village?Math.round(C.r):0),
+function worldSave(){return {v:2,nFix:NFIX,n0:BN0,mob:IS_MOBILE?1:0,log:WLOG,sr:COUNTRIES.map(C=>C.settle&&!C.village?Math.round(C.r):0),
   d:bRanges(b=>b.destroyed&&!b.gold),g:bRanges(b=>b.gold)};}
 let CMAP=i=>i;
 function worldLoad(w){if(!w||typeof w!=='object')return;
   // 外の世界の国と建物が加わったので、古い記録の番号を今の並びへ読み替える
-  {const cOld=typeof w.nFix==='number'?w.nFix:TI,cOff=TI+1-cOld;CMAP=i=>i>=cOld?i+cOff:i;}
+  {const cOld=typeof w.nFix==='number'?w.nFix:TI,cOff=NFIX-cOld;CMAP=i=>i>=cOld?i+cOff:i;}
   if(Array.isArray(w.log)){REPLAY=true;for(const e of w.log){try{applyW(e);}catch(err){}}REPLAY=false;WLOG=w.log.slice(-800);}
   if(Array.isArray(w.sr))w.sr.forEach((r,i)=>{const C=COUNTRIES[CMAP(i)];if(C&&C.settle&&!C.village&&typeof r==='number'&&r>0)C.r=Math.max(C.r,r);});
   if(typeof w.n0!=='number'||w.n0>BN0||w.mob!==(IS_MOBILE?1:0))return;// 端末や世界の生成が違えば壊れ具合は復元しない
@@ -5478,7 +5762,7 @@ function lockCands(all){const p=player.pos,L=[];
   for(const e of enemies){if(!e.alive||e.statue||e.kind==='citizen')continue;const d=e.pos.distanceTo(p);if(d>(e.kind==='mage'||e.kind==='brute'||e.kind==='boss'?420:320))continue;if(!all&&!hostileE(e))continue;L.push([e,d]);}
   for(const u of CRW){if(u.st!==1)continue;const d=Math.hypot(u.x-p.x,u.z-p.z);if(d>220)continue;if(!all&&!hostileU(u))continue;L.push([u,d]);}
   for(const t of TITANS){if(!t.alive)continue;const d=Math.hypot(t.pos.x-p.x,t.pos.z-p.z);if(d<1100)L.push([t,d]);}
-  for(const u of ROB){if(u.st!==1||u.side==='gnd')continue;const d=u.pos.distanceTo(p);if(d<420)L.push([u,d]);}
+  for(const u of ROB){if(u.st!==1||u.side!=='sky')continue;const d=u.pos.distanceTo(p);if(d<420)L.push([u,d]);}
   if(LG.alive){for(const I of LG.isles)if(I.alive){const d=I.pos.distanceTo(p);if(d<1600)L.push([I,d+200]);}const d=lockPos(LG).distanceTo(p);if(d<1700)L.push([LG,d+400]);}
   L.sort((a,b)=>a[1]-b[1]);return L.slice(0,24).map(a=>a[0]);}
 function lockToggle(){LOCK.on=!LOCK.on;try{localStorage.setItem('hatenMadouou.lock',LOCK.on?'1':'0');}catch(e){}LOCK.t=null;
@@ -5511,7 +5795,7 @@ function saveGame(force){if(!saveReady||!started)return;if(!AUTOSAVE&&!force)ret
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(buildSave()));}catch(e){}}
 function buildSave(){
   return ({v:1,at:Date.now(),diff:DIFF,mana:MANA,upg:UPG,pwr:PWR_BIAS,kills,kb:KB,built:BUILT,farms:FARMS,
-    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,world:worldSave(),titans:TITANS.map(t=>[t.alive?1:0,+(t.hp/(t.max||1)).toFixed(3)]),titanSeen:TITAN_SEEN?1:0,lagna:lagnaSave(),rel:relSave(),tech:techSave(),barros:BARROS.done?{done:1}:null,lv:LV,exp:EXP,quest:questSave(),endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
+    fac:{emp:{rep:FAC.emp.rep,hostile:FAC.emp.hostile},dem:{rep:FAC.dem.rep,hostile:FAC.dem.hostile}},combos:[...COMBO_SEEN],comboN:COMBO_N,world:worldSave(),titans:TITANS.map(t=>[t.alive?1:0,+(t.hp/(t.max||1)).toFixed(3)]),titanSeen:TITAN_SEEN?1:0,lagna:lagnaSave(),rel:relSave(),tech:techSave(),star:starSave(),barros:BARROS.done?{done:1}:null,lv:LV,exp:EXP,quest:questSave(),endings:[...END_SEEN],harvest:HARVEST,trade:TRADE,tribute:TRIBUTE,peace:PEACE,
     rule:COUNTRIES.map(C=>[C.rule==='vassal'?1:C.rule==='ally'?2:0,Math.round(C.favor||0)]),
     eco:COUNTRIES.map(C=>C.eco?[Math.round(C.eco.pop),Math.round(C.eco.hap),Math.round(C.eco.food),Math.round(C.eco.wood),Math.round(C.eco.ore)]:null)});}
 function readSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&typeof s==='object'?s:null;}catch(e){return null;}}
@@ -5522,7 +5806,7 @@ function loadSave(){const s=readSave();if(!s)return 1;const num=(v,d)=>typeof v=
   pHP=PLAYER_MAX;
   for(const k of['emp','dem']){const f=s.fac&&s.fac[k];if(!f)continue;FAC[k].rep=num(f.rep,0);FAC[k].hostile=!!f.hostile;}
   try{questLoad(s.quest);}catch(e){}
-  if(Array.isArray(s.titans))TITAN_LOAD=s.titans;TITAN_SEEN=!!s.titanSeen;LG_LOAD=s.lagna||null;relLoad(s.rel);TECH_LOAD=s.tech||null;if(s.barros&&s.barros.done)BARROS.done=true;
+  if(Array.isArray(s.titans))TITAN_LOAD=s.titans;TITAN_SEEN=!!s.titanSeen;LG_LOAD=s.lagna||null;relLoad(s.rel);TECH_LOAD=s.tech||null;starLoad(s.star);if(s.barros&&s.barros.done)BARROS.done=true;
   LV=clamp(Math.floor(num(s.lv,1)),1,LV_MAX);EXP=Math.max(0,num(s.exp,0));
   PWR_BIAS=num(s.pwr,0);kills=Math.max(0,Math.floor(num(s.kills,0)));BUILT=Math.max(0,num(s.built,0));FARMS=Math.max(0,num(s.farms,0));
   if(s.kb&&typeof s.kb==='object')for(const k in s.kb){const v=num(s.kb[k],0);if(v>0)KB[k]=v;}
@@ -5646,14 +5930,16 @@ initSites();
 initOuter();
 initLagna();
 initSays();
+initWorld2();
 initCrowd();
 initEconomy();
 BN0=buildings.length;
 setDiff(loadSave());postLoad();lagnaLoad();techLoad(TECH_LOAD);saveReady=true;
 // 主な国の町にも住人を置く（人々の声が聞こえるように）
+populateWorld2();
 for(const ci of[0,1,2,3,4,6]){const C=COUNTRIES[ci];if(!C)continue;const n=IS_MOBILE?5:12,r0=ci===3?C4R-20:ci===4?ER-60:C.r*.7;
   for(let i=0;i<n;i++){const a=Math.random()*6.28,r=Math.sqrt(Math.random())*r0,x=C.x+Math.cos(a)*r,z=C.z+Math.sin(a)*r;if(groundAt(x,z)<1)continue;new Enemy('citizen',x,z,{tc:{x:C.x,z:C.z,r:r0},inTown:false});}}loadAch();renderSaveInfo();
-window.__h={trees,ICE_TREES,get sakura(){return SAKURA;},TECH,techDevelop,BARROS,barrosStart,say,kingSay,sayMage,SAYS,indraFire,LG,ROB,SKY,REL,AIDS,THREAT,rel,relAdd,spawnAid,spawnRobot,lagnaArrive,lagnaFall,breakIsle,indraCharge,updRel,skyArea,robAlive,get kb(){return KB;},BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,get sea(){return SEA;},get moon(){return MOON;},hgrid,LOCK,lockToggle,lockCycle,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={ST,starArrive,novaCharge,toggleAura,get aura(){return AURA_ON;},get nfix(){return NFIX;},kurobako,trees,ICE_TREES,get sakura(){return SAKURA;},TECH,techDevelop,BARROS,barrosStart,say,kingSay,sayMage,SAYS,indraFire,LG,ROB,SKY,REL,AIDS,THREAT,rel,relAdd,spawnAid,spawnRobot,lagnaArrive,lagnaFall,breakIsle,indraCharge,updRel,skyArea,robAlive,get kb(){return KB;},BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,get sea(){return SEA;},get moon(){return MOON;},hgrid,LOCK,lockToggle,lockCycle,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
