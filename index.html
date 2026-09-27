@@ -1612,6 +1612,12 @@ function barrierPush(p,pad){for(const B of BARRIERS){if(B.hp<=0)continue;const R
     const e=Math.sqrt((dx*dx+dz*dz)/(R*R)+(dy*dy)/(H*H));if(e>=1)continue;if(e<1e-4){p.x=B.x+R;continue;}const k=1/e;
     if(p.y<B.y-2){const hd=Math.hypot(dx,dz)||1;p.x=B.x+dx/hd*R;p.z=B.z+dz/hd*R;}else{p.x=B.x+dx*k;p.z=B.z+dz*k;p.y=(B.y-2)+dy*k;}return true;}return false;}
 function domeTopAt(x,z,reach){let top=-1e9;for(const B of BARRIERS){if(B.hp<=0)continue;const d=Math.max(0,Math.hypot(x-B.x,z-B.z)-reach);if(d>=B.r)continue;top=Math.max(top,B.y-2+B.r*.72*Math.sqrt(1-(d/B.r)**2));}return top;}
+function barrierRay(o,d,maxT){let best=-1;for(const B of BARRIERS){if(B.hp<=0)continue;const k=1/.72,ox=o.x-B.x,oy=(o.y-(B.y-2))*k,oz=o.z-B.z,dy=d.y*k;
+    const a=d.x*d.x+dy*dy+d.z*d.z,b=2*(ox*d.x+oy*dy+oz*d.z),c=ox*ox+oy*oy+oz*oz-B.r*B.r,D=b*b-4*a*c;if(c<0||D<0)continue;const t=(-b-Math.sqrt(D))/(2*a);
+    if(t<=0||t>maxT||o.y+d.y*t<B.y-2)continue;if(best<0||t<best)best=t;}return best;}
+// 大魔導士の魔法が結界の表面の近くで炸裂したら、結界そのものを削る
+function barrierBlast(p,r,dmg){for(const B of BARRIERS){if(B.hp<=0)continue;const dx=p.x-B.x,dz=p.z-B.z,dy=Math.max(0,p.y-(B.y-2));
+    const e=Math.sqrt((dx*dx+dz*dz)/(B.r*B.r)+dy*dy/((B.r*.72)**2));if(Math.abs(e-1)*B.r>r+8)continue;const C=COUNTRIES[B.ci];C.angered=true;C.plT=gameTime;hitBarrier(B,{x:p.x,y:p.y,z:p.z,height:0,rad:0},dmg*P_MUL*(B.anc?1.5:1));}}
 function barrierAt(x,z){for(const B of BARRIERS)if(B.hp>0&&Math.hypot(x-B.x,z-B.z)<B.r)return B;return null;}
 function hitBarrier(B,b,dmg){
   // 1フレームで最も強い一撃だけを結界の損耗とする（巻き込んだ建物の数では増えない）
@@ -2351,6 +2357,7 @@ function damageArea(pos,r,dmg,knock,type,opts={}){
   titanArea(pos,r,dmg);
   skyArea(pos,r,dmg,type);
   bigArea(pos,r,dmg,type);
+  barrierBlast(pos,r,dmg*(opts.bmul||1));
 }
 // damage numbers
 const dmgEls=[];let dmgI=0;
@@ -2633,6 +2640,7 @@ const SP={
       const tg=P.clone();if(NB>1){tg.x+=rr(-1,1)*W*2.5;tg.z+=rr(-1,1)*W*2.5;tg.y+=rr(0,1)*W*2;}
       const dir=tg.sub(o).normalize();let L=LEN;
       for(let d=6;d<LEN;d+=3){const x=o.x+dir.x*d,y=o.y+dir.y*d,z=o.z+dir.z*d;if(y<groundAt(x,z)){L=d;break;}}
+      {const bt=barrierRay(o,dir,L);if(bt>0&&bt<L){L=bt;barrierBlast(o.clone().addScaledVector(dir,bt),W*2,DMG0*1.2*TD[TIER]*W);}}
       const b=o.clone().addScaledVector(dir,L);
       beamCircle(o,dir,.9*Math.pow(W,.6)+.6,s.c3.clone().multiplyScalar(NB>3?.22:.45),.5);beamFx(o,b,W,s.c3.clone().multiplyScalar(.5),.35+W*.05);
       snd('crack',.45+W*.1);if(K.t>=2)shake(.15*W);
@@ -3014,12 +3022,12 @@ function playerProton(P,K){const len=[300,700,1400,2600][K.t],W=[10,16,24,36][K.
 // 横に薙げば薙いだ跡に爆炎の壁が立つ。照準を動かさなければ、照準の先へ大地を這うように進む
 function beamRay(maxT){const o=camera.position,d=V3();camera.getWorldDirection(d);
   if(LOCK.on&&LOCK.t&&lockAlive(LOCK.t)){const p=lockPos(LOCK.t);return {p,kind:p.y>groundAt(p.x,p.z)+6?'sky':'ground'};}
-  const sb=skyAimHit(o,d,maxT);let t=camDist+2,lim=sb>0?sb:maxT;
+  const sb=skyAimHit(o,d,maxT),bt=barrierRay(o,d,maxT);let t=camDist+2,lim=sb>0?sb:maxT;if(bt>camDist&&bt<lim)lim=bt;
   while(t<lim){const x=o.x+d.x*t,y=o.y+d.y*t,z=o.z+d.z*t,g=groundAt(x,z);
     if(y<=g)return {p:V3(x,g,z),kind:'ground'};
     if(nearTown(x,z)&&bNear(x,z,b=>!b.destroyed&&Math.abs(x-b.x)<b.rad&&Math.abs(z-b.z)<b.rad&&y<b.y+b.height))return {p:V3(x,y,z),kind:'ground'};
     t+=Math.max(1.5,(y-g)*.3);}
-  if(sb>0)return {p:o.clone().addScaledVector(d,sb),kind:'sky'};return {p:o.clone().addScaledVector(d,maxT),kind:'none'};}
+  if(bt>camDist&&bt<=lim)return {p:o.clone().addScaledVector(d,bt),kind:'sky'};if(sb>0)return {p:o.clone().addScaledVector(d,sb),kind:'sky'};return {p:o.clone().addScaledVector(d,maxT),kind:'none'};}
 function playerBeam(len,W,power,K){const SW=2.3,R=W*3,SD=W*5,maxT=len*1.25+camDist,MAXP=IS_MOBILE?26:48;let t=0,lb=-1,lastBoom=null,lastBoomT=-9,creep=0,prevRaw=null,nP=0,dmgT=0,side=1,lastImp=null;
   snd('crack',1.3,player.pos);screenFlash(lin(1.6,1.1,.6),.6);shake(.8);flashLight(player.pos.clone().setY(player.pos.y+40),lin(1,.7,.35),260,len,SW+3);later(.1,()=>snd('bigboom',1.1,player.pos));
   const boom=(p,dir)=>{const sd=V3(dir.z,0,-dir.x).normalize();
@@ -3032,7 +3040,7 @@ function playerBeam(len,W,power,K){const SW=2.3,R=W*3,SD=W*5,maxT=len*1.25+camDi
       if(prevRaw&&prevRaw.distanceTo(imp)>W*.6)creep*=Math.pow(.2,dt);else creep=Math.min(len*.6,creep+dt*len*.32);prevRaw=imp.clone();
       imp=imp.clone().addScaledVector(fwd,creep);imp.y=groundAt(imp.x,imp.z);
       if(!lastBoom||lastBoom.distanceTo(imp)>W*1.5||t-lastBoomT>.2){boom(imp,fwd);lastBoom=imp.clone();lastBoomT=t;}}
-    else if(H.kind==='sky'){if(t-lastBoomT>.15){lastBoomT=t;skyArea(imp,W*2,power*TD[TIER]*2,'fire');glowSphere(imp,W,W*4,lin(8,4,1.5),.4);burst(imp,IS_MOBILE?12:24,W*2,1,W*.3,2,PC.fireA,PC.fireB,1,1,0,glow,W,W);if(Math.random()<.3)snd('bigboom',.6,imp);}}
+    else if(H.kind==='sky'){if(t-lastBoomT>.15){lastBoomT=t;skyArea(imp,W*2,power*TD[TIER]*2,'fire');barrierBlast(imp,W*2,power*TD[TIER]*2.5);glowSphere(imp,W,W*4,lin(8,4,1.5),.4);burst(imp,IS_MOBILE?12:24,W*2,1,W*.3,2,PC.fireA,PC.fireB,1,1,0,glow,W,W);if(Math.random()<.3)snd('bigboom',.6,imp);}}
     lastImp=imp;
     if(t-lb>.06){lb=t;beamFx(o,imp,W*.8,lin(3,1.8,.8),.14);}
     for(let q=0;q<(IS_MOBILE?5:12);q++)glow.emit(imp.x+rr(-W,W),imp.y+rr(0,W*.6),imp.z+rr(-W,W),rr(-10,10),rr(10,40),rr(-10,10),rr(.4,.9),rr(W*.2,W*.5),.4,PC.white,PC.fireA,1,.6,-2);
@@ -4013,8 +4021,8 @@ function initCivs(){const M3=THREE.BufferGeometryUtils.mergeBufferGeometries;
     else if(c.sty==='lines')for(let k=0;k<12;k++)fl(new THREE.BoxGeometry(12,50,6),mats[0],c.cr*.35,Y+c.H*.8+(k%3)*30,.12,.5,5);
     else if(c.sty==='terrace')for(let k=0;k<3;k++){const o=fl(new THREE.TorusGeometry(c.H*(.12+k*.06),4,4,6),mats[2],0,Y+c.H*(.3+k*.22),0,.5-k*.3,4);o.rotation.x=Math.PI/2;}
     else if(c.sty==='jag')for(let k=0;k<6;k++){const g=new THREE.ConeGeometry(10,rr0(prng,120,220),5).rotateZ(rr0(prng,-.8,.8));fl(g,mats[1],c.cr*rr0(prng,.4,1),Y+rr0(prng,60,200),.03,.2,30);}
-    // 大結界（通常の4倍の強度）
-    const B=mkBarrier(ci,c.x,c.z,c.P,c.cr+70,c.col.clone().multiplyScalar(.28));B.mul=4;B.max*=4;B.hp=B.max;
+    // 大結界（帝都の1.5倍の強度。表面への直撃は1.5倍効く）
+    const B=mkBarrier(ci,c.x,c.z,c.P,c.cr+70,c.col.clone().multiplyScalar(.28));B.mul=1.5;B.anc=true;B.max*=1.5;B.hp=B.max;
     c.wR={beam:80,ice:90,rail:55,sky:120,lance:60,wave:150,erupt:130,thunder:110,missile:170,void:120}[c.wk];c.wD={wave:24000,rail:30000,thunder:42000}[c.wk]||60000;
     c.host=false;c.charge=0;c.found=false;}}
 function civVoice(c,txt,dur){if(txt)say(c.vo,txt,{who:c.n.split(' ').pop(),cls:'anc',far:5200,dur:dur||6.5});}
@@ -4456,7 +4464,8 @@ function updShields(dt){if(FIELD&&gameTime>=FIELD.end)FIELD=null;if(MIRROR&&game
 Object.assign(SP,{atf(P,s,K){atField(K);},mirror(P,s,K){mirrorForm(K);}});
 // ================= 古代魔法 =================
 // 大陸（本来の世界の範囲）そのものを変える禁呪。処理は数フレームに分けて行い、画面が止まらないようにする
-const inMain=(x,z)=>Math.abs(x)<HALF&&Math.abs(z)<HALF;
+const inMain=(x,z)=>(Math.abs(x)<HALF&&Math.abs(z)<HALF)||civHere(x,z);
+function civHere(x,z){const c=civAt(player.pos.x,player.pos.z,2500);return !!c&&Math.hypot(x-c.x,z-c.z)<c.R+300;}
 function stagger(list,per,fn,done){let i=0;addFx({update(){const n=Math.min(list.length,i+per);for(;i<n;i++)fn(list[i],i);if(i>=list.length){if(done)done();return false;}return true;}});}
 function quickRuin(b){if(b.destroyed&&!b.gold)return;if(b.gold)return;b.destroyed=true;b.hp=0;b.collapse=2;b.burn=0;b.smokeT=0;destroyedHp+=b.maxHp;const C=COUNTRIES[b.country];C.dest+=b.maxHp;C.angered=true;if(C.start<0)C.start=gameTime;
   scene.remove(b.mesh);if(b.orn)scene.remove(b.orn);makeRubble(b);for(const a of b.archers)if(a.alive){a.alive=false;a.dead=true;scene.remove(a.g);}}
@@ -5122,14 +5131,15 @@ function updAim(){
   for(const e of enemies){if(!e.alive||e.kind==='citizen')continue;const c=e.pos.clone();c.y+=e.h*.5;const v=c.sub(o);const t=v.dot(camDir);if(t<camDist+1||t>best)continue;
     const perp=v.addScaledVector(camDir,-t).length();if(perp<e.radius*1.1){best=t;hitE=e;}}
   {const sb=skyAimHit(o,camDir,Math.max(best,1800));if(sb>0&&(sb<best||!hitE)){best=sb;hitE=hitE||LG;}}
+  let hitB=false;{const bt=barrierRay(o,camDir,Math.max(best,1200));if(bt>camDist&&bt<best){best=bt;hitB=true;}}
   let t=camDist+2,hit=false;
   while(t<best){const x=o.x+camDir.x*t,y=o.y+camDir.y*t,z=o.z+camDir.z*t;const g=groundAt(x,z);
     if(y<=g){hit=true;break;}
     if(nearTown(x,z)&&bNear(x,z,b=>!b.destroyed&&Math.abs(x-b.x)<b.rad&&Math.abs(z-b.z)<b.rad&&y<b.y+b.height))hit=true;
     if(hit)break;t+=Math.max(1,(y-g)*.35);}
-  if(!hit&&!hitE)t=Math.min(t,600);
+  if(!hit&&!hitE&&!hitB)t=Math.min(t,600);
   aimPoint.copy(o).addScaledVector(camDir,Math.min(t,best));
-  if(!hit&&!hitE){aimPoint.y=Math.max(aimPoint.y,groundAt(aimPoint.x,aimPoint.z));}
+  if(!hit&&!hitE&&!hitB){aimPoint.y=Math.max(aimPoint.y,groundAt(aimPoint.x,aimPoint.z));}
   if(LOCK.on&&LOCK.t&&lockAlive(LOCK.t))aimPoint.copy(lockPos(LOCK.t));
   const s=SPELLS[selSpell];
   marker.position.set(aimPoint.x,groundAt(aimPoint.x,aimPoint.z)+.5,aimPoint.z);marker.scale.setScalar(Math.min(s.r,60));
