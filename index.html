@@ -219,6 +219,7 @@ body.spec #bar,body.spec #tier,body.spec #cross,body.spec #acts,body.spec #bossb
 .say.sky{background:rgba(14,40,48,.9);color:#dff8f4;border:1px solid rgba(143,240,224,.7);font-size:14px;max-width:min(320px,70vw)}.say.sky::after{border-top-color:rgba(14,40,48,.9)}.say.sky b{color:#8ff0e0}
 .say.god{background:rgba(255,250,232,.94);color:#3a2a10;border:1px solid rgba(232,193,112,.9);font-size:14px;max-width:min(320px,70vw)}.say.god::after{border-top-color:rgba(255,250,232,.94)}.say.god b{color:#a07010}
 .say.anc{background:rgba(10,30,34,.92);color:#dffcf6;border:1px solid rgba(120,240,220,.75);font-size:14px;max-width:min(320px,70vw)}.say.anc::after{border-top-color:rgba(10,30,34,.92)}.say.anc b{color:#7ff0d8}
+#spaceHud{position:absolute;left:50%;top:92px;transform:translateX(-50%);display:none;padding:4px 14px;border-radius:12px;background:rgba(6,8,20,.6);color:#cfe0ff;font-family:var(--mincho),serif;font-size:14px;letter-spacing:.1em;pointer-events:none;z-index:5}
 .say.sk2{background:rgba(40,16,56,.92);color:#f6ecff;border:1px solid rgba(200,140,255,.75);font-size:13.5px}.say.sk2::after{border-top-color:rgba(40,16,56,.92)}.say.sk2 b{color:#d8a8ff}
 .say.sg{background:rgba(40,30,10,.92);border-color:#ffe08a;color:#fff6dc;font-size:13.5px}.say.sg::after{border-top-color:rgba(40,30,10,.92)}
 #emerg{position:fixed;inset:0;z-index:38;display:none;place-items:center;padding:calc(var(--st) + 16px) 16px calc(var(--sb) + 16px);background:radial-gradient(ellipse at 50% 45%,rgba(90,8,8,.78),rgba(10,2,4,.94) 75%);font-family:var(--mincho),serif;text-align:center;pointer-events:auto;overflow-y:auto}
@@ -413,8 +414,9 @@ body.spec #lockBtns,body.spec #lockR{display:none !important}
 <h3>魔法</h3><p><b>魔法書</b>を開くと、すべての魔法の説明が読めます。押すとワンタッチ枠に加わり、キー1〜9・0（スマホは下の紋章）で唱えられます。</p>
 <ul><li><b>攻撃</b>：炎・雷・氷・水・風・地、終焉の極光、星墜とし、穿光</li><li><b>創造</b>：復元・豊穣・人・建物・花畑・麦畑・水田・野菜畑・港。壊すだけでなく、世界を豊かにできる</li><li><b>連鎖魔法</b>：属性の魔法を同じ場所に重ねると起こる。例：水をまいて雷で「雷水陣」</li><li><b>召喚と変化</b>：精霊3種は一定時間そばで戦い、神龍は一帯を無に帰す。「夜烏の変化」は体を烏の群れに変えて攻撃を受け付けない</li></ul>
 <h3>世界と勢力</h3><ul><li><b>依頼</b>（J）：帝国と魔王軍から依頼が届く。魔晶を稼いで工房で強化できる</li><li><b>国勢</b>（K）：国ごとの人口や食料。壊した国は属国に、豊かにした国は盟友になる</li><li><b>地図</b>（N）・<b>観戦</b>（V）：両軍の会戦を遠くから眺められる</li><li><b>物語</b>（G）・<b>実績</b>（L）：物語を進めると、封印された何かが目を覚ます……</li><li><b>外の世界</b>：この世界は小さな世界のひとつ。北の海の彼方の<b>巨神帝国</b>から、巨神兵が上陸してくることがある。光線を溜めている間に倒すか、避けよう</li><li><b>天空王国ラグナ</b>：しばらくすると、雲の彼方から巨大な<b>天空の城</b>が現れる。国の上空に留まって<b>飛行機械兵</b>を降らせ、町を火の海にし、ときどき<b>インドラの矢</b>で大地を撃ち抜く。まわりの<b>浮島</b>と城は<b>強・極</b>の魔法でしか砕けず、砕けた島は地上へ落ちる。浮島が残っている間、城への傷は4分の1</li><li><b>諸勢力の関係</b>（K の国勢）：敵対する兵は出会えば自ら戦い、「同盟」の勢力は襲われた国へ<b>援軍</b>を送る。共通の敵に襲われ続けると、帝国と魔王軍でさえ休戦する。信頼の厚い勢力は、襲われている大魔導士にも援軍を送ってくれる</li><li><b>地上の反撃</b>：天空の城が現れると、地上の国々は研究を急ぐ。まれに、インドラの矢を防ぐ<b>天盾</b>や、天空の城に挑む<b>守護機兵</b>を完成させる</li><li><b>禁呪バロス</b>：天空の城に国を焼かれ、崩壊率が8割を超えた国には、ごくまれに古代魔法の継承者が生まれる。国家非常事態が宣言され、国民とともに世界を滅ぼす禁呪を唱える。術者を討つか、その前に天空の城を墜とせば止められる</li><li><b>オーラ</b>（U・「気」）：魔法使いは強さに応じた大きさのオーラをまとう。自分のオーラを展開すると、弱い敵はひるみ、怯え、驚く。隠せば気づかれない</li><li><b>宇宙の帝王</b>：しばらくすると、宇宙帝王ギルザードが側近二人と宇宙船で降り立ち、国々を焼き、星を滅ぼす炎の球「滅星球」を放つ。溜めている間に深手を負わせれば止められる</li><li><b>広がる世界</b>：帝都と魔都には外郭の街区が広がり、各地に小国20と村50がある。帝国と魔王軍は空の兵を持ち、天空の機械兵と渡り合う</li><li><b>人々の声</b>：町を歩くと、住人や兵のつぶやきが聞こえる。国家術師や幹部は、近づくと話しかけてくる</li></ul>
-<h3>外界と、世界の脅威</h3><ul><li><b>外界</b>：中央の世界の外には、約30倍の広さの大洋が広がる。外洋では飛翔が5倍速。地図（N）の「外界図」で位置が分かる</li><li><b>古代文明</b>：外界に眠る10の超古代国家。巨大な結界と超兵器を持ち、怒らせれば大魔導士でも倒されかねない（超兵器は照準の円から逃げればかわせる）</li><li><b>決戦兵器</b>：国を焼かれた国は、汎用人型決戦兵器を起動して報復する。相手が大魔導士でも容赦しない</li><li><b>使徒</b>：外界の果てから現れる世界の脅威。ATフィールドは<b>極</b>の魔法か古代魔法でなければ破れない</li><li><b>天上の神殿</b>：雲の上に浮かぶ神の住まい（転移で行ける）。どこかで虐殺が起きると、神兵が降りて止めに来る</li></ul>
+<h3>外界と、世界の脅威</h3><ul><li><b>外界</b>：中央の世界の外には、約30倍の広さの大洋が広がる。外洋では飛翔が5倍速。地図（N）の「外界図」で位置が分かる</li><li><b>古代文明</b>：外界に眠る10の超古代国家。巨大な結界と超兵器を持ち、怒らせれば大魔導士でも倒されかねない（超兵器は照準の円から逃げればかわせる）</li><li><b>決戦兵器</b>：国を焼かれた国は、汎用人型決戦兵器を起動して報復する。相手が大魔導士でも容赦しない</li><li><b>使徒</b>：外界の果てから現れる世界の脅威。ATフィールドは<b>極</b>の魔法か古代魔法でなければ破れない</li><li><b>天上の神殿</b>：雲の上に浮かぶ神の住まい（転移で行ける）。どこかで虐殺が起きると、神兵が降りて止めに来る（大魔導士には手を出さない）</li></ul>
 <h3>超魔法と城</h3><ul><li><b>超魔法</b>：魔法書の最後にある、大魔導士だけの魔法（かみのしもべ・こおりおに・むらさきのほのお・りゅうせい・せかいじゅ）。威力の段階に関わらず全力で、ATフィールドも貫く</li><li><b>大魔導士の城</b>：天穹楼は巨大な城になった。宇宙の手前まで届く四本の塔と、城を守る弟子の魔法使い50名がいる。近づくと話しかけてくる</li></ul>
+<h3>宇宙と大ピラミッド</h3><ul><li><b>宇宙</b>：飛翔してどこまでも昇ると、空が暗くなり、大気の外へ出る。足もとの世界は丸い星になり、月まで飛んでいける（前進で視線の方向へ）。降りれば真下の場所へ戻る。転移の「宇宙（月のそば）」でも行ける</li><li><b>大ピラミッド</b>：東の荒野にそびえる超巨大な四角錐。斜面を歩いて頂まで登れる</li><li><b>暗黒大陸</b>：外界の古代文明は大陸ごと広がる大都市。人口は今までの国の百倍</li></ul>
 <h3>困ったとき</h3><ul><li>倒れても拠点で起き上がるだけ。進行は自動でセーブされる</li><li>スマホが熱いときは、上の「画質」を<b>省電力</b>に</li><li>強すぎて退屈なら、タイトルで<b>魔法使い見習い</b>を選ぶと Lv1 から成長を楽しめる</li></ul>
 <div class="bf"><button type="button" class="x">はじめる</button></div></div>
   <div id="story"><div class="wt">物語</div><div class="sh"></div><div class="sb2"></div><div class="bf"><button type="button" class="x">閉じる</button></div></div>
@@ -568,14 +570,14 @@ function flashLight(pos,color,intensity,dist,dur){
 }
 
 // ================= post =================
-let composer=null, finalPass=null, bloom=null;
+let composer=null, finalPass=null, bloom=null, mainRP=null;
 const post={flash:0,flashCol:lin(1,1,1),tint:0,tintCol:lin(1,0.35,0.15),shake:0,aberr:0};
 try{
   const rt=new THREE.WebGLRenderTarget(innerWidth*PR,innerHeight*PR,{type:THREE.HalfFloatType,samples:IS_MOBILE?0:4});
   composer=new THREE.EffectComposer(renderer,rt);
   composer.setPixelRatio(PR);
   composer.setSize(innerWidth,innerHeight);
-  composer.addPass(new THREE.RenderPass(scene,camera));
+  composer.addPass(mainRP=new THREE.RenderPass(scene,camera));
   bloom=new THREE.UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),0.7,0.5,1.05);
   composer.addPass(bloom);
   finalPass=new THREE.ShaderPass({
@@ -718,7 +720,7 @@ function heightAt(x,z){
   const gx=clamp((x+HALF)/STEP,0,SEG-0.001), gz=clamp((z+HALF)/STEP,0,SEG-0.001);
   const ix=Math.floor(gx), iz=Math.floor(gz), fx=gx-ix, fz=gz-iz;
   const a=hgrid[iz*NV+ix], b=hgrid[iz*NV+ix+1], c=hgrid[(iz+1)*NV+ix], d=hgrid[(iz+1)*NV+ix+1];
-  return lerp(lerp(a,b,fx),lerp(c,d,fx),fz);
+  const hh=lerp(lerp(a,b,fx),lerp(c,d,fx),fz);return PYR.on?Math.max(hh,pyrTop(x,z)):hh;
 }
 function groundAt(x,z){if(Math.abs(x-HX)<32&&Math.abs(z-HZ)<32)return HX0F;if((x-C4X)*(x-C4X)+(z-C4Z)*(z-C4Z)<C4R*C4R)return C4Y;const g=Math.max(heightAt(x,z),0.15);return WALKS.length?walkTop(x,z,g):g;}
 // 外の世界の大陸：独自の高さ格子（本来の世界の外側なので別に持つ）
@@ -733,30 +735,32 @@ function outerH(x,z){const gx=(x-(OCX-OCS/2))/OSTEP,gz=(z-(OCZ-OCS/2))/OSTEP;if(
 // 中央の世界と巨神帝国の外側に、果てしない外洋が広がる（中央の世界のおよそ30倍の広さ）。
 // その大洋に、人智を超えた10の古代文明が大陸ごと眠っている
 const OB=26300;
+const PYR={x:3950,z:-1650,h:40,H:820,S:620,on:false,g:null};
+function pyrTop(x,z){const m=Math.max(Math.abs(x-PYR.x),Math.abs(z-PYR.z));return m<PYR.S?PYR.h+(PYR.S-m)/PYR.S*PYR.H:-1e9;}
 const CIVS=[
-  {n:'海神文明 アトランティス',s:'オリハルコンの環状都市。海を統べた最古の文明',sty:'ring',P:24,R:2000,c0:[.4,.48,.46],c1:[.64,.72,.72],gl:[1.2,4.5,6],body:0xdfe8ee,trim:0x6fd8e8,core:'spire',H:980,wk:'beam',wn:'オリハルコン結晶砲',aggr:0,
+  {n:'海神文明 アトランティス',s:'オリハルコンの環状都市。海を統べた最古の文明',sty:'ring',P:24,R:4000,c0:[.4,.48,.46],c1:[.64,.72,.72],gl:[1.2,4.5,6],body:0xdfe8ee,trim:0x6fd8e8,core:'spire',H:980,wk:'beam',wn:'オリハルコン結晶砲',aggr:0,
     v:['我らは海と共に在る。陸の者よ、何を求めて来た','オリハルコンの環は、一万二千年、一度も破られたことがない'],vh:['愚かな。海神の怒りを知るがいい','結晶砲、充填。──塵ひとつ残すな']},
-  {n:'太陽帝国 ムー',s:'太陽神ラ・ムーを祀る黄金の帝国',sty:'plain',P:40,R:2200,c0:[.6,.48,.28],c1:[.78,.66,.4],gl:[7,4.5,1.2],body:0xd9b86a,trim:0xfff0b0,core:'pyramid',H:760,wk:'sky',wn:'太陽神の眼',aggr:0,
+  {n:'太陽帝国 ムー',s:'太陽神ラ・ムーを祀る黄金の帝国',sty:'plain',P:40,R:4400,c0:[.6,.48,.28],c1:[.78,.66,.4],gl:[7,4.5,1.2],body:0xd9b86a,trim:0xfff0b0,core:'pyramid',H:760,wk:'sky',wn:'太陽神の眼',aggr:0,
     v:['太陽は、我らの王。王は、太陽の子','空の眼は、いつでも地上を見ている'],vh:['太陽神の眼が、お前を見た','ラ・ムーの名において、焼き尽くせ']},
-  {n:'霊智文明 レムリア',s:'心で語り、思念で空を浮かべた賢者の国',sty:'hills',P:60,R:1900,c0:[.36,.5,.4],c1:[.6,.7,.66],gl:[4,2,7],body:0xcfc4ec,trim:0xb08aff,core:'dome',H:620,wk:'wave',wn:'思念の大波動',aggr:0,
+  {n:'霊智文明 レムリア',s:'心で語り、思念で空を浮かべた賢者の国',sty:'hills',P:60,R:3800,c0:[.36,.5,.4],c1:[.6,.7,.66],gl:[4,2,7],body:0xcfc4ec,trim:0xb08aff,core:'dome',H:620,wk:'wave',wn:'思念の大波動',aggr:0,
     v:['……聞こえる。あなたの心は、とても静かで、とても寂しい','言葉は要らない。我らは思念で語る'],vh:['あなたの心が、刃に変わった','思念の波よ、この者を押し流せ']},
-  {n:'極北文明 ハイパーボリア',s:'北風の彼方、永久氷河に眠る光の民',sty:'ice',P:90,R:2100,c0:[.72,.78,.84],c1:[.95,.97,1],gl:[3,5.5,8],body:0xe8f4ff,trim:0x9fe0ff,core:'spire',H:880,wk:'ice',wn:'絶対零度砲',aggr:0,
+  {n:'極北文明 ハイパーボリア',s:'北風の彼方、永久氷河に眠る光の民',sty:'ice',P:90,R:4200,c0:[.72,.78,.84],c1:[.95,.97,1],gl:[3,5.5,8],body:0xe8f4ff,trim:0x9fe0ff,core:'spire',H:880,wk:'ice',wn:'絶対零度砲',aggr:0,
     v:['北風の向こうへ、ようこそ。ここに夜は来ない','氷は時を止める。我らはずっと、ここで待っていた'],vh:['凍れ。永遠に','絶対零度砲、照準。']},
-  {n:'地底王国 アガルタ',s:'大地の底の太陽を抱く、巨大な火口の都',sty:'crater',P:14,R:2000,c0:[.36,.28,.24],c1:[.56,.44,.36],gl:[8,3,.8],body:0x9a8676,trim:0xffb070,core:'dome',H:540,wk:'erupt',wn:'地殻穿孔砲',aggr:0,
+  {n:'地底王国 アガルタ',s:'大地の底の太陽を抱く、巨大な火口の都',sty:'crater',P:14,R:4000,c0:[.36,.28,.24],c1:[.56,.44,.36],gl:[8,3,.8],body:0x9a8676,trim:0xffb070,core:'dome',H:540,wk:'erupt',wn:'地殻穿孔砲',aggr:0,
     v:['地の底にも、太陽はある。我らはそれを守ってきた','大地は生きている。怒らせぬことだ'],vh:['大地よ、目を覚ませ','地殻を穿て。灼熱の柱を立てよ']},
-  {n:'天塔都市 バビロン',s:'天へ届く塔を築き、神の雷を手にした都',sty:'plain',P:30,R:2100,c0:[.62,.54,.4],c1:[.76,.68,.5],gl:[4,5,9],body:0xc8b48c,trim:0x90a8ff,core:'babel',H:1700,wk:'thunder',wn:'天の雷霆',aggr:0,
+  {n:'天塔都市 バビロン',s:'天へ届く塔を築き、神の雷を手にした都',sty:'plain',P:30,R:4200,c0:[.62,.54,.4],c1:[.76,.68,.5],gl:[4,5,9],body:0xc8b48c,trim:0x90a8ff,core:'babel',H:1700,wk:'thunder',wn:'天の雷霆',aggr:0,
     v:['塔は、まだ天に届いていない。だから、我らは築き続ける','神の言葉は、とうに散った。残ったのは、雷だけだ'],vh:['天の雷霆よ、落ちよ','塔に刃を向けた者に、天罰を']},
-  {n:'天翔帝国 ラーマ',s:'空飛ぶ宮殿ヴィマーナを駆る帝国',sty:'hills',P:46,R:2200,c0:[.5,.46,.32],c1:[.7,.62,.44],gl:[8,5,2],body:0xe6c890,trim:0xffd070,core:'shikhara',H:720,wk:'missile',wn:'梵天の矢（ブラフマーストラ）',aggr:0,
+  {n:'天翔帝国 ラーマ',s:'空飛ぶ宮殿ヴィマーナを駆る帝国',sty:'hills',P:46,R:4400,c0:[.5,.46,.32],c1:[.7,.62,.44],gl:[8,5,2],body:0xe6c890,trim:0xffd070,core:'shikhara',H:720,wk:'missile',wn:'梵天の矢（ブラフマーストラ）',aggr:0,
     v:['ヴィマーナは、風より速く空を翔ける','かつて一つの矢が、都をひとつ消した。二度と使わぬと誓ったのだが'],vh:['ブラフマーストラ、封印解除','誓いは破られた。お前のせいだ']},
-  {n:'星詠文明 ナスカ',s:'大地に星図を描き、星と語らう民',sty:'lines',P:36,R:1900,c0:[.56,.36,.26],c1:[.7,.5,.36],gl:[6,6,9],body:0x3a3036,trim:0xe8e8ff,core:'monolith',H:640,wk:'lance',wn:'星の槍',aggr:0,
+  {n:'星詠文明 ナスカ',s:'大地に星図を描き、星と語らう民',sty:'lines',P:36,R:3800,c0:[.56,.36,.26],c1:[.7,.5,.36],gl:[6,6,9],body:0x3a3036,trim:0xe8e8ff,core:'monolith',H:640,wk:'lance',wn:'星の槍',aggr:0,
     v:['大地の線は、空の星への手紙','星は答える。お前が来ることも、星は知っていた'],vh:['星よ、槍を','天より降る光を、避けられるものなら避けてみよ']},
-  {n:'機械文明 アルケー',s:'創造主の滅びたあとも動き続ける自律機械の都',sty:'terrace',P:48,R:2000,c0:[.26,.28,.3],c1:[.42,.46,.5],gl:[1,6,7],body:0x2a2e34,trim:0x40f0e0,core:'monolith',H:1100,wk:'rail',wn:'超電磁投射砲',aggr:1,
+  {n:'機械文明 アルケー',s:'創造主の滅びたあとも動き続ける自律機械の都',sty:'terrace',P:48,R:4000,c0:[.26,.28,.3],c1:[.42,.46,.5],gl:[1,6,7],body:0x2a2e34,trim:0x40f0e0,core:'monolith',H:1100,wk:'rail',wn:'超電磁投射砲',aggr:1,
     v:['──識別：未登録の生命体','──創造主不在。命令継続：領域を防衛せよ'],vh:['──排除を開始します','──超電磁投射砲、発射シークエンス']},
-  {n:'深淵都市 ルルイエ',s:'海の底から浮かび上がった、ゆがんだ角度の都',sty:'jag',P:20,R:2000,c0:[.14,.2,.18],c1:[.26,.32,.3],gl:[2,7,4],body:0x1c2a26,trim:0x60ff9a,core:'jag',H:820,wk:'void',wn:'深淵の顎',aggr:1,
+  {n:'深淵都市 ルルイエ',s:'海の底から浮かび上がった、ゆがんだ角度の都',sty:'jag',P:20,R:4000,c0:[.14,.2,.18],c1:[.26,.32,.3],gl:[2,7,4],body:0x1c2a26,trim:0x60ff9a,core:'jag',H:820,wk:'void',wn:'深淵の顎',aggr:1,
     v:['……ふんぐるい……むぐるうなふ……','角度が、合わない。ここでは、何もかもが'],vh:['深淵が、お前を見返している','呑め、深淵の顎よ']},
 ];
 CIVS.forEach((c,i)=>{const a=-Math.PI/2+(i+.5)*Math.PI*2/CIVS.length,r=i%2?20000:15200;c.i=i;c.x=Math.round(Math.cos(a)*r);c.z=Math.round(Math.sin(a)*r);c.cr=c.R*.36;
-  c.GN=IS_MOBILE?56:96;c.S=c.R*2.3;c.st=c.S/c.GN;c.hg=new Float32Array((c.GN+1)*(c.GN+1));
+  c.GN=IS_MOBILE?72:128;c.S=c.R*2.3;c.st=c.S/c.GN;c.hg=new Float32Array((c.GN+1)*(c.GN+1));
   for(let j=0;j<=c.GN;j++)for(let k=0;k<=c.GN;k++)c.hg[j*(c.GN+1)+k]=civH0(c,c.x-c.S/2+k*c.st,c.z-c.S/2+j*c.st);});
 function civH0(c,x,z){const dc=Math.hypot(x-c.x,z-c.z),q=dc/c.R,n=fbm(x*.0009+c.i*7,z*.0009-c.i*3,3);const e=q+n*.16;
   let h=lerp(-32,4,1-smooth(.84,1,e));
@@ -846,11 +850,11 @@ function applyCraters(){
 }
 
 // ================= sky =================
-const skyUni={sunDir:{value:SUN_DIR},time:{value:0},tint:{value:0}};
+const skyUni={sunDir:{value:SUN_DIR},time:{value:0},tint:{value:0},space:{value:0}};
 const sky=new THREE.Mesh(new THREE.SphereGeometry(3000,32,20),new THREE.ShaderMaterial({
   uniforms:skyUni,side:THREE.BackSide,depthWrite:false,fog:false,
   vertexShader:'varying vec3 vD;void main(){vD=normalize(position);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-  fragmentShader:`uniform vec3 sunDir;uniform float time,tint;varying vec3 vD;
+  fragmentShader:`uniform vec3 sunDir;uniform float time,tint,space;varying vec3 vD;
     float hs(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
     float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hs(i),hs(i+vec2(1,0)),f.x),mix(hs(i+vec2(0,1)),hs(i+vec2(1,1)),f.x),f.y);}
     float fb(vec2 p){float a=0.,m=.5;for(int i=0;i<5;i++){a+=vn(p)*m;p*=2.07;m*=.5;}return a;}
@@ -865,6 +869,7 @@ const sky=new THREE.Mesh(new THREE.SphereGeometry(3000,32,20),new THREE.ShaderMa
         vec3 cc=mix(vec3(.55,.3,.35),vec3(2.2,1.1,.55),pow(sd,3.));cc=mix(vec3(.18,.14,.26),cc,.35+.65*smoothstep(.2,.9,cl+sd*.5));
         c=mix(c,cc,cl*.9);}
       c=mix(c,c*vec3(1.5,.45,.25),tint);
+      if(space>0.){vec3 q=floor(d*300.);float st=step(.9975,hs(q.xy*.731+q.yz*1.37+q.zx*2.11))*(.5+hs(q.zy))*2.5;vec3 sp=vec3(.004,.006,.02)+vec3(st)+vec3(30.,18.,9.)*smoothstep(.9986,.9994,sd)+vec3(1.2,.6,.3)*pow(sd,40.)*.6;c=mix(c,sp,space);}
       gl_FragColor=vec4(c,1.);}`
 }));
 sky.frustumCulled=false;sky.renderOrder=-1;scene.add(sky);
@@ -2284,11 +2289,11 @@ function updHome(dt){
   if(Math.random()<dt*6)glow.emit(HX+rr(-.8,.8),F+4+rr(-.8,.8),HZ+8+rr(-.8,.8),0,rr(.3,1),0,rr(.6,1.2),.35,.1,PC.violetB,PC.gold,.8,0,0);
 }
 function homeSpawn(){if(APP){appHome();return;}player.pos.set(HX,F,HZ+2);player.vel.set(0,0,0);player.flying=false;document.querySelector('[data-a="fly"]').classList.remove('on');player.face=Math.PI;camYaw=Math.PI;camPitch=.3;}
-const WARPS=[{n:'天穹楼',d:'大魔導士の居城'},{n:'王都ルーンヘイム',d:'西洋の王都'},{n:'月詠国 神楽京',d:'東方の城下町'},{n:'蒼海の国 アズラーン',d:'白亜と碧の海上都市'},{n:'天空要塞都市 エーテリア',d:'雲上に浮かぶ要塞'},{n:'神聖ヴァルガルド帝国 帝都',d:'人類最大の帝国（西の果て）'},{n:'魔都ネクロディア',d:'魔王の座す都（東の大陸）'},{n:'東雲国 桜花京',d:'桜と黒漆の城下町'},{n:'古の遺跡',d:'西の果てに眠る太古の都の跡'},{n:'封印の地',d:'北東の果て、虚ろの祭壇'},{n:'巨神帝国',d:'北の海の彼方、外の世界'},{n:'天上の神殿',d:'雲の遥か上、神の住まう場所'},...CIVS.map(c=>({n:c.n,d:'外界の古代文明 ─ '+c.s}))];
+const WARPS=[{n:'天穹楼',d:'大魔導士の居城'},{n:'王都ルーンヘイム',d:'西洋の王都'},{n:'月詠国 神楽京',d:'東方の城下町'},{n:'蒼海の国 アズラーン',d:'白亜と碧の海上都市'},{n:'天空要塞都市 エーテリア',d:'雲上に浮かぶ要塞'},{n:'神聖ヴァルガルド帝国 帝都',d:'人類最大の帝国（西の果て）'},{n:'魔都ネクロディア',d:'魔王の座す都（東の大陸）'},{n:'東雲国 桜花京',d:'桜と黒漆の城下町'},{n:'古の遺跡',d:'西の果てに眠る太古の都の跡'},{n:'封印の地',d:'北東の果て、虚ろの祭壇'},{n:'巨神帝国',d:'北の海の彼方、外の世界'},{n:'天上の神殿',d:'雲の遥か上、神の住まう場所'},...CIVS.map(c=>({n:c.n,d:'外界の古代文明 ─ '+c.s})),{n:'大ピラミッド',d:'東の荒野にそびえる、山より大きな墓'},{n:'宇宙（月のそば）',d:'この星を離れ、月の石碑のもとへ'}];
 let warpOpen=false,warpOpenedAt=0;
 function toggleWarp(){warpOpen=!warpOpen;$('#warp').classList.toggle('on',warpOpen);if(warpOpen)warpOpenedAt=performance.now();if(warpOpen&&document.pointerLockElement)document.exitPointerLock();}
 function travelTo(i){
-  warpOpen=false;$('#warp').classList.remove('on');
+  warpOpen=false;$('#warp').classList.remove('on');if(SPC.on){SPC.on=false;scene.add(hero);if(mainRP){mainRP.scene=scene;mainRP.camera=camera;}}
   magicCircle(player.pos,5,lin(5,3,9),1.2,{y:.2,spin:3});burst(player.pos.clone().setY(player.pos.y+1),80,14,1,2,.3,PC.violetB,PC.gold,1,2,0);snd('chime',.7);
   post.flash=Math.max(post.flash,.8);player.vel.set(0,0,0);
   if(i===0){homeSpawn();later(1.2,()=>{const d=DSC[0];if(d)say(d,'師匠、おかえりなさいませ！',{who:d.nm,cls:'mg',far:220,dur:4});});}
@@ -2302,6 +2307,8 @@ function travelTo(i){
   else if(i===10){const x=OCX,z=OCZ+TI_R+380;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI;camYaw=Math.PI;camPitch=.15;}
   else if(i===9){const x=SEAL.x-170,z=SEAL.z+60;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   else if(i===11){player.pos.set(TPL.x,TPL.y,TPL.z+70);player.face=Math.PI;camYaw=Math.PI;camPitch=.15;}
+  else if(i===22){const x=PYR.x,z=PYR.z+PYR.S+700;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI;camYaw=Math.PI;camPitch=.05;}
+  else if(i===23){player.pos.set(HX,SPC.SW+50,HZ);player.flying=true;spaceEnter();const n=SPC.C.clone().sub(SPC.moonC).normalize();SPC.pos.copy(SPC.moonC).addScaledVector(n,SPC.RM+2500);camYaw=Math.atan2(-n.x,-n.z);camPitch=.1;}
   else if(i>=12&&CIVS[i-12]){const c=CIVS[i-12],d=Math.hypot(c.x,c.z),x=c.x-c.x/d*(c.cr+340),z=c.z-c.z/d*(c.cr+340),f=Math.atan2(c.x-x,c.z-z);player.pos.set(x,Math.max(groundAt(x,z),0),z);player.face=f;camYaw=f;camPitch=.1;}
   else{const x=C3X-C3R-22,z=C3Z;player.pos.set(x,groundAt(x,z),z);player.face=Math.PI/2;camYaw=Math.PI/2;camPitch=.2;}
   showBanner(WARPS[i].n,i===0?WARPS[0].d:'転移完了');
@@ -2359,6 +2366,7 @@ function damageArea(pos,r,dmg,knock,type,opts={}){
   skyArea(pos,r,dmg,type);
   bigArea(pos,r,dmg,type);
   barrierBlast(pos,r,dmg*(opts.bmul||1));
+  if(inOuter(pos.x,pos.z))cityArea(pos,r);
 }
 // damage numbers
 const dmgEls=[];let dmgI=0;
@@ -2391,7 +2399,7 @@ function hurtPlayer(dmg){
   if(pHP<=0){pHP=0;pDead=true;showBanner('大魔導士、膝をつく','天穹楼にて再起する');snd('bigboom',.6);
     later(2.6,()=>{travelTo(0);pHP=PLAYER_MAX;pDead=false;});}
 }
-function updBossBar(){if(titanBar()||skyBar()||bigBar())return;let best=null,bd=520;for(const m of MAGES){if(!m.alive||!m.active)continue;const d=m.pos.distanceTo(player.pos);if(d<bd){bd=d;best=m;}}
+function updBossBar(){if(SPC.on){$('#bossbar').classList.remove('on');return;}if(titanBar()||skyBar()||bigBar())return;let best=null,bd=520;for(const m of MAGES){if(!m.alive||!m.active)continue;const d=m.pos.distanceTo(player.pos);if(d<bd){bd=d;best=m;}}
   const el=$('#bossbar');el.classList.toggle('on',!!best);if(!best)return;
   el.querySelector('.bn').textContent=best.nm+(best.hp<best.maxHp*.5?' ─ 本気':'');el.querySelector('.bh i').style.width=(best.hp/best.maxHp*100).toFixed(1)+'%';
   el.querySelector('.bs i').style.width=(best.shield/best.shMax*100).toFixed(1)+'%';}
@@ -2457,7 +2465,7 @@ const cds=SPELLS.map(()=>0);let selSpell=0;
 function announce(s){const el=$('#spellName');el.innerHTML=`${s.name}<small>${s.read}</small>`;el.style.setProperty('--sc',s.col);el.classList.remove('show');void el.offsetWidth;el.classList.add('show');}
 
 function cast(i){
-  if(!started||pDead||SPEC)return;
+  if(!started||pDead||SPEC)return;if(SPC.on){toast('宇宙では魔法を唱えられない（星へ戻ろう）');return;}
   const s=SPELLS[i];selSpell=i;updBarSel();
   if(!spellOk(s)){toast(SPELL_LV[s.id]>LV_MAX?`「${s.name}」は大魔導士だけの魔法`:`「${s.name}」は Lv${SPELL_LV[s.id]} で習得する`);return;}
   if(cds[i]>0)return;cds[i]=s.anc||s.sup?s.cd:s.cd*TCD[TIER]*.5;
@@ -2936,7 +2944,7 @@ function raincall(K){const dur=[20,30,45,60][K.t],R=[200,300,450,700][K.t];WEATH
   snd('whoosh',1.2);later(.5,()=>snd('crack',.9));showBanner('天候支配','黒雲が空を覆い、雷雨が降り注ぐ（'+dur+'秒）');}
 function updWeather(dt){const on=WEATHER&&gameTime<WEATHER.end;if(WEATHER&&!on){WEATHER=null;}
   const tgt=on?1:0;const a=(WEATHER?WEATHER.a:0);const na=lerp(rainMesh.userData.a||0,tgt,Math.min(1,dt*.8));rainMesh.userData.a=na;if(WEATHER)WEATHER.a=na;
-  scene.fog.color.copy(FOG0).lerp(tmpC.setRGB(.07,.08,.11),na*.85);{const c=camera.position,m=Math.max(Math.abs(c.x),Math.abs(c.z));scene.fog.density=FOG_D0*(1+na*.9)*lerp(1,.42,smooth(HALF+300,HALF+2500,m));waterUni.fogD.value=scene.fog.density;}if(finalPass)finalPass.uniforms.exposure.value=.95-na*.28;
+  scene.fog.color.copy(FOG0).lerp(tmpC.setRGB(.07,.08,.11),na*.85);{const c=camera.position,m=Math.max(Math.abs(c.x),Math.abs(c.z));const ak=smooth(600,3000,c.y);scene.fog.color.lerp(tmpC.setRGB(.012,.016,.04),ak*.9);scene.fog.density=FOG_D0*(1+na*.9)*lerp(1,.42,smooth(HALF+300,HALF+2500,m))*(1-.8*ak);waterUni.fogD.value=scene.fog.density;}if(finalPass)finalPass.uniforms.exposure.value=.95-na*.28;
   if(na<.02){rainMesh.visible=false;return;}rainMesh.visible=true;rainMesh.material.opacity=.45*na;
   const pa=rainGeo.attributes.position.array,c=camera.position;
   for(let i=0;i<RAIN_N;i++){const r=rainP[i];r.y-=r.v*dt;if(r.y<-10){r.y=rr(40,70);r.x=rr(-70,70);r.z=rr(-70,70);}const x=c.x+r.x,y=c.y+r.y-20,z=c.z+r.z;pa[i*6]=x;pa[i*6+1]=y;pa[i*6+2]=z;pa[i*6+3]=x+.6;pa[i*6+4]=y+3.2;pa[i*6+5]=z+.3;}
@@ -4075,7 +4083,7 @@ function updCivs(dt){if(!started)return;const P=player.pos;
 // ================= 巨大な者たち（決戦兵器・使徒・神兵）の共通処理 =================
 const BIGS=[];
 function bigHit(o,dmg,src,type){if(!o.alive||!(dmg>0))return;
-  if(src==='p'){dmg*=P_MUL;o.anger=Math.max(o.anger||0,60);o.pHit=gameTime;
+  if(src==='p'){dmg*=P_MUL;if(o.kind!=='god'){o.anger=Math.max(o.anger||0,60);o.pHit=gameTime;}
     // ATフィールド：弱・中の魔法はほぼ通らない。強で四分の一、極でようやく全力が届く
     if(o.at){const k=TIER>=3||SUPER?1:TIER===2?.25:.02;if(k<1&&gameTime-(o.atFx||0)>.22){o.atFx=gameTime;const c=o.pos.clone().setY(o.pos.y+o.h*.5),n=player.pos.clone().sub(c);if(n.lengthSq()<1)n.set(0,0,1);
         const p=c.clone().addScaledVector(n.normalize(),o.radius*1.4);octFlash(p,n,o.radius*1.5,lin(3,1.4,.4));if(Math.random()<.35)floatText(p,'ATフィールド','nul');snd('null',.7,p);}dmg*=k;}}
@@ -4229,7 +4237,7 @@ function evaCheck(){const now=gameTime,act=BIGS.filter(o=>o.kind==='eva'&&o.aliv
 let ANGEL_T=IS_MOBILE?720:600,ANGEL_N=0;
 function angelTarget(){const L=[];COUNTRIES.forEach((C,ci)=>{if(!C.total||C.faction==='titan'||C.dest/C.total>.8)return;const w=C.anc!=null?1.2:C.big?4:C.minor?1:C.village?.15:2;L.push([ci,w]);});
   let s=L.reduce((a,b)=>a+b[1],0)*Math.random();for(const [ci,w] of L){s-=w;if(s<=0)return ci;}return L.length?L[0][0]:0;}
-function angelBlast(A,p,R,d){const R2=R*R;
+function angelBlast(A,p,R,d){const R2=R*R;if(inOuter(p.x,p.z))cityArea(p,R);
   if(started&&!pDead&&!SPEC&&player.pos.distanceToSquared(p)<(R+8)**2){PL_THREAT.angel=gameTime;hurtPlayer(d.pl);}
   for(const b of buildings){if(b.destroyed)continue;const dx=b.x-p.x,dz=b.z-p.z,q=R+b.rad;if(dx*dx+dz*dz<q*q){threat(b.country,'angel');damageBuilding(b,d.b,.9,true);}}
   for(const u of CRW)if(u.st===1&&(u.x-p.x)**2+(u.z-p.z)**2<R2)crowdDamage(u,d.u,V3(rr(-30,30),40,rr(-30,30)),'npc');
@@ -4340,7 +4348,7 @@ const GOD_L={pl:['大魔導士よ。神は、見ておられる','その力は�
   emp:['剣を収めよ。これは戦ではない、虐殺だ','帝国の兵よ、神の名において命ずる。退け'],dem:['魔の軍勢よ、民から手を引け','冥皇の兵よ、ここより先は神の庭だ'],
   titan:['巨神よ、眠りに戻れ','古き巨神、ここは通さぬ'],angel:['理の外の者よ、ここは通さぬ','使徒よ、天の槍を受けよ'],x:['虐殺を止めよ。神は、見ておられる']};
 const KAMI_L=['よく来た、大魔導士よ。ここは天上の神殿 ─ 地上のすべてを見守る場所だ','わしは争いを止めはせん。人は争うものだ。だが、罪なき民の虐殺だけは許さぬ',
-  '地上で虐殺が起これば、ここから神兵を遣わす。たとえ相手が、そなたであってもな','そなたの力は、神であるわしをも超えておる。だからこそ、その力の使い道を誤るな',
+  '地上で虐殺が起これば、ここから神兵を遣わす。……そなたにだけは、なぜか手を出せぬがな','そなたの力は、神であるわしをも超えておる。だからこそ、その力の使い道を誤るな',
   '外界の海には、十の古き文明が眠っておる。かつて天をも恐れなかった者たちだ。侮るでないぞ','使徒は、この世界の理の外から来る。神兵とて、容易くは退けられぬ',
   '人の造った巨人……決戦兵器か。あれもまた、守りたいものを守るための力なのだろう'];
 const AIDE_L=['神殿の庭は、いつでも手入れしております','ここから見る雲海は、格別でしょう？','神兵たちは、いつでも出陣できます','神様は、ああ見えて地上の皆さんが大好きなんですよ'];
@@ -4389,7 +4397,7 @@ function godModel(){const g=new THREE.Group(),M=godMats;const P=(geo,m,x,y,z,par
   g.scale.setScalar(2.2);return {g,wl,wr};}
 function godTarget(o){const s=o.sq,C=COUNTRIES[s.ci],P=o.pos,R=C.r+900;
   switch(s.perp){
-  case'pl':return !pDead&&!SPEC&&Math.hypot(player.pos.x-C.x,player.pos.z-C.z)<R+600?{pl:1,p:player.pos.clone().setY(player.pos.y+1.4)}:null;
+  case'pl':return null;
   case'sky':{const u=robotNear(P.x,P.z,900);if(u)return {u,p:u.pos.clone()};return LG.alive&&Math.hypot(LG.pos.x-C.x,LG.pos.z-C.z)<R+800?{lg:1,p:LG.pos.clone().setY(LG.pos.y-120)}:null;}
   case'emp':case'dem':{const sd=s.perp==='dem'?1:0;let best=null,bd=900*900;for(const u of CRW){if(u.st!==1||u.sd!==sd)continue;const d=(u.x-P.x)**2+(u.z-P.z)**2;if(d<bd){bd=d;best=u;}}
     if(best)return {cr:best,p:V3(best.x,best.y+1.5,best.z)};for(const e of enemies){if(!e.alive||e.kind==='citizen'||powOfEnemy(e)!==s.perp)continue;if(Math.hypot(e.pos.x-C.x,e.pos.z-C.z)<R)return {e,p:e.pos.clone().setY(e.pos.y+(e.h||2)*.5)};}return null;}
@@ -4403,7 +4411,7 @@ function godUpd(o,dt){const g=o.g,s=o.sq;
   if(!o.alive){if(o.dying<0)return;o.dying+=dt;g.position.y+=dt*30;g.rotation.z+=dt;if(o.dying>2){scene.remove(g);o.gone=true;}return;}
   if(o.leave){o.pos.y+=dt*170;g.position.copy(o.pos);if(o.pos.y>groundAt(o.pos.x,o.pos.z)+1500){scene.remove(g);o.gone=true;o.alive=false;}return;}
   if(o.anger>0&&s.perp!=='pl')o.anger-=dt;
-  o.reT=(o.reT||0)-dt;if(o.reT<=0){o.reT=.8;o.T=o.anger>0&&!pDead&&!SPEC&&started?{pl:1,p:player.pos.clone().setY(player.pos.y+1.4)}:godTarget(o);if(o.T)s.last=gameTime;}
+  o.reT=(o.reT||0)-dt;if(o.reT<=0){o.reT=.8;o.T=godTarget(o);if(o.T)s.last=gameTime;}
   const T=o.T,C=COUNTRIES[s.ci];if(T&&T.pl)T.p.copy(player.pos).setY(player.pos.y+1.4);
   o.a+=dt*.35;const cx=T?T.p.x:C.x,cz=T?T.p.z:C.z,rad=T?(T.pl?150:230):C.r*.6+60;const gx=cx+Math.cos(o.a)*rad,gz=cz+Math.sin(o.a)*rad;
   const gy=T&&T.lg?LG.pos.y-260:Math.max(groundAt(gx,gz),0)+o.hover+(T&&T.pl?Math.max(0,player.pos.y-groundAt(player.pos.x,player.pos.z)):0);
@@ -4432,7 +4440,7 @@ function updGods(dt){for(let i=GOD.sq.length-1;i>=0;i--){const s=GOD.sq[i],C=COU
 function godCheck(){const now=gameTime;if(GOD.sq.length>=2)return;
   for(let ci=0;ci<COUNTRIES.length;ci++){const C=COUNTRIES[ci];if(!C.total||C.faction==='titan'||(C.godCd||0)>now)continue;const f=C.dest/C.total;if(f>.97)continue;
     const loss=lossIn(C,40);if(loss<(C.village?.35:C.big?.08:.15))continue;const perp=C.plT>now-20?'pl':recentThreat(ci,30);if(!perp||!GOD_PN[perp])continue;
-    if(perp==='pl'&&!GOD.warned){GOD.warned=true;C.godCd=now+24;showBanner('天上の神殿より','大魔導士よ、罪なき民の虐殺をやめよ。次は、神兵を遣わす');snd('bell',1);return;}
+    if(perp==='pl'){C.godCd=now+60;if(!(GOD.plMsgT>now)){GOD.plMsgT=now+300;showBanner('天上の神殿より','……大魔導士よ、民を焼くのは、ほどほどにな');snd('bell',.7);}continue;}
     godDispatch(ci,perp);return;}}
 // ================= 超魔法（大魔導士だけの、世界の理を超える魔法） =================
 // 威力の段階に関わらず全力。ATフィールドも貫く
@@ -4514,6 +4522,7 @@ function supMurasaki(P){const G=P.clone();G.y=Math.max(groundAt(G.x,G.z),0);cons
         SUPER=true;for(const o of BIGS)if(o.alive&&Math.hypot(o.pos.x-G.x,o.pos.z-G.z)<front)bigHit(o,o.max*3.4,'anc');SUPER=false;
         for(const B of BARRIERS)if(B.hp>0&&Math.hypot(B.x-G.x,B.z-G.z)<front+B.r)hitBarrier(B,{x:B.x,y:B.y,z:B.z,height:0,rad:0},1e15);
         if(LG.alive&&Math.hypot(LG.pos.x-G.x,LG.pos.z-G.z)<front)skyAnc('void',(x,z)=>Math.hypot(x-G.x,z-G.z)<front);
+        if(FRAME_N%6===0)cityArea(G,front);
         if(pN<PM&&Math.random()<dt*(IS_MOBILE?8:20)){pN++;const a=Math.random()*6.28,r=Math.random()<.6?rr(0,front):rr(0,Math.min(front,2200));let x=G.x+Math.cos(a)*r,z=G.z+Math.sin(a)*r;
           if(Math.random()<.5){const b2=Math.random()*6.28,r2=rr(100,1600);x=VIEW.x+Math.cos(b2)*r2;z=VIEW.z+Math.sin(b2)*r2;}
           if(Math.hypot(x-G.x,z-G.z)<=front)purplePillar(V3(x,groundAt(x,z),z),rr(50,140),rr(600,1500),0);}}
@@ -4654,6 +4663,145 @@ Object.assign(SPELL_DESC,{sup_kami:'十体の決戦兵器を呼び出す。四�
   sup_murasaki:'古代魔法の十倍の威力。紫の業火が見渡す限りに広がり、国も結界も使徒も、すべてを焼き尽くす。',
   sup_ryusei:'隕石魔法の十倍の大隕石が、世界地図のあちこちへ降りそそぐ。どこに落ちるかは、星だけが知っている。',
   sup_sekaiju:'宇宙まで届く世界樹を生やす。ふだんはただ大きな木が育つだけだが、国の中に生やせば、根と幹が町を壊す。'});
+// ================= 大ピラミッド =================
+// 東の荒野にそびえる、山より大きな四角錐。斜面は歩いて登れる。頂には黄金の冠石
+function initPyramid(){const P=PYR,R=P.S+240;P.h=40;
+  terrainEdit(P.x,P.z,R*1.42,(h,q,x,z,id)=>{const m=Math.max(Math.abs(x-P.x),Math.abs(z-P.z));const w=m<P.S+30?1:1-smooth(P.S+30,R,m);if(w<=0)return;const nh=lerp(h,P.h,w);hOrig[id]=nh;return nh;});
+  treesIn(P.x,P.z,R*1.3,t=>{if(Math.max(Math.abs(t.x-P.x),Math.abs(t.z-P.z))<P.S+60)removeTree(t,false);});
+  const g=new THREE.Group();g.position.set(P.x,P.h,P.z);scene.add(g);P.g=g;
+  const tex=canvasTex(256,256,(x,w,hh)=>{x.fillStyle='#cdb27c';x.fillRect(0,0,w,hh);for(let j=0;j<16;j++){x.fillStyle='rgba(90,64,30,.35)';x.fillRect(0,j*16,w,2);for(let i=0;i<8;i++){x.fillStyle=`rgba(${120+Math.random()*60|0},${90+Math.random()*50|0},50,.25)`;x.fillRect(i*32+(j%2)*16,j*16+2,30,13);}}});
+  tex.wrapS=tex.wrapT=THREE.RepeatWrapping;tex.repeat.set(10,10);
+  const body=new THREE.Mesh(new THREE.ConeGeometry(P.S*Math.SQRT2,P.H,4,1,true).rotateY(Math.PI/4).translate(0,P.H/2,0),new THREE.MeshStandardMaterial({map:tex,roughness:.92,flatShading:true}));body.castShadow=body.receiveShadow=true;g.add(body);
+  const skirt=new THREE.Mesh(new THREE.BoxGeometry(P.S*2,60,P.S*2).translate(0,-30,0),body.material);g.add(skirt);
+  const capH=P.H*.07,cap=new THREE.Mesh(new THREE.ConeGeometry(P.S*Math.SQRT2*.07,capH,4).rotateY(Math.PI/4).translate(0,P.H-capH/2+1,0),new THREE.MeshStandardMaterial({color:0xe8c170,metalness:.9,roughness:.25,emissive:lin(.5,.3,.05)}));g.add(cap);
+  const gl=new THREE.Mesh(new THREE.SphereGeometry(14,16,12),new THREE.MeshBasicMaterial({color:lin(8,6,2)}));gl.position.y=P.H+10;g.add(gl);P.gl=gl;
+  // 正面の入口と参道の柱
+  const st=new THREE.MeshStandardMaterial({map:tex,roughness:.9});const door=new THREE.Mesh(new THREE.BoxGeometry(60,70,40),new THREE.MeshStandardMaterial({color:0x1a120a,roughness:1}));door.position.set(0,35,P.S-8);g.add(door);
+  for(let k=0;k<8;k++)for(const s of[-1,1]){const c=new THREE.Mesh(new THREE.CylinderGeometry(8,9,60,10),st);c.position.set(s*70,30,P.S+60+k*70);c.castShadow=true;g.add(c);}
+  P.on=true;}
+function updPyramid(dt){if(!PYR.g)return;PYR.g.visible=Math.hypot(VIEW.x-PYR.x,VIEW.z-PYR.z)<9000;PYR.gl.scale.setScalar(1+Math.sin(gameTime*2)*.15);
+  if(!PYR.seen&&started&&Math.hypot(player.pos.x-PYR.x,player.pos.z-PYR.z)<PYR.S+300){PYR.seen=true;showBanner('大ピラミッド','山より高い、名も知れぬ王の墓。頂の冠石は、今も光を放っている');}}
+// ================= 宇宙 =================
+// 高く昇るほど空は暗くなり、星が見え、足もとの世界は丸い星になっていく。大気圏を抜けると宇宙に出る。月まで飛んでいける。
+// 宇宙では、今までの世界を「星」の上面（北極のあたり）に写した球体として描く。降りれば、真下の場所へ戻る
+const SPC={on:false,RP:30000,SW:3000,C:V3(0,-30000,0),pos:V3(),moonC:V3(),RM:7000,sunD:V3(-.5,.75,.45).normalize(),seenMoon:false,landed:false,planet:null,moon:null,stone:null,hud:null,firstOut:false};
+const spaceScene=new THREE.Scene(),spaceCam=new THREE.PerspectiveCamera(62,innerWidth/innerHeight,1,4e6);
+const planetFS=`uniform sampler2D wmap,mmap;uniform float RP,OB,HF,t;uniform vec3 sunD;varying vec3 vL;
+  float h(vec3 p){return fract(sin(dot(p,vec3(12.9898,78.233,37.719)))*43758.5453);}
+  float n3(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(mix(h(i),h(i+vec3(1,0,0)),f.x),mix(h(i+vec3(0,1,0)),h(i+vec3(1,1,0)),f.x),f.y),mix(mix(h(i+vec3(0,0,1)),h(i+vec3(1,0,1)),f.x),mix(h(i+vec3(0,1,1)),h(i+vec3(1,1,1)),f.x),f.y),f.z);}
+  float fb(vec3 p){float a=0.,m=.5;for(int i=0;i<5;i++){a+=n3(p)*m;p*=2.1;m*=.5;}return a;}
+  void main(){vec3 n=normalize(vL);float th=acos(clamp(n.y,-1.,1.)),az=atan(n.z,n.x),r=th*RP;vec2 p=vec2(cos(az),sin(az))*r;vec3 col;float cap=0.;
+    if(abs(p.x)<HF&&abs(p.y)<HF){col=texture2D(mmap,vec2(p.x/HF*.5+.5,1.-(p.y/HF*.5+.5))).rgb*1.6;cap=1.;}
+    else if(abs(p.x)<OB&&abs(p.y)<OB){col=texture2D(wmap,vec2(p.x/OB*.5+.5,1.-(p.y/OB*.5+.5))).rgb*1.3;cap=1.;}
+    else{float c=fb(n*3.2+vec3(7.,1.,3.));float d=fb(n*9.);vec3 land=mix(vec3(.18,.3,.12),vec3(.42,.34,.2),smoothstep(.45,.75,d));vec3 sea=mix(vec3(.02,.07,.16),vec3(.05,.16,.3),smoothstep(.3,.55,c));
+      col=mix(sea,land,smoothstep(.54,.57,c));col=mix(col,vec3(.9,.94,1.),smoothstep(-.72,-.9,n.y));}
+    float cl=fb(n*22.+vec3(t*.004,0.,t*.002))*.7+fb(n*6.)*.3;col=mix(col,vec3(1.),smoothstep(.6,.8,cl)*(cap>.5?.22:.45));
+    float l=max(dot(n,sunD),0.);col*=l*1.05+.05;col+=vec3(.9,.6,.3)*pow(1.-l,8.)*.02;gl_FragColor=vec4(col,1.);}`;
+function spaceTex(){const N=IS_MOBILE?512:1024,cv=document.createElement('canvas');cv.width=cv.height=N;const x=cv.getContext('2d'),sc=N/(OB*2),P=(wx,wz)=>[(wx+OB)*sc,(wz+OB)*sc];
+  const img=x.createImageData(N,N),D=img.data;
+  for(let j=0;j<N;j++)for(let i=0;i<N;i++){const wx=-OB+(i+.5)/sc,wz=-OB+(j+.5)/sc,k=(j*N+i)*4;let r=16,g=48,b=74;
+    if(Math.abs(wx)>HALF||Math.abs(wz)>HALF){const h=outerH(wx,wz);if(h>1){const c=civAt(wx,wz,0),t=clamp(h/200,0,1);if(c){r=lerp(c.c0[0],c.c1[0],t)*230;g=lerp(c.c0[1],c.c1[1],t)*230;b=lerp(c.c0[2],c.c1[2],t)*230;if(Math.hypot(wx-c.x,wz-c.z)<c.R*.86&&Math.hypot(wx-c.x,wz-c.z)>c.cr){r=r*.7+50;g=g*.7+50;b=b*.7+55;}}else{r=90+t*60;g=76+t*50;b=60+t*40;}}
+      else if(h>-10){r=40;g=90;b=110;}}
+    D[k]=r;D[k+1]=g;D[k+2]=b;D[k+3]=255;}
+  x.putImageData(img,0,0);
+  {const [a,b]=P(-HALF,-HALF);x.drawImage(mapCv,a,b,WORLD*sc,WORLD*sc);}
+  return new THREE.CanvasTexture(cv);}
+function initSpace(){const S=SPC;spaceScene.background=new THREE.Color(0x000004);spaceScene.add(new THREE.AmbientLight(0x404a66,.35));
+  const sl=new THREE.DirectionalLight(0xfff4e0,2.2);sl.position.copy(S.sunD).multiplyScalar(1e5);spaceScene.add(sl);
+  // 星々
+  {const N=IS_MOBILE?2500:6000,pos=new Float32Array(N*3),col=new Float32Array(N*3);for(let i=0;i<N;i++){const u=Math.random()*2-1,a=Math.random()*6.283,r=Math.sqrt(1-u*u),R=2.5e6;pos[i*3]=Math.cos(a)*r*R;pos[i*3+1]=u*R;pos[i*3+2]=Math.sin(a)*r*R;
+      const k=.5+Math.random()*.9,tt=Math.random();col[i*3]=k*(tt<.2?1:tt<.4?.8:1);col[i*3+1]=k*(tt<.2?.8:1);col[i*3+2]=k*(tt<.4?1:.8);}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));
+    const st=new THREE.Points(g,new THREE.PointsMaterial({size:IS_MOBILE?2:1.6,sizeAttenuation:false,vertexColors:true,fog:false}));st.frustumCulled=false;spaceScene.add(st);S.stars=st;}
+  // 太陽
+  {const p=S.sunD.clone().multiplyScalar(2e6);const s=new THREE.Mesh(new THREE.SphereGeometry(26000,24,16),new THREE.MeshBasicMaterial({color:lin(20,16,10),fog:false}));s.position.copy(p);spaceScene.add(s);
+    const h=new THREE.Mesh(new THREE.SphereGeometry(80000,24,16),new THREE.MeshBasicMaterial({color:lin(1.2,.8,.4),transparent:true,opacity:.35,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}));h.position.copy(p);spaceScene.add(h);}
+  // 星（この世界）
+  const wmap=spaceTex(),mmap=new THREE.CanvasTexture(mapCv);
+  const pl=new THREE.Mesh(new THREE.SphereGeometry(S.RP,IS_MOBILE?96:160,IS_MOBILE?64:110),new THREE.ShaderMaterial({uniforms:{wmap:{value:wmap},mmap:{value:mmap},RP:{value:S.RP},OB:{value:OB},HF:{value:HALF},t:{value:0},sunD:{value:S.sunD}},
+    vertexShader:'varying vec3 vL;void main(){vL=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:planetFS}));pl.position.copy(S.C);spaceScene.add(pl);S.planet=pl;
+  const at=new THREE.Mesh(new THREE.SphereGeometry(S.RP*1.035,96,48),new THREE.ShaderMaterial({uniforms:{sunD:{value:S.sunD}},transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.BackSide,
+    vertexShader:'varying vec3 vN,vW;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;vN=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*viewMatrix*w;}',
+    fragmentShader:'uniform vec3 sunD;varying vec3 vN,vW;void main(){vec3 v=normalize(cameraPosition-vW);float f=pow(1.-abs(dot(vN,v)),3.);float l=.25+.75*max(dot(-vN,sunD),0.);gl_FragColor=vec4(vec3(.25,.55,1.2)*f*l*1.4,1.);}'}));
+  at.position.copy(S.C);spaceScene.add(at);
+  // 月
+  S.moonC.copy(S.C).addScaledVector(V3(.3,.85,-.43).normalize(),185000);
+  const mt=canvasTex(512,256,(x,w,hh)=>{x.fillStyle='#8a8884';x.fillRect(0,0,w,hh);for(let i=0;i<260;i++){const r=Math.random()*Math.random()*26+2,a=Math.random()*w,b=Math.random()*hh;x.fillStyle=`rgba(${60+Math.random()*40|0},${60+Math.random()*40|0},${60+Math.random()*40|0},.55)`;x.beginPath();x.arc(a,b,r,0,7);x.fill();
+      x.strokeStyle='rgba(200,200,195,.35)';x.lineWidth=1;x.beginPath();x.arc(a-r*.15,b-r*.15,r,0,7);x.stroke();}
+    for(let i=0;i<6;i++){x.fillStyle='rgba(50,52,58,.45)';x.beginPath();x.ellipse(Math.random()*w,Math.random()*hh,40+Math.random()*60,20+Math.random()*30,Math.random()*3,0,7);x.fill();}});
+  const mo=new THREE.Mesh(new THREE.SphereGeometry(S.RM,96,64),new THREE.MeshStandardMaterial({map:mt,roughness:1,emissive:0x2a2a30,emissiveMap:mt}));mo.position.copy(S.moonC);spaceScene.add(mo);S.moon=mo;
+  // 月の石碑（星のほうを向いた面に立つ）
+  {const n=S.C.clone().sub(S.moonC).normalize(),p=S.moonC.clone().addScaledVector(n,S.RM),g=new THREE.Group();g.position.copy(p);g.quaternion.setFromUnitVectors(V3(0,1,0),n);spaceScene.add(g);
+    const stn=new THREE.MeshStandardMaterial({color:0x2a2830,roughness:.4,metalness:.5});g.add(new THREE.Mesh(new THREE.BoxGeometry(40,160,12).translate(0,80,0),stn));
+    for(let k=0;k<8;k++){const a=k/8*6.283,c=new THREE.Mesh(new THREE.BoxGeometry(14,40+(k%2)*20,14).translate(0,20,0),stn);c.position.set(Math.cos(a)*120,0,Math.sin(a)*120);g.add(c);}
+    const gl=new THREE.Mesh(new THREE.SphereGeometry(10,16,12),new THREE.MeshBasicMaterial({color:lin(4,6,10)}));gl.position.y=175;g.add(gl);S.stone={g,p:p.clone().addScaledVector(n,120),n};}
+  const hud=document.createElement('div');hud.id='spaceHud';document.body.appendChild(hud);S.hud=hud;}
+// 世界の座標 ↔ 宇宙の座標（北極を中心とした正距方位図法）
+function spaceFromWorld(x,y,z,out){const S=SPC,r=Math.hypot(x,z),th=r/S.RP,az=Math.atan2(z,x),n=V3(Math.sin(th)*Math.cos(az),Math.cos(th),Math.sin(th)*Math.sin(az));return (out||V3()).copy(S.C).addScaledVector(n,S.RP+y);}
+function worldFromSpace(p){const S=SPC,d=p.clone().sub(S.C),L=d.length(),n=d.divideScalar(L),th=Math.acos(clamp(n.y,-1,1)),az=Math.atan2(n.z,n.x),r=th*S.RP;return {x:Math.cos(az)*r,z:Math.sin(az)*r,alt:L-S.RP};}
+function spaceEnter(){const S=SPC;S.on=true;spaceFromWorld(player.pos.x,player.pos.y,player.pos.z,S.pos);S.vel=V3();spaceScene.add(hero);if(mainRP){mainRP.scene=spaceScene;mainRP.camera=spaceCam;}
+  S.home=V3(player.pos.x,0,player.pos.z);player.pos.y=SPC_PARK;
+  if(!S.firstOut){S.firstOut=true;showBanner('宇宙','大気の外へ ─ 足もとの世界は、ひとつの丸い星だった');later(3,()=>toast('🌙 月まで飛んでいける（前進で視線の方向へ。Space／C で上下）'));}else toast('宇宙に出た');snd('chime',.8);}
+function spaceExit(){const S=SPC,w=worldFromSpace(S.pos);S.on=false;scene.add(hero);if(mainRP){mainRP.scene=scene;mainRP.camera=camera;}
+  const x=clamp(w.x,-OB+40,OB-40),z=clamp(w.z,-OB+40,OB-40);player.pos.set(x,Math.max(w.alt,groundAt(x,z)+5),z);player.vel.set(0,-40,0);player.flying=true;
+  const fb=document.querySelector('[data-a="fly"]');if(fb)fb.classList.add('on');toast('大気圏に突入した');snd('whoosh',1);}
+const SPC_PARK=2e5;// 宇宙にいる間、地上の世界での大魔導士の居場所（誰の手も届かない高さ）
+function updSpace(dt){const S=SPC;if(spaceCam.aspect!==camera.aspect){spaceCam.aspect=camera.aspect;spaceCam.updateProjectionMatrix();}S.planet&&(S.planet.material.uniforms.t.value=gameTime);
+  // 昇るほど空は暗く、星が見えてくる
+  const alt=S.on?0:player.pos.y,k=S.on?1:smooth(700,S.SW,alt);skyUni.space.value=k;
+  if(!S.on){if(started&&!SPEC&&player.flying&&alt>S.SW)spaceEnter();else{S.hud.style.display=alt>700&&started?'block':'none';if(alt>700)S.hud.textContent=`高度 ${(alt/100).toFixed(1)} km　─ 昇り続ければ、宇宙へ`;return;}}
+  if(SPEC){return;}
+  // 宇宙を飛ぶ：前進は視線の方向。速さは星からの高さに応じて増す
+  const w=worldFromSpace(S.pos),dm=S.pos.distanceTo(S.moonC)-S.RM,near=Math.min(w.alt,dm);
+  let mx=0,mz=0;if(keys.KeyW||keys.ArrowUp)mz+=1;if(keys.KeyS||keys.ArrowDown)mz-=1;if(keys.KeyA||keys.ArrowLeft)mx-=1;if(keys.KeyD||keys.ArrowRight)mx+=1;if(touch.stickId!==null){mx+=touch.mx;mz-=touch.my;}
+  const len=Math.hypot(mx,mz);if(len>1){mx/=len;mz/=len;}const cp=Math.cos(camPitch),fwd=V3(Math.sin(camYaw)*cp,-Math.sin(camPitch-.15),Math.cos(camYaw)*cp).normalize(),rt=V3(-Math.cos(camYaw),0,Math.sin(camYaw));
+  let vy=0;if(keys.Space||actHeld.up)vy+=1;if(keys.KeyC||keys.ControlLeft||actHeld.down)vy-=1;
+  const dash=keys.ShiftLeft||keys.ShiftRight||actHeld.dash,sp=clamp(near*.35,120,16000)*(dash?2.6:1);
+  const want=fwd.multiplyScalar(mz).addScaledVector(rt,mx).add(V3(0,vy,0)).multiplyScalar(sp);S.vel.lerp(want,Math.min(1,dt*3));S.pos.addScaledVector(S.vel,dt);
+  if(Math.hypot(want.x,want.z)>1)player.face=Math.atan2(want.x,want.z);
+  // 月は硬い（めり込まない）。近づくと月面の石碑が語りかける
+  {const d=S.pos.clone().sub(S.moonC),L=d.length();if(L<S.RM+3){S.pos.copy(S.moonC).addScaledVector(d.divideScalar(L),S.RM+3);S.vel.multiplyScalar(.2);}
+    if(!S.seenMoon&&L<S.RM+1500){S.seenMoon=true;KB.moon=(KB.moon||0)+1;showBanner('月面到達','大魔導士は、ひとり月に立った。見上げれば、あの星が青く光っている');snd('chime',1);later(.4,()=>snd('bell',.8));saveGame();}
+    if(S.stone&&S.pos.distanceTo(S.stone.p)<400&&!S.stoneSaid){S.stoneSaid=true;toast('……月の石碑には、古い文字でこう刻まれていた。「最強の者よ、ここは静かだろう」');}}
+  // 星へ戻る：大気圏まで降りれば、真下の場所へ
+  if(w.alt<S.SW-300)return spaceExit();
+  hero.position.copy(S.pos);hero.rotation.set(0,player.face,0);
+  const pivot=S.pos.clone();pivot.y+=3.1;const dir=V3(Math.sin(camYaw)*cp,-Math.sin(camPitch),Math.cos(camYaw)*cp);spaceCam.position.copy(pivot).addScaledVector(dir,-camDist);
+  const vp=camPitch-.15,cv=Math.cos(vp);spaceCam.lookAt(spaceCam.position.clone().add(V3(Math.sin(camYaw)*cv,-Math.sin(vp),Math.cos(camYaw)*cv)));
+  S.hud.style.display='block';S.hud.textContent=dm<w.alt?`月まで ${Math.max(0,dm/100).toFixed(1)} km`:`高度 ${(w.alt/100).toFixed(1)} km　月まで ${(dm/100).toFixed(0)} km`;}
+// ================= 暗黒大陸：古代文明の大都市と民 =================
+// 結界の外にも、大陸を覆うほどの街並みが広がり、無数の民が暮らしている（まとめて描く）
+const CITY=[];let DARK_SEEN=false;
+function initCivCity(){const box=new THREE.BoxGeometry(1,1,1).translate(0,.5,0),M3=THREE.BufferGeometryUtils.mergeBufferGeometries;
+  const man=M3([new THREE.ConeGeometry(.5,1.5,6).translate(0,.75,0),new THREE.SphereGeometry(.26,6,5).translate(0,1.72,0)]);
+  for(const c of CIVS){const prng=mulberry(9090+c.i*31),NB=IS_MOBILE?600:2600,NP=IS_MOBILE?260:1400;
+    const im=new THREE.InstancedMesh(box,new THREE.MeshStandardMaterial({color:0xffffff,roughness:.5,metalness:.35}),NB),cap=new THREE.InstancedMesh(box,new THREE.MeshBasicMaterial({color:0xffffff}),NB);
+    const B=[],col=new THREE.Color(),cB=new THREE.Color(c.body),cT=new THREE.Color(c.trim),r0=c.cr+110,r1=c.R*.86;let n=0;
+    for(let t=0;t<NB*5&&n<NB;t++){const a=prng()*6.283,r=Math.sqrt(r0*r0+(r1*r1-r0*r0)*prng()),x=c.x+Math.cos(a)*r,z=c.z+Math.sin(a)*r,y=civHAt(x,z);if(y<3)continue;
+      const k=1-(r-r0)/(r1-r0),w=8+prng()*20,d=8+prng()*20,h=10+prng()*(24+k*k*180),ry=prng()*3;
+      _sd.position.set(x,y-2,z);_sd.rotation.set(0,ry,0);_sd.scale.set(w,h,d);_sd.updateMatrix();im.setMatrixAt(n,_sd.matrix);col.copy(cB).lerp(cT,prng()*.3).multiplyScalar(.65+prng()*.45);im.setColorAt(n,col);
+      _sd.position.y=y-2+h;_sd.scale.set(w*1.03,Math.max(.8,h*.025),d*1.03);_sd.updateMatrix();cap.setMatrixAt(n,_sd.matrix);cap.setColorAt(n,col.copy(c.col).multiplyScalar(.35+prng()*.3));
+      B.push({x,z,y,w,h,d,ry,alive:true});n++;}
+    im.count=cap.count=n;im.castShadow=true;im.receiveShadow=true;im.frustumCulled=cap.frustumCulled=false;scene.add(im,cap);
+    const pm=new THREE.InstancedMesh(man,new THREE.MeshStandardMaterial({color:0xffffff,roughness:.8}),NP);pm.frustumCulled=false;scene.add(pm);const P=[];
+    for(let i=0;i<NP;i++){let x,z,y,t=0;do{const a=prng()*6.283,r=c.cr*.3+prng()*(c.R*.85-c.cr*.3);x=c.x+Math.cos(a)*r;z=c.z+Math.sin(a)*r;y=civHAt(x,z);}while(y<3&&++t<20);
+      P.push({x,z,y,a:prng()*6.283,sp:2+prng()*4,t:prng()*8,alive:true});pm.setColorAt(i,col.setHSL(prng(),.35+prng()*.3,.3+prng()*.3));}
+    const C=CITY[c.i]={c,im,cap,pm,B,P,vis:true};cityPeopleDraw(C);cityVis(C,false);}}
+function cityVis(C,v){if(C.vis===v)return;C.vis=v;C.im.visible=C.cap.visible=C.pm.visible=v;}
+function cityPeopleDraw(C){const pm=C.pm;for(let i=0;i<C.P.length;i++){const p=C.P[i];if(!p.alive)_sd.scale.setScalar(.001);else _sd.scale.setScalar(2.1);_sd.position.set(p.x,p.y,p.z);_sd.rotation.set(0,p.a,0);_sd.updateMatrix();pm.setMatrixAt(i,_sd.matrix);}pm.instanceMatrix.needsUpdate=true;}
+function updCivCity(dt){if(!CITY.length)return;const P=player.pos,V=SPC.on?null:VIEW;
+  if(!DARK_SEEN&&started&&!SPEC&&!SPC.on&&inOuter(P.x,P.z)&&Math.max(Math.abs(P.x),Math.abs(P.z))>HALF+1500){DARK_SEEN=true;showBanner('外界 ─ 暗黒大陸','人類の地図にない世界。十の古代文明と、数えきれない民が、今も生きている');}
+  for(const C of CITY){const c=C.c,d=V?Math.hypot(V.x-c.x,V.z-c.z):1e9;cityVis(C,d<c.R+7000);if(d>c.R+2500)continue;
+    for(const p of C.P){if(!p.alive)continue;p.t-=dt;if(p.t<=0){p.t=rr(3,9);p.a=rr(0,6.283);}const nx=p.x+Math.sin(p.a)*p.sp*dt,nz=p.z+Math.cos(p.a)*p.sp*dt,ny=civHAt(nx,nz);
+      const r=Math.hypot(nx-c.x,nz-c.z);if(ny<3||r>c.R*.88||r<c.cr+20){p.a+=Math.PI;continue;}p.x=nx;p.z=nz;p.y=ny;}
+    cityPeopleDraw(C);}}
+// 魔法や使徒の攻撃は、大陸の街並みと民も巻き込む
+function cityArea(p,r){for(const C of CITY){const c=C.c;if(Math.hypot(p.x-c.x,p.z-c.z)>c.R+r)continue;let ch=0,fx=0;
+    for(let i=0;i<C.B.length;i++){const b=C.B[i];if(!b.alive)continue;const dx=b.x-p.x,dz=b.z-p.z;if(dx*dx+dz*dz>(r+b.w*.5)**2)continue;b.alive=false;ch=1;
+      _sd.position.set(b.x,b.y-2,b.z);_sd.rotation.set(0,b.ry,0);_sd.scale.set(b.w,.001,b.d);_sd.updateMatrix();C.im.setMatrixAt(i,_sd.matrix);C.cap.setMatrixAt(i,_sd.matrix);
+      if(fx<12&&Math.hypot(b.x-VIEW.x,b.z-VIEW.z)<1500){fx++;burst(V3(b.x,b.y+b.h*.4,b.z),24,18,2.5,b.w*.4,b.w*.9,PC.dust,PC.dustB,.8,1.2,-2,smoke,b.w*.5,b.h*.3);}}
+    if(ch){C.im.instanceMatrix.needsUpdate=C.cap.instanceMatrix.needsUpdate=true;}
+    let pk=0;for(const q of C.P){if(q.alive&&(q.x-p.x)**2+(q.z-p.z)**2<r*r){q.alive=false;pk++;}}if(pk)cityPeopleDraw(C);}}
 // ================= 絶対障壁・魔法返し =================
 let FIELD=null,MIRROR=null;
 const octGeo=(()=>{const g=new THREE.CircleGeometry(1,8);g.rotateZ(Math.PI/8);return g;})();
@@ -5422,17 +5570,17 @@ function updPlayer(dt){
   const len=Math.hypot(mx,mz);if(len>1){mx/=len;mz/=len;}
   const f=V3(Math.sin(camYaw),0,Math.cos(camYaw)),r=V3(-Math.cos(camYaw),0,Math.sin(camYaw));
   const dashing=keys.ShiftLeft||keys.ShiftRight||actHeld.dash;
-  const spd=(player.flying?38:22)*(dashing?2.6:1)*(CROW?1.5:1)*(player.flying&&inOuter(player.pos.x,player.pos.z)?5:1);
+  const spd=(player.flying?38:22)*(dashing?2.6:1)*(CROW?1.5:1)*(player.flying&&inOuter(player.pos.x,player.pos.z)?5:1)*(player.flying?Math.min(12,1+Math.max(0,player.pos.y-600)/400):1);
   const want=f.multiplyScalar(mz).addScaledVector(r,mx).multiplyScalar(spd);
   player.vel.x=lerp(player.vel.x,want.x,Math.min(1,dt*8));player.vel.z=lerp(player.vel.z,want.z,Math.min(1,dt*8));
   if(Math.hypot(want.x,want.z)>1&&player.castAnim<=0)player.face=Math.atan2(want.x,want.z);
   const g=Math.max(groundAt(player.pos.x,player.pos.z),templeFloor(player.pos.x,player.pos.z,player.pos.y));
   if(player.flying){
-    let vy=0;if(keys.Space||actHeld.up)vy+=22;if(keys.KeyC||keys.ControlLeft||actHeld.down)vy-=22;
+    const cf=Math.min(40,1+Math.max(0,player.pos.y-250)/200);let vy=0;if(keys.Space||actHeld.up)vy+=22*cf;if(keys.KeyC||keys.ControlLeft||actHeld.down)vy-=22*cf;
     player.vel.y=lerp(player.vel.y,vy,Math.min(1,dt*5));
     player.pos.addScaledVector(player.vel,dt);
     if(player.pos.y<g+.5){player.pos.y=g+.5;}
-    {const cap=Math.max(HOME_FLOOR+220,Math.hypot(TPL.x-player.pos.x,TPL.z-player.pos.z)<TPL.r+900?TPL.y+320:0,LG.alive&&Math.hypot(LG.pos.x-player.pos.x,LG.pos.z-player.pos.z)<1000?LG.pos.y+160:0);if(player.pos.y>cap)player.pos.y=cap;}
+    
   }else{
     if(player.onGround&&(keys.Space||actHeld.up)){player.vel.y=18;player.onGround=false;}
     player.vel.y-=40*dt;player.pos.addScaledVector(player.vel,dt);
@@ -5504,19 +5652,19 @@ function frame(){
   {const d=Math.min(clock.getDelta(),.05),n=SPEC?SPEC.speed:1;for(let k=0;k<n;k++)step(d);}
   if(composer){finalPass.uniforms.flash.value=post.flash;finalPass.uniforms.flashCol.value.copy(post.flashCol);finalPass.uniforms.tint.value=post.tint*.35;finalPass.uniforms.aberr.value=post.aberr+shakeAmt*.004;finalPass.uniforms.time.value=gameTime%100;
     composer.render();}
-  else renderer.render(scene,camera);
+  else renderer.render(SPC.on?spaceScene:scene,SPC.on?spaceCam:camera);
 }
 function step(dt){
   gameTime+=dt;FRAME_N++;
   for(let i=timers.length-1;i>=0;i--){timers[i].t-=dt;if(timers[i].t<=0){const f=timers[i].fn;timers.splice(i,1);f();}}
   for(let i=0;i<cds.length;i++)if(cds[i]>0)cds[i]=Math.max(0,cds[i]-dt);
   if(SPEC){VIEW.x=SPEC.fx;VIEW.z=SPEC.fz;}else if(started){VIEW.x=player.pos.x;VIEW.z=player.pos.z;}
-  if(started){if(SPEC){specCam(dt);updPlayerHP(dt);}else{updPlayer(dt);updCamera(dt);}updSpawns(dt);if(!SPEC)updPlayerHP(dt);}else titleCam(dt);
+  if(started){if(SPEC){specCam(dt);updPlayerHP(dt);}else if(!SPC.on){updPlayer(dt);updCamera(dt);}updSpawns(dt);if(!SPEC)updPlayerHP(dt);}else titleCam(dt);
   for(let i=enemies.length-1;i>=0;i--){const e=enemies[i];if(e.dead){enemies.splice(i,1);continue;}
     if(!started&&e.kind!=='boss'&&!e.fly){e.animate(dt,false);continue;}e.update(dt);}
   for(let i=fx.length-1;i>=0;i--){if(!fx[i].update(dt))fx.splice(i,1);}
   cullT-=dt;if(cullT<=0){cullT=.3;cullWorld();}
-  updWorld(dt);updCrowd(dt);updSites(dt);updTitans(dt);updLagna(dt);updRobots(dt);updRel(dt);updTech(dt);updBarros(dt);updVoices(dt);updIceTrees();updSakura(dt);updAuras(dt);updStar(dt);updAirForce(dt);updSpirits(dt);updIceMts(dt);updCrow(dt);updShields(dt);updWeather(dt);updAncient(dt);updWaves(dt);updBarriers(dt);updCivs(dt);updBigs(dt);updLoss(dt);updGods(dt);updAngels(dt);updTemple(dt);updSuper(dt);updDisciples(dt);
+  updWorld(dt);updCrowd(dt);updSites(dt);updTitans(dt);updLagna(dt);updRobots(dt);updRel(dt);updTech(dt);updBarros(dt);updVoices(dt);updIceTrees();updSakura(dt);updAuras(dt);updStar(dt);updAirForce(dt);updSpirits(dt);updIceMts(dt);updCrow(dt);updShields(dt);updWeather(dt);updAncient(dt);updWaves(dt);updBarriers(dt);updCivs(dt);updBigs(dt);updLoss(dt);updGods(dt);updAngels(dt);updTemple(dt);updSuper(dt);updDisciples(dt);updPyramid(dt);updSpace(dt);updCivCity(dt);
   updBuildings(dt);updDebris(dt);updHome(dt);updFlora(dt);updSkyCity(dt);updFarm(dt);
   for(let i=burningTrees.length-1;i>=0;i--){const b=burningTrees[i];b.life-=dt;const t=b.t;
     if(Math.random()<dt*25)glow.emit(t.x+rr(-1,1)*t.s*.4,t.y+t.s*rr(1,2.6),t.z+rr(-1,1)*t.s*.4,0,rr(4,8),0,rr(.5,1),rr(2,4),.4,PC.fireA,PC.fireB,1,.5,-2);
@@ -5783,7 +5931,7 @@ function specTargets(){const L=[];
   COUNTRIES.forEach((C,ci)=>L.push({n:C.label,x:C.x,z:C.z,ci,d:Math.max(160,C.r*1.6)}));
   for(const p of PORTS)if(!p.dead)L.push({n:COUNTRIES[p.ci].label+'の港',x:p.end.x,z:p.end.z,port:p,d:160});
   return L;}
-function toggleSpec(){if(!started)return;
+function toggleSpec(){if(!started)return;if(SPC.on){toast('宇宙からは観戦できない');return;}
   if(SPEC){camYaw=SPEC.y0;camPitch=SPEC.p0;SPEC=null;document.body.classList.remove('spec');$('#specBtn').classList.remove('on');return;}
   if(questOpen)toggleQuest();if(mapOpen)toggleMap();if(bookOpen)toggleBook();if(realmOpen)toggleRealm();if(warpOpen)toggleWarp();
   const L=specTargets();SPEC={L,i:0,y0:camYaw,p0:camPitch,dist:L[0].d,speed:1,fx:L[0].x,fz:L[0].z,fy:groundAt(L[0].x,L[0].z),cT:0,lastIn:-9};
@@ -5954,7 +6102,8 @@ function drawOuterMap(x,W){const sc=W/(OB*2),P=(wx,wz)=>[(wx+OB)*sc,(wz+OB)*sc];
 function drawWorldMap(){const cv=$('#wmap canvas'),x=cv.getContext('2d'),W=cv.width;if(WMODE){drawOuterMap(x,W);return;}x.drawImage(mapCv,0,0,W,W);const sc=W/WORLD,P=(wx,wz)=>[(wx+HALF)*sc,(wz+HALF)*sc];
   x.font='12px serif';x.textAlign='center';COUNTRIES.forEach((C,i)=>{const [a,b]=P(C.x,C.z);x.strokeStyle=C.rule==='vassal'?'#c9a0ff':C.rule==='ally'?'#8fe8a0':C.faction==='dem'?'#ff5a5a':C.faction==='emp'?'#ffe08a':'#fff';x.lineWidth=2;x.beginPath();x.arc(a,b,Math.max(5,C.r*sc),0,7);x.stroke();
     x.fillStyle='#fff';x.shadowColor='#000';x.shadowBlur=4;x.fillText(C.label.replace('神聖ヴァルガルド帝国 ',''),a,b-Math.max(7,C.r*sc)-4);x.shadowBlur=0;});
-  {const [a,b]=P(HX,HZ);x.fillStyle='#d8b0ff';x.fillRect(a-3,b-3,6,6);x.fillText('天穹楼',a,b-8);}
+  {const [a,b]=P(HX,HZ);x.fillStyle='#d8b0ff';x.fillRect(a-3,b-3,6,6);x.fillText('大魔導士の城',a,b-8);}
+  {const [a,b]=P(PYR.x,PYR.z),s2=PYR.S*sc;x.fillStyle='#e8c878';x.beginPath();x.moveTo(a,b-s2);x.lineTo(a+s2,b+s2*.7);x.lineTo(a-s2,b+s2*.7);x.closePath();x.fill();x.fillStyle='#fff';x.fillText('大ピラミッド',a,b-s2-4);}
   for(const S of[RUINS,SEAL]){const [a,b]=P(S.x,S.z);x.fillStyle=S===SEAL?'#c070ff':'#d8c8a0';x.beginPath();x.arc(a,b,4,0,7);x.fill();x.fillText(S===SEAL?'封印の地':S.n,a,b-8);}
   for(const m of ACTIVE)if(m.tgt&&m.tgt.alive){const [a,b]=P(m.tgt.pos.x,m.tgt.pos.z);x.strokeStyle='#ff4040';x.lineWidth=2;x.beginPath();x.arc(a,b,7,0,7);x.stroke();}
   for(const bt of BATTLES)if(!bt.over){const [a,b]=P(bt.f.x,bt.f.z);x.font='16px serif';x.fillStyle='#ffb040';x.fillText('⚔',a,b+5);x.font='12px serif';x.fillText(bt.f.n,a,b+18);}
@@ -6091,7 +6240,7 @@ const ORE_BASE=[26,34,12,60,160,160,28];// 王都・神楽京・アズラーン�
 let ecoT=0,ecoSlow=0,realmOpen=false;
 const fmtN=v=>Math.round(v).toLocaleString();
 const arrow=d=>d>.5?'↑':d<-.5?'↓':'';
-function popCapOf(ci){let c=0;for(const b of buildings){if(b.country!==ci||b.destroyed)continue;c+=b.kind==='house'?14:b.wall?0:6;}const C=COUNTRIES[ci];return c*(C.big?3:1);}
+function popCapOf(ci){let c=0;for(const b of buildings){if(b.country!==ci||b.destroyed)continue;c+=b.kind==='house'?14:b.wall?0:6;}const C=COUNTRIES[ci];return c*(C.big?3:1)*(C.anc!=null?100:1);}
 function nearestCi(x,z){let bi=-1,bd=1e9;COUNTRIES.forEach((C,i)=>{const d=Math.hypot(C.x-x,C.z-z)-C.r;if(d<bd){bd=d;bi=i;}});return bi;}
 function ecoInitOne(ci){const C=COUNTRIES[ci];const cap=popCapOf(ci);
   C.eco={cap,pop:cap*.85,hap:65,food:cap*3,wood:C.village?120:cap*.8,ore:(ORE_BASE[ci]||(C.village?4:6))*20,mil:0,dPop:0,dFood:0,dWood:0,dOre:0,wood0:0,fieldY:0,flowerA:0,happyT:0};}
@@ -6238,6 +6387,7 @@ const ACHS=[
   {id:'angel',n:'パターン青',d:'使徒を倒す',t:'使徒を討つ者',col:'#8fb0ff',c:()=>(KB.angel||0)>=1},
   {id:'eva',n:'決戦兵器、沈黙',d:'汎用人型決戦兵器を倒す',t:'巨人殺し',col:'#b080ff',c:()=>(KB.eva||0)>=1},
   {id:'civ10',n:'外界の旅人',d:'十の古代文明をすべて見つける',t:'外界を知る者',col:'#8ff0e0',c:()=>CIVS.every(c=>c.found)},
+  {id:'moon',n:'月面到達',d:'宇宙を越えて、月に立つ',t:'月に立つ者',col:'#cfe0ff',c:()=>(KB.moon||0)>=1},
   {id:'ura',n:'真なる最強',d:'裏章を終え、虚ろの魔人を討つ',t:'最強を超えし者',col:'#b070ff',c:()=>QDONE.has('u10')},
 ];
 const ACH=new Set();let TITLE=null;
@@ -6727,7 +6877,7 @@ initOuter();
 initLagna();
 initSays();
 initWorld2();
-initCivs();initTemple();NFIX=COUNTRIES.length;initCastle();initDisciples();
+initCivs();initTemple();NFIX=COUNTRIES.length;initCastle();initDisciples();initPyramid();initCivCity();initSpace();
 initCrowd();
 initEconomy();
 BN0=buildings.length;
@@ -6736,7 +6886,7 @@ setDiff(loadSave());postLoad();lagnaLoad();techLoad(TECH_LOAD);saveReady=true;
 populateWorld2();
 for(const ci of[0,1,2,3,4,6]){const C=COUNTRIES[ci];if(!C)continue;const n=IS_MOBILE?5:12,r0=ci===3?C4R-20:ci===4?ER-60:C.r*.7;
   for(let i=0;i<n;i++){const a=Math.random()*6.28,r=Math.sqrt(Math.random())*r0,x=C.x+Math.cos(a)*r,z=C.z+Math.sin(a)*r;if(groundAt(x,z)<1)continue;new Enemy('citizen',x,z,{tc:{x:C.x,z:C.z,r:r0},inTown:false});}}loadAch();renderSaveInfo();
-window.__h={SERV,DSC,CAS,supKami,supKoori,supMurasaki,supRyusei,supSekaiju,get pIfr(){return pIfr;},set pIfr(v){pIfr=v;},CIVS,BIGS,TPL,GOD,evaLaunch,angelSpawn,godDispatch,civFire,lossIn,bigHit,updLoss,evaCheck,godCheck,crossBlast,get angelT(){return ANGEL_T;},set angelT(v){ANGEL_T=v;},get wmode(){return WMODE;},drawWorldMap,ST,starArrive,novaCharge,toggleAura,get aura(){return AURA_ON;},get nfix(){return NFIX;},kurobako,trees,ICE_TREES,get sakura(){return SAKURA;},TECH,techDevelop,BARROS,barrosStart,say,kingSay,sayMage,SAYS,indraFire,LG,ROB,SKY,REL,AIDS,THREAT,rel,relAdd,spawnAid,spawnRobot,lagnaArrive,lagnaFall,breakIsle,indraCharge,updRel,skyArea,robAlive,get kb(){return KB;},BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,get sea(){return SEA;},get moon(){return MOON;},hgrid,LOCK,lockToggle,lockCycle,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
+window.__h={SPC,PYR,CITY,spaceEnter,spaceExit,spaceFromWorld,worldFromSpace,cityArea,SERV,DSC,CAS,supKami,supKoori,supMurasaki,supRyusei,supSekaiju,get pIfr(){return pIfr;},set pIfr(v){pIfr=v;},CIVS,BIGS,TPL,GOD,evaLaunch,angelSpawn,godDispatch,civFire,lossIn,bigHit,updLoss,evaCheck,godCheck,crossBlast,get angelT(){return ANGEL_T;},set angelT(v){ANGEL_T=v;},get wmode(){return WMODE;},drawWorldMap,ST,starArrive,novaCharge,toggleAura,get aura(){return AURA_ON;},get nfix(){return NFIX;},kurobako,trees,ICE_TREES,get sakura(){return SAKURA;},TECH,techDevelop,BARROS,barrosStart,say,kingSay,sayMage,SAYS,indraFire,LG,ROB,SKY,REL,AIDS,THREAT,rel,relAdd,spawnAid,spawnRobot,lagnaArrive,lagnaFall,breakIsle,indraCharge,updRel,skyArea,robAlive,get kb(){return KB;},BATTLES,startBattle,HX,HZ,HOME_H0,HOME_FLOOR,travel,MAGES,COUNTRIES,OFFERS,ACTIVE,launchRaid,genMission,offerMission,acceptMission,FAC,get mana(){return MANA;},get php(){return pHP;},worldPower,RAIDS,travelTo,SP,CRW,get sea(){return SEA;},get moon(){return MOON;},hgrid,LOCK,lockToggle,lockCycle,TITANS,titanInvade,WAVES,WALKS,groundAt,get weather(){return WEATHER;},UPG,BARRIERS,MAGES,get crow(){return CROW;},ICE_MTS,QDONE,QACT,QS,QUESTS,get majin(){return MAJIN;},ENDINGS,makePeace,destroyBuilding,goldBuilding,btAlive,updCrowd,crowdArea,heightAt,findCoast,buildPort,PORTS,SHIPS,FIELDS,get harvest(){return HARVEST;},get trade(){return TRADE;},COMBO_SEEN,get comboN(){return COMBO_N;}};
 })();
 </script>
 </body>
